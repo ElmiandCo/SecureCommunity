@@ -38,3 +38,7 @@ In Supabase Auth URL Configuration:
 - Redirect URLs should include: `https://esecureprofilecommunityv1.vercel.app`
 
 Google OAuth provider should use Supabase's generated callback URL as the Google Cloud redirect URI. The application sends the Vercel URL as the post-login redirect.
+
+
+## V3 deployment fix
+The build script is at the repository root as `build.mjs` so GitHub web uploads cannot accidentally omit a nested scripts directory. Vercel runs `npm run build` and publishes `dist/`.

@@ -1,0 +1,11 @@
+import fs from "node:fs";
+import path from "node:path";
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+if (!url || !key) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel environment variables.");
+fs.rmSync("dist", { recursive:true, force:true });
+fs.mkdirSync("dist/assets", { recursive:true });
+for (const f of ["index.html","styles.css","app.js"]) fs.copyFileSync(f, path.join("dist",f));
+fs.copyFileSync("assets/mascot.jpeg", "dist/assets/mascot.jpeg");
+fs.writeFileSync("dist/config.js", `window.APP_CONFIG = ${JSON.stringify({SUPABASE_URL:url,SUPABASE_ANON_KEY:key})};\n`);
+console.log("Built E Secure Community into dist/");
