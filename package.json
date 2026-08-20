@@ -1,0 +1,7 @@
+{
+  "name": "e-secure-community",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-config.mjs"
+  }
+}

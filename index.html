@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080510">
+<title>E — Secure Community</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">E</span><span>E</span></div>
+    <div id="sessionBadge" class="session-badge">LOCKED</div>
+  </header>
+
+  <main>
+    <section id="publicView" class="screen">
+      <div class="public-grid">
+        <div class="copy">
+          <span class="eyebrow">PRIVATE • SECURE • CONNECTED</span>
+          <h1>Your people.<br><span>Your space.</span></h1>
+          <p class="lead">A private profile community where your information stays behind the lock until you sign in.</p>
+          <div class="security-note">
+            <div class="lock">🔐</div>
+            <div><b>Security first.</b><small>Profiles and posts are only available to authenticated members.</small></div>
+          </div>
+          <div class="auth-buttons">
+            <button id="openLogin" class="primary">Sign in</button>
+            <button id="openSignup" class="ghost">Create account</button>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="glow"></div>
+          <img src="assets/mascot.jpeg" alt="E mascot">
+          <div class="art-badge">ACCESS<br><b>REQUIRED</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="authView" class="screen hidden">
+      <div class="auth-card">
+        <button id="backPublic" class="back">← Back</button>
+        <div class="auth-logo">E</div>
+        <div id="authTitle"></div>
+        <div id="authMessage" class="message hidden"></div>
+        <form id="authForm" class="form"></form>
+        <div class="divider"><span>or continue with</span></div>
+        <div class="socials">
+          <button class="social" data-provider="google">Google</button>
+          <button class="social" data-provider="apple">Apple</button>
+          <button class="social" data-provider="facebook">Facebook</button>
+        </div>
+        <div id="authSwitch" class="switch"></div>
+      </div>
+    </section>
+
+    <section id="appView" class="screen hidden">
+      <div class="app-layout">
+        <aside class="sidebar">
+          <div class="mini-profile" id="miniProfile"></div>
+          <nav>
+            <button class="side active" data-page="feed">⌂ Home</button>
+            <button class="side" data-page="profiles">◉ People</button>
+            <button class="side" data-page="profile">◎ My Profile</button>
+          </nav>
+          <button id="signOut" class="logout">Sign out</button>
+        </aside>
+
+        <div class="content">
+          <div id="feedPage" class="page">
+            <div class="page-head"><div><span class="eyebrow">MEMBER AREA</span><h2>Community</h2></div><div class="online">● Secure session</div></div>
+            <div class="composer">
+              <div class="avatar" id="composerAvatar">E</div>
+              <div class="composer-body">
+                <textarea id="postText" maxlength="500" placeholder="Share something with the community..."></textarea>
+                <div class="composer-footer"><span id="charCount">0/500</span><button id="publish" class="primary">Post</button></div>
+              </div>
+            </div>
+            <div id="feed"></div>
+          </div>
+
+          <div id="profilesPage" class="page hidden">
+            <div class="page-head"><div><span class="eyebrow">MEMBERS</span><h2>People</h2></div></div>
+            <div id="profilesGrid" class="profiles-grid"></div>
+          </div>
+
+          <div id="profilePage" class="page hidden">
+            <div class="page-head"><div><span class="eyebrow">YOUR PRIVATE PROFILE</span><h2>My Profile</h2></div></div>
+            <div id="profilePanel"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
