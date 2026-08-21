@@ -55,3 +55,20 @@ Authentication > URL Configuration pointed at the production Vercel URL and keep
 the Google provider's Authorized Redirect URI pointed at the Supabase callback URL.
 
 Never expose a Supabase secret/service-role key in the browser.
+
+
+## V5 account behavior
+
+For immediate account creation and sign-in without waiting for an email, Supabase
+Authentication must have **Confirm email disabled**. This is a Supabase project
+setting, not a browser-side setting.
+
+If email verification is required for production, enable Confirm email and configure
+custom SMTP. The frontend will then correctly tell the user that confirmation is
+required rather than pretending an email was sent.
+
+Google OAuth returns to the current production origin and the frontend ensures a
+profile exists for every authenticated user. The database trigger is also installed
+in the production project as a second line of defense.
+
+Never expose a Supabase secret/service-role key in browser code.

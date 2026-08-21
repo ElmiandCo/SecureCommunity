@@ -51,26 +51,75 @@ function showAuth(mode="login"){
 
 async function signup(){
  clearMessage();
- const firstName=$("firstName").value.trim(),lastName=$("lastName").value.trim(),username=$("username").value.trim().toLowerCase(),email=$("email").value.trim().toLowerCase(),password=$("password").value;
- if(!/^[a-z0-9_.-]{3,30}$/.test(username)){message("Username must be 3–30 characters and use letters, numbers, dots, underscores, or hyphens.");return}
+ const firstName=$("firstName").value.trim();
+ const lastName=$("lastName").value.trim();
+ const username=$("username").value.trim().toLowerCase();
+ const email=$("email").value.trim().toLowerCase();
+ const password=$("password").value;
+
+ if(!/^[a-z0-9_.-]{3,30}$/.test(username)){
+   message("Username must be 3–30 characters and use letters, numbers, dots, underscores, or hyphens.");
+   return;
+ }
  if(password.length<8){message("Password must be at least 8 characters.");return}
- const {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:`${firstName} ${lastName}`.trim(),first_name:firstName,last_name:lastName,username}}});
+
+ const {data,error}=await sb.auth.signUp({
+   email,password,
+   options:{data:{
+     display_name:`${firstName} ${lastName}`.trim(),
+     first_name:firstName,
+     last_name:lastName,
+     username
+   }}
+ });
+
  if(error){
-   if(/already registered|already been registered|user already/i.test(error.message)) message("Sorry — that email already has an account.");
-   else if(/username/i.test(error.message)) message("That username may already be in use. Try another one.");
+   if(/already registered|already been registered|user already|already exists/i.test(error.message))
+     message("Sorry — that email already has an account. Sign in instead.");
    else message(errText(error));
    return;
  }
- if(!data.user){message("We couldn't create the account. Please try again.");return}
- // If email confirmation is enabled, session will be null until verified.
+
+ if(!data.user){
+   message("We couldn't create the account. Please try again.");
+   return;
+ }
+
+ // If Supabase email confirmation is OFF, signUp returns a session.
+ // If it is ON, the user is created but cannot be signed in until confirmed.
  if(data.session){
-   try{await ensureProfile(data.user,{firstName,lastName,username});}catch(e){console.error(e)}
-   await enterApp(); toast("Account created. Welcome! 🎉");
+   try{
+     await ensureProfile(data.user,{firstName,lastName,username});
+     await enterApp();
+     toast("Account created. Welcome! 🎉");
+   }catch(e){
+     console.error("Profile setup failed:",e);
+     message("Your account was created, but we couldn't finish your profile. Please sign in again.");
+   }
+   return;
+ }
+
+ // Try an immediate password sign-in. This succeeds when email confirmation is disabled
+ // even if the SDK didn't return a session in the signUp response.
+ const loginResult=await sb.auth.signInWithPassword({email,password});
+ if(!loginResult.error && loginResult.data?.session){
+   try{
+     await ensureProfile(loginResult.data.user,{firstName,lastName,username});
+     await enterApp();
+     toast("Account created. Welcome! 🎉");
+   }catch(e){
+     console.error("Profile setup failed:",e);
+     message("Account created, but profile setup failed. Please sign in again.");
+   }
+   return;
+ }
+
+ if(/email not confirmed/i.test(loginResult.error?.message||"")){
+   message("Your account was created. Email confirmation is currently required in Supabase. Turn off Confirm email for immediate sign-in, or configure SMTP so the confirmation email can be delivered.");
  }else{
-   message("Account created. Check your email to confirm your address, then sign in.");
+   message("Your account was created. Sign in with your new email and password.");
  }
 }
-
 async function login(){
  clearMessage();
  const email=$("email").value.trim().toLowerCase(),password=$("password").value;
@@ -100,52 +149,6 @@ async function social(provider){
    options:{redirectTo, queryParams:{access_type:"offline",prompt:"select_account"}}
  });
  if(error) message(errText(error));
-}
-
-async function ensureProfile(user, hints={}){
- const metadata = user.user_metadata || {};
- const firstName = hints.firstName || metadata.first_name || "";
- const lastName = hints.lastName || metadata.last_name || "";
- const displayName =
-   hints.display_name ||
-   (firstName || lastName ? `${firstName} ${lastName}`.trim() : "") ||
-   metadata.display_name ||
-   metadata.full_name ||
-   user.email?.split("@")[0] ||
-   "Member";
-
- let username = (hints.username || metadata.username || `member_${user.id.slice(0,8)}`)
-   .toLowerCase().replace(/[^a-z0-9_.-]/g,"-").slice(0,30);
-
- if(username.length < 3) username = `member_${user.id.slice(0,8)}`;
-
- const payload={
-   id:user.id,
-   display_name:displayName,
-   first_name:firstName,
-   last_name:lastName,
-   username
- };
-
- // The database trigger normally creates this row at auth-user creation.
- // This upsert is a safe second line of defense for OAuth users and older accounts.
- const {data,error}=await sb.from("profiles").upsert(payload,{onConflict:"id"}).select().single();
- if(error) throw error;
- profile=data;
- return data;
-}
-
-async function ensureProfile(user, hints={}){
- const payload={
-  id:user.id,
-  display_name:hints.display_name || hints.firstName && hints.lastName ? `${hints.firstName} ${hints.lastName}`.trim() : user.user_metadata?.display_name || user.email?.split("@")[0] || "Member",
-  first_name:hints.firstName || user.user_metadata?.first_name || "",
-  last_name:hints.lastName || user.user_metadata?.last_name || "",
-  username:(hints.username || user.user_metadata?.username || `member_${user.id.slice(0,8)}`).toLowerCase()
- };
- const {data,error}=await sb.from("profiles").upsert(payload,{onConflict:"id"}).select().single();
- if(error) throw error;
- profile=data;return data;
 }
 
 async function loadProfile(){
@@ -267,12 +270,22 @@ $("publish").onclick=()=>editingPostId?saveEditedPost():publish();
 $("postText").oninput=e=>$("charCount").textContent=`${e.target.value.length}/500`;
 document.querySelectorAll(".side").forEach(b=>b.onclick=()=>{document.querySelectorAll(".side").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(b.dataset.page+"Page").classList.remove("hidden")});
 
-sb.auth.onAuthStateChange(async (_event,session)=>{
+sb.auth.onAuthStateChange(async (event,session)=>{
  if(session){
    me=session.user;
-   try{await loadProfile();await loadPosts();renderApp();}catch(e){console.error(e)}
- } else {
-   me=null;profile=null;posts=[];setScreen("publicView");$("sessionBadge").textContent="LOCKED";
+   try{
+     await loadProfile();
+     await loadPosts();
+     renderApp();
+   }catch(e){
+     console.error("Auth/profile load failed:",e);
+     setScreen("publicView");
+     message("We signed you in, but couldn't load your profile yet. Please try again.");
+   }
+ } else if(event==="SIGNED_OUT" || event==="INITIAL_SESSION"){
+   me=null;profile=null;posts=[];
+   setScreen("publicView");
+   $("sessionBadge").textContent="LOCKED";
  }
 });
 
