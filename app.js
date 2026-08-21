@@ -94,8 +94,45 @@ async function forgot(){
 
 async function social(provider){
  clearMessage();
- const {error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin}});
+ const redirectTo = `${window.location.origin}/`;
+ const {error}=await sb.auth.signInWithOAuth({
+   provider,
+   options:{redirectTo, queryParams:{access_type:"offline",prompt:"select_account"}}
+ });
  if(error) message(errText(error));
+}
+
+async function ensureProfile(user, hints={}){
+ const metadata = user.user_metadata || {};
+ const firstName = hints.firstName || metadata.first_name || "";
+ const lastName = hints.lastName || metadata.last_name || "";
+ const displayName =
+   hints.display_name ||
+   (firstName || lastName ? `${firstName} ${lastName}`.trim() : "") ||
+   metadata.display_name ||
+   metadata.full_name ||
+   user.email?.split("@")[0] ||
+   "Member";
+
+ let username = (hints.username || metadata.username || `member_${user.id.slice(0,8)}`)
+   .toLowerCase().replace(/[^a-z0-9_.-]/g,"-").slice(0,30);
+
+ if(username.length < 3) username = `member_${user.id.slice(0,8)}`;
+
+ const payload={
+   id:user.id,
+   display_name:displayName,
+   first_name:firstName,
+   last_name:lastName,
+   username
+ };
+
+ // The database trigger normally creates this row at auth-user creation.
+ // This upsert is a safe second line of defense for OAuth users and older accounts.
+ const {data,error}=await sb.from("profiles").upsert(payload,{onConflict:"id"}).select().single();
+ if(error) throw error;
+ profile=data;
+ return data;
 }
 
 async function ensureProfile(user, hints={}){
@@ -115,7 +152,9 @@ async function loadProfile(){
  if(!me)return;
  const {data,error}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();
  if(error) throw error;
- if(!data) profile=await ensureProfile(me); else profile=data;
+ if(!data) profile=await ensureProfile(me);
+ else profile=data;
+ return profile;
 }
 
 async function loadPosts(){

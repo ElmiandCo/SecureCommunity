@@ -1,0 +1,11 @@
+-- Secure Community production schema notes.
+-- The production Supabase project already contains profiles, posts, and post_likes.
+-- A production migration also installs public.handle_new_user() and the
+-- on_auth_user_created trigger so every Auth user gets a profile row.
+--
+-- RLS requirements:
+-- profiles: authenticated SELECT; owner INSERT/UPDATE
+-- posts: authenticated SELECT; owner INSERT/UPDATE/DELETE
+-- post_likes: authenticated SELECT; owner INSERT/DELETE
+--
+-- Do not put a Supabase service-role/secret key in the browser.

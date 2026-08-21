@@ -42,3 +42,16 @@ Google OAuth provider should use Supabase's generated callback URL as the Google
 
 ## V3 deployment fix
 The build script is at the repository root as `build.mjs` so GitHub web uploads cannot accidentally omit a nested scripts directory. Vercel runs `npm run build` and publishes `dist/`.
+
+
+## V4 profile-auth fix
+
+The production database now creates a `profiles` row automatically whenever a new
+Supabase Auth user is created. The frontend also defensively creates the profile
+with an upsert if an older account has no profile row.
+
+Google OAuth redirects back to the current production origin. Keep Supabase
+Authentication > URL Configuration pointed at the production Vercel URL and keep
+the Google provider's Authorized Redirect URI pointed at the Supabase callback URL.
+
+Never expose a Supabase secret/service-role key in the browser.
