@@ -1,74 +1,43 @@
-# E — Secure Community v2
+# One Muslim — Social Community V2
 
-Production-oriented static web app using Supabase Auth + Postgres/RLS and Vercel.
+GitHub-ready prototype combining the strongest pieces of the supplied projects:
 
-## Features
-- Real email/password authentication through Supabase Auth
-- Email confirmation support
-- Password reset email flow
-- Google/Apple/Facebook OAuth hooks (provider must be configured in Supabase)
-- Secure persistent sessions handled by Supabase
-- Member profiles: first/last name, username, bio, location, website, avatar field
-- Authenticated-only community feed
-- Create posts
-- Edit/delete only your own posts
-- Like/unlike posts with database-enforced one-like-per-user-per-post
-- Like counters
-- Sign-out immediately hides private content
-- Mobile-first responsive UI
-- Mascot artwork retained
+- One Muslim-inspired bright visual direction is the master design language.
+- Google/Supabase authentication integration point from the secure profile app.
+- Community feed and member profile foundation.
+- Avatar Creator V1 using the supplied layered 1254×1254 PNG assets.
+- Edit Profile with city, state/province, country and city-level Muslim Map visibility.
+- Muslim Map interaction inspired by the supplied daycare movement map: filters, live-looking pulsing markers and result list.
+- Events and new-revert journey entry points.
+- Supabase schema for profiles, posts and events.
 
-## Security model
-The browser never stores passwords. Supabase Auth owns credentials and sessions. Post/profile/like permissions are enforced by PostgreSQL Row Level Security (RLS), not merely by hiding UI controls.
+## Run locally
 
-The requested five-failure/5-minute lockout is NOT implemented as client-side security. Client-side counters can be bypassed. Supabase Auth's server-side rate limiting/brute-force protections are the security boundary. If an exact five-attempt/5-minute business rule is required later, implement it in a trusted server-side authentication layer rather than JavaScript.
+Because this is a static site, you can serve it with any static server. Do not open `index.html` from `file://` if you plan to use Supabase OAuth.
 
-## Vercel setup
-The Vercel project should have these environment variables in the deployment environment:
-- `NEXT_PUBLIC_SUPABASE_URL` = `https://njilnqgdfrvpvgbkodwl.supabase.co`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` = Supabase Publishable key
+Example:
 
-Never put the Supabase secret/service-role key in the browser or Vercel client environment.
+```bash
+python -m http.server 5500
+```
 
-The build script creates `dist/config.js` from those environment variables. Vercel deploys `dist/`.
+Then open `http://localhost:5500`.
 
-## Supabase Auth redirect
-In Supabase Auth URL Configuration:
-- Site URL: `https://esecureprofilecommunityv1.vercel.app`
-- Redirect URLs should include: `https://esecureprofilecommunityv1.vercel.app`
+## Connect Supabase
 
-Google OAuth provider should use Supabase's generated callback URL as the Google Cloud redirect URI. The application sends the Vercel URL as the post-login redirect.
+1. Create/configure a Supabase project.
+2. Run `supabase/schema.sql` in the Supabase SQL Editor.
+3. Enable Google under Supabase Authentication → Providers.
+4. Put the project URL and anon key in `config.js`.
+5. Add your GitHub Pages / deployment URL to the Supabase Auth redirect URL allow-list.
+6. Never place a service-role key in the browser project.
 
+## GitHub
 
-## V3 deployment fix
-The build script is at the repository root as `build.mjs` so GitHub web uploads cannot accidentally omit a nested scripts directory. Vercel runs `npm run build` and publishes `dist/`.
+This repository is intentionally simple: no build step and no generated dependencies. Upload the project contents to GitHub as-is.
 
+## V1 boundaries
 
-## V4 profile-auth fix
+The avatar is intentionally 2D layered PNG composition for now. The architecture leaves room for later 3D environments, cars, accessories, shared spaces and richer social experiences without requiring the first release to become a game engine.
 
-The production database now creates a `profiles` row automatically whenever a new
-Supabase Auth user is created. The frontend also defensively creates the profile
-with an upsert if an older account has no profile row.
-
-Google OAuth redirects back to the current production origin. Keep Supabase
-Authentication > URL Configuration pointed at the production Vercel URL and keep
-the Google provider's Authorized Redirect URI pointed at the Supabase callback URL.
-
-Never expose a Supabase secret/service-role key in the browser.
-
-
-## V5 account behavior
-
-For immediate account creation and sign-in without waiting for an email, Supabase
-Authentication must have **Confirm email disabled**. This is a Supabase project
-setting, not a browser-side setting.
-
-If email verification is required for production, enable Confirm email and configure
-custom SMTP. The frontend will then correctly tell the user that confirmation is
-required rather than pretending an email was sent.
-
-Google OAuth returns to the current production origin and the frontend ensures a
-profile exists for every authenticated user. The database trigger is also installed
-in the production project as a second line of defense.
-
-Never expose a Supabase secret/service-role key in browser code.
+The Muslim Map is intentionally city-level in V1. Do not expose exact home addresses or precise user coordinates.
