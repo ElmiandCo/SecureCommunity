@@ -41,3 +41,12 @@ This repository is intentionally simple: no build step and no generated dependen
 The avatar is intentionally 2D layered PNG composition for now. The architecture leaves room for later 3D environments, cars, accessories, shared spaces and richer social experiences without requiring the first release to become a game engine.
 
 The Muslim Map is intentionally city-level in V1. Do not expose exact home addresses or precise user coordinates.
+
+## V3 avatar/rank update
+- Three supplied male avatar choices.
+- Rank starts at 100.
+- Avatar customization unlocks at Rank 1,000.
+- Generated mask-color variants included.
+- Female avatar slot reserved for future assets.
+- Saved avatar appears in the authenticated header.
+See `docs/AVATAR_RANK_V1.md`.
