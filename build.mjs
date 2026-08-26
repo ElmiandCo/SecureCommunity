@@ -5,7 +5,6 @@ if(!url||!key)throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_S
 fs.rmSync("dist",{recursive:true,force:true}); fs.mkdirSync("dist/assets/avatars",{recursive:true});
 for(const f of ["index.html","styles.css","app.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","header-home-lock.js","community-posts-notes.js","avatar-profile-picker.js"])fs.copyFileSync(f,path.join("dist",f));
 fs.copyFileSync("home-dashboard-safe.js","dist/home-dashboard.js");
-fs.copyFileSync("node_modules/@supabase/supabase-js/dist/umd/supabase.js","dist/supabase.js");
 for(const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg","pearl.svg"])fs.copyFileSync(`assets/avatars/${f}`,path.join("dist/assets/avatars",f));
 let html=fs.readFileSync("dist/index.html","utf8");
 for(const f of ["home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","header-home-lock.js","community-posts-notes.js","avatar-profile-picker.js"])if(!html.includes(`src="${f}"`))html=html.replace("</body>",`<script src="${f}"></script>\n</body>`);
