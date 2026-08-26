@@ -1,0 +1,6 @@
+/* Safety layer: visual overlays must never block primary navigation. */
+.auth-buttons{position:relative!important;z-index:100!important;pointer-events:auto!important}
+.auth-buttons button{position:relative!important;z-index:101!important;pointer-events:auto!important;touch-action:manipulation!important}
+.hero-art{pointer-events:none!important}
+.bot,.bot-sign{pointer-events:none!important}
+@media(max-width:520px){.hero-art{display:none!important}.public-grid{grid-template-columns:1fr!important}.copy{position:relative!important;z-index:10!important}}
