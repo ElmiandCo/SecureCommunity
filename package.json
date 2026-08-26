@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.112.4"
   }
 }
