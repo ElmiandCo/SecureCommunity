@@ -8,8 +8,10 @@ fs.copyFileSync("home-dashboard-safe.js","dist/home-dashboard.js");
 fs.copyFileSync("node_modules/@supabase/supabase-js/dist/umd/supabase.js","dist/supabase.js");
 for(const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg","pearl.svg"])fs.copyFileSync(`assets/avatars/${f}`,path.join("dist/assets/avatars",f));
 let html=fs.readFileSync("dist/index.html","utf8");
-html=html.replace(/<script src="https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2"><\/script>/g,`<script src="supabase.js"></script>`);
-for(const f of ["home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","header-home-lock.js","community-posts-notes.js","avatar-profile-picker.js"])if(!html.includes(`src="${f}"`))html=html.replace("</body>",`<script src="${f}"></script>\n</body>`);
+html=html.replace(/<script src="https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2"><\/script>/g,`<script src="supabase.js" defer></script>`);
+html=html.replace(/<script src="config\.js"><\/script>/g,`<script src="config.js" defer></script>`);
+html=html.replace(/<script src="app\.js"><\/script>/g,`<script src="app.js" defer></script>`);
+for(const f of ["home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","header-home-lock.js","community-posts-notes.js","avatar-profile-picker.js"]){if(!html.includes(`src="${f}"`))html=html.replace("</body>",`<script src="${f}" defer></script>\n</body>`);}
 if(!html.includes('href="input-fix.css"'))html=html.replace("</head>",`<link rel="stylesheet" href="input-fix.css">\n</head>`);
 if(!html.includes('href="green-override.css"'))html=html.replace("</head>",`<link rel="stylesheet" href="green-override.css">\n</head>`);
-fs.writeFileSync("dist/index.html",html);fs.writeFileSync("dist/config.js",`window.APP_CONFIG=${JSON.stringify({SUPABASE_URL:url,SUPABASE_ANON_KEY:key})};\n`);console.log("Built E Secure Community with local Supabase SDK, restored feature modules, form readability fix, and green theme override.");
+fs.writeFileSync("dist/index.html",html);fs.writeFileSync("dist/config.js",`window.APP_CONFIG=${JSON.stringify({SUPABASE_URL:url,SUPABASE_ANON_KEY:key})};\n`);console.log("Built E Secure Community with deferred scripts, local Supabase SDK, restored feature modules, form readability fix, and green theme override.");
