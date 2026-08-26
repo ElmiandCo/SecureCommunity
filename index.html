@@ -1,44 +1,103 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f7fbff"><meta name="description" content="One Muslim — community, avatar identity, events and Muslim Map.">
-<title>One Muslim</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080510">
+<title>E — Secure Community</title>
 <link rel="stylesheet" href="styles.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="#home" aria-label="One Muslim home"><span class="brand-mark">1</span><span>ONE MUSLIM</span></a>
-  <nav class="topnav" aria-label="Primary navigation">
-    <button data-nav="home">Home</button><button data-nav="map">Muslim Map</button><button data-nav="events">Events</button><button data-nav="community">Community</button>
-  </nav>
-  <div class="auth-actions"><button id="signInBtn" class="text-btn">Sign in</button><button id="joinBtn" class="primary">Join One Muslim</button><button id="profileBtn" class="profile-chip hidden"><span class="header-avatar"><img id="headerAvatar" alt="Your avatar"></span><span id="profileBtnName"></span><span class="rank-pill">Rank <b id="headerRank">100</b></span></button></div>
-</header>
-<main>
-<section id="homePage" class="page">
-  <div class="hero">
-    <div class="hero-copy"><span class="eyebrow">ONE COMMUNITY · ONE UMMAH</span><h1>Find your people.<br><em>Build your journey.</em></h1><p>One Muslim brings community, useful resources, local connection, events and personal growth into one welcoming space.</p><div class="hero-actions"><button id="heroJoin" class="primary large">Start your journey</button><button data-nav="map" class="secondary large">Explore Muslim Map</button></div><div class="hero-links"><span>New revert?</span><a href="#community" data-nav="community">Start here →</a><span>Just took your shahada?</span><a href="#journey" id="journeyLink">Join the journey →</a></div></div>
-    <div class="hero-card"><div class="halo"></div><div class="mini-avatar"><img src="assets/avatar/base/master.png" alt="One Muslim avatar"></div><div class="hero-card-copy"><span>YOUR DIGITAL IDENTITY</span><b>Customize your avatar</b><small>Start simple now. Grow into worlds, accessories and shared spaces later.</small></div></div>
-  </div>
-  <section class="feature-grid"><article><span>🗺️</span><h3>Muslim Map</h3><p>Discover community at a city-level and find nearby events and mosques as the platform grows.</p></article><article><span>🤝</span><h3>Community</h3><p>Share updates, welcome new Muslims and build meaningful connections.</p></article><article><span>📖</span><h3>Qur'an & Growth</h3><p>Make learning and spiritual growth part of the everyday experience.</p></article><article><span>🎮</span><h3>Your Avatar</h3><p>Create a recognizable identity now, with room for richer experiences later.</p></article></section>
-  <section class="home-sections"><div><span class="eyebrow">WHAT'S HAPPENING</span><h2>News, viral conversations & community moments</h2><div id="homeFeed" class="feed-list"></div></div><aside class="event-card"><span class="eyebrow">UP NEXT</span><h2>Upcoming events</h2><div id="homeEvents"></div></aside></section>
-</section>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">E</span><span>E</span></div>
+    <div id="sessionBadge" class="session-badge">LOCKED</div>
+  </header>
 
-<section id="mapPage" class="page hidden"><div class="page-title"><div><span class="eyebrow">DISCOVER YOUR UMMAH</span><h2>Muslim Map</h2><p>Explore members by city, plus community places and events as they are added.</p></div><button id="mapJoin" class="primary">Create your profile</button></div><div class="map-layout"><aside class="map-sidebar"><label>Search city or country<input id="mapSearch" placeholder="Minneapolis, Toronto, London..."></label><label>Show<select id="mapFilter"><option value="members">Muslims</option><option value="mosques">Mosques</option><option value="events">Events</option></select></label><div id="mapResults"></div></aside><div class="map-canvas" id="mapCanvas"><div class="map-grid"></div><div class="map-label label-a">NORTH AMERICA</div><div class="map-label label-b">EUROPE</div><div class="map-label label-c">AFRICA</div><div class="map-label label-d">ASIA</div><div id="mapDots"></div></div></div><p class="privacy-note">Privacy first: the first version uses city-level discovery, not home addresses or exact user locations.</p></section>
+  <main>
+    <section id="publicView" class="screen">
+      <div class="public-grid">
+        <div class="copy">
+          <span class="eyebrow">PRIVATE • SECURE • CONNECTED</span>
+          <h1>Your people.<br><span>Your space.</span></h1>
+          <p class="lead">A private profile community where your information stays behind the lock until you sign in.</p>
+          <div class="security-note">
+            <div class="lock">🔐</div>
+            <div><b>Security first.</b><small>Profiles and posts are only available to authenticated members.</small></div>
+          </div>
+          <div class="auth-buttons">
+            <button id="openLogin" class="primary">Sign in</button>
+            <button id="openSignup" class="ghost">Create account</button>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="glow"></div>
+          <img src="assets/mascot.jpeg" alt="E mascot">
+          <div class="art-badge">ACCESS<br><b>REQUIRED</b></div>
+        </div>
+      </div>
+    </section>
 
-<section id="eventsPage" class="page hidden"><div class="page-title"><div><span class="eyebrow">COMMUNITY CALENDAR</span><h2>Events</h2><p>Gatherings, classes, Qur'an circles and community moments.</p></div><button id="eventJoin" class="primary">Join One Muslim</button></div><div id="eventsGrid" class="events-grid"></div></section>
+    <section id="authView" class="screen hidden">
+      <div class="auth-card">
+        <button id="backPublic" class="back">← Back</button>
+        <div class="auth-logo">E</div>
+        <div id="authTitle"></div>
+        <div id="authMessage" class="message hidden"></div>
+        <form id="authForm" class="form"></form>
+        <div class="divider"><span>or continue with</span></div>
+        <div class="socials">
+          <button class="social" data-provider="google">Google</button>
+          <button class="social" data-provider="apple">Apple</button>
+          <button class="social" data-provider="facebook">Facebook</button>
+        </div>
+        <div id="authSwitch" class="switch"></div>
+      </div>
+    </section>
 
-<section id="communityPage" class="page hidden"><div class="page-title"><div><span class="eyebrow">CONNECTED & GROWING</span><h2>Community</h2><p>Welcome people, share progress and build useful connections.</p></div><button id="communityJoin" class="primary">Sign in to post</button></div><div class="community-grid"><div><div id="composer" class="composer hidden"><textarea id="postBody" maxlength="500" placeholder="Share something beneficial..."></textarea><div><span id="count">0/500</span><button id="postBtn" class="primary">Post</button></div></div><div id="communityFeed" class="feed-list"></div></div><aside class="journey-card" id="journey"><span class="eyebrow">NEW REVERT?</span><h2>Your journey doesn't have to be alone.</h2><p>Find resources, local community and people who can help you take your next step.</p><button id="journeyJoin" class="primary">Join the journey</button></aside></div></section>
+    <section id="appView" class="screen hidden">
+      <div class="app-layout">
+        <aside class="sidebar">
+          <div class="mini-profile" id="miniProfile"></div>
+          <nav>
+            <button class="side active" data-page="feed">⌂ Home</button>
+            <button class="side" data-page="profiles">◉ People</button>
+            <button class="side" data-page="profile">◎ My Profile</button>
+          </nav>
+          <button id="signOut" class="logout">Sign out</button>
+        </aside>
 
-<section id="profilePage" class="page hidden"><div class="page-title"><div><span class="eyebrow">YOUR IDENTITY</span><h2>Edit Profile</h2><p>Keep your public details useful and your location privacy-controlled.</p></div></div><div class="profile-layout"><form id="profileForm" class="panel"><label>Display name<input id="profileName" required></label><label>Bio<textarea id="profileBio" maxlength="240"></textarea></label><div class="three"><label>City<input id="profileCity" placeholder="City"></label><label>State / Province<input id="profileState" placeholder="State or province"></label><label>Country<input id="profileCountry" placeholder="Country"></label></div><label class="check"><input id="profileMap" type="checkbox"> Show me on Muslim Map at city level</label><button class="primary" type="submit">Save profile</button><p id="profileStatus" class="status"></p></form><div class="panel avatar-panel">
-<div class="rank-card"><div><span class="eyebrow">YOUR RANK</span><strong id="rankValue">100</strong><span>points</span></div><div><b id="unlockText">1,000 points unlock more customization</b><small>Earn points by completing your profile and participating.</small></div></div>
-<div class="avatar-stage" id="avatarStage"><img id="avatarCharacter" src="assets/avatar/male/male-1-original.jpg" alt="Selected avatar"></div>
-<div><span class="eyebrow">AVATAR CREATOR V1</span><h3>Choose your identity</h3><p class="muted">Three male complexion options are available now. Female avatars are reserved for a future release.</p></div>
-<div id="avatarControls"></div>
-<button id="saveAvatar" class="secondary">Save avatar</button><p id="avatarStatus" class="status"></p></div></div></section>
-</main>
-<div id="authModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="authTitle"><div class="modal-card"><button id="closeAuth" class="close">×</button><span class="eyebrow">ONE MUSLIM</span><h2 id="authTitle">Join the community</h2><p id="authSub">Create your account and start building your profile.</p><button id="googleBtn" class="google">Continue with Google</button><div class="or"><span>or</span></div><form id="authForm"><label>Name<input id="authName" required></label><label>Email<input id="authEmail" type="email" required></label><label>Password<input id="authPassword" type="password" minlength="8" required></label><button class="primary" type="submit">Create account</button></form><button id="authSwitch" class="link-btn">Already have an account? Sign in</button><p id="authStatus" class="status"></p></div></div>
+        <div class="content">
+          <div id="feedPage" class="page">
+            <div class="page-head"><div><span class="eyebrow">MEMBER AREA</span><h2>Community</h2></div><div class="online">● Secure session</div></div>
+            <div class="composer">
+              <div class="avatar" id="composerAvatar">E</div>
+              <div class="composer-body">
+                <textarea id="postText" maxlength="500" placeholder="Share something with the community..."></textarea>
+                <div class="composer-footer"><span id="charCount">0/500</span><button id="publish" class="primary">Post</button></div>
+              </div>
+            </div>
+            <div id="feed"></div>
+          </div>
+
+          <div id="profilesPage" class="page hidden">
+            <div class="page-head"><div><span class="eyebrow">MEMBERS</span><h2>People</h2></div></div>
+            <div id="profilesGrid" class="profiles-grid"></div>
+          </div>
+
+          <div id="profilePage" class="page hidden">
+            <div class="page-head"><div><span class="eyebrow">YOUR PRIVATE PROFILE</span><h2>My Profile</h2></div></div>
+            <div id="profilePanel"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
 <div id="toast" class="toast hidden"></div>
-<script src="config.js"></script><script src="app.js"></script>
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

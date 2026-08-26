@@ -1,49 +1,296 @@
-const C=window.ONE_MUSLIM_CONFIG||{};
-const supabaseClient=(C.SUPABASE_URL&&C.SUPABASE_ANON_KEY&&window.supabase)?window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY):null;
-const demoKey='oneMuslimV3Demo';
-const defaultAvatar={gender:'male',maleBase:'male-1',maskColor:'white',headwear:'none',shirtColor:'black',backgroundColor:'default',eyeGlowColor:'none'};
-const demo={user:null,profiles:[
-{id:'demo-1',name:'Amina Hassan',city:'Minneapolis',state:'MN',country:'United States',bio:'Learning, growing and connecting.',map:true,rankPoints:100,avatar:{...defaultAvatar,maleBase:'male-1'}},
-{id:'demo-2',name:'Yusuf Ali',city:'Toronto',state:'ON',country:'Canada',bio:'Community builder.',map:true,rankPoints:100,avatar:{...defaultAvatar,maleBase:'male-2'}},
-{id:'demo-3',name:'Layla Omar',city:'London',state:'',country:'United Kingdom',bio:'Always learning.',map:true,rankPoints:100,avatar:{...defaultAvatar,maleBase:'male-3'}}],
-posts:[{id:'p1',name:'One Muslim',body:'Welcome to One Muslim — a place to connect, learn and grow together.',time:Date.now()-7200000},{id:'p2',name:'Community',body:'New revert? You are welcome here. Your journey starts with one step.',time:Date.now()-3600000}],session:null};
-let state=JSON.parse(localStorage.getItem(demoKey)||'null')||demo;
-const save=()=>localStorage.setItem(demoKey,JSON.stringify(state));
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const fmt=t=>new Date(t).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
-const maleOptions=[['male-1','Complexion 1'],['male-2','Complexion 2'],['male-3','Complexion 3']];
-const maskOptions=[['white','White'],['black','Black'],['teal','Teal'],['gold','Gold'],['royal-blue','Royal Blue'],['emerald','Emerald'],['crimson','Crimson'],['purple','Purple']];
-const headwearOptions=[['none','None'],['hat','Hat'],['scarf','Islamic Scarf']];
-const shirtOptions=[['black','Black'],['white','White'],['teal','Teal'],['gold','Gold'],['blue','Blue']];
-const bgOptions=[['default','Default'],['mint','Mint'],['sky','Sky'],['sand','Sand'],['night','Night']];
-const eyeOptions=[['none','None'],['teal','Teal'],['gold','Gold'],['blue','Blue'],['purple','Purple'],['red','Red']];
-function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),2600)}
-function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=document.getElementById(page+'Page');if(!target)return;target.classList.remove('hidden');history.replaceState(null,'','#'+page);if(page==='map')renderMap();if(page==='community')renderCommunity();if(page==='events')renderEvents();if(page==='profile')renderProfile();renderHeader()}
-document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.nav)));
-function openAuth(signup=true){document.getElementById('authModal').classList.remove('hidden');setAuthMode(signup)}
-function closeAuth(){document.getElementById('authModal').classList.add('hidden')}
-function setAuthMode(signup){document.getElementById('authTitle').textContent=signup?'Join the community':'Welcome back';document.getElementById('authSub').textContent=signup?'Create your account and start building your profile.':'Sign in to continue your journey.';document.getElementById('authName').closest('label').style.display=signup?'grid':'none';document.getElementById('authSwitch').textContent=signup?'Already have an account? Sign in':'Need an account? Create one';document.getElementById('authForm').querySelector('.primary').textContent=signup?'Create account':'Sign in';document.getElementById('authForm').dataset.mode=signup?'signup':'login';document.getElementById('authStatus').textContent=''}
-document.getElementById('closeAuth').onclick=closeAuth;document.getElementById('joinBtn').onclick=()=>openAuth(true);document.getElementById('heroJoin').onclick=()=>openAuth(true);document.getElementById('signInBtn').onclick=()=>openAuth(false);['mapJoin','eventJoin','communityJoin','journeyJoin'].forEach(id=>document.getElementById(id).onclick=()=>openAuth(true));document.getElementById('authSwitch').onclick=()=>setAuthMode(document.getElementById('authForm').dataset.mode!=='signup');
-document.getElementById('googleBtn').onclick=async()=>{if(!supabaseClient){document.getElementById('authStatus').textContent='Google Auth is ready for Supabase. Add SUPABASE_URL and SUPABASE_ANON_KEY in config.js, then enable Google in Supabase Auth.';return}const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)document.getElementById('authStatus').textContent=error.message};
-document.getElementById('authForm').onsubmit=async e=>{e.preventDefault();const mode=e.currentTarget.dataset.mode;if(supabaseClient){let r;if(mode==='signup')r=await supabaseClient.auth.signUp({email:authEmail.value,password:authPassword.value,options:{data:{display_name:authName.value.trim()}}});else r=await supabaseClient.auth.signInWithPassword({email:authEmail.value,password:authPassword.value});if(r.error){authStatus.textContent=r.error.message;return}closeAuth();await hydrateUser();toast(mode==='signup'?'Welcome to One Muslim!':'Welcome back!');go(mode==='signup'?'profile':'community');return}const email=authEmail.value.trim().toLowerCase();if(mode==='signup'){if(state.profiles.some(p=>p.email===email)){authStatus.textContent='An account with that email already exists.';return}const p={id:'local-'+Date.now(),name:authName.value.trim(),email,city:'',state:'',country:'',bio:'',map:false,rankPoints:100,rankAwards:{},avatar:{...defaultAvatar}};state.profiles.push(p);state.user=p;state.session=p.id;save();closeAuth();renderHeader();go('profile');toast('Account created — you start at Rank 100.')}else{const p=state.profiles.find(x=>x.email===email);if(!p){authStatus.textContent='Demo mode: create an account first.';return}state.user=p;state.session=p.id;save();closeAuth();renderHeader();go('community');toast('Signed in!')}};
-async function hydrateUser(){if(!supabaseClient)return;const {data}=await supabaseClient.auth.getUser();if(!data.user)return;let p=state.profiles.find(x=>x.id===data.user.id);if(!p){p={id:data.user.id,name:data.user.user_metadata?.display_name||data.user.email?.split('@')[0]||'Member',email:data.user.email,city:'',state:'',country:'',bio:'',map:false,rankPoints:100,rankAwards:{},avatar:{...defaultAvatar}};state.profiles.push(p)}p.rankPoints=p.rankPoints||100;p.avatar={...defaultAvatar,...(p.avatar||{})};state.user=p;state.session=p.id;save();renderHeader()}
-async function logout(){if(supabaseClient)await supabaseClient.auth.signOut();state.user=null;state.session=null;save();renderHeader();go('home');toast('Signed out.')}
-function avatarSrc(av){av={...defaultAvatar,...(av||{})};if(av.maleBase==='male-1'||av.maleBase==='male-2'||av.maleBase==='male-3'){return `assets/avatar/male/${av.maleBase}-mask-${av.maskColor||'white'}.jpg`}return 'assets/avatar/male/male-1-mask-white.jpg'}
-function renderHeader(){const u=state.user;document.getElementById('signInBtn').classList.toggle('hidden',!!u);document.getElementById('joinBtn').classList.toggle('hidden',!!u);const b=document.getElementById('profileBtn');b.classList.toggle('hidden',!u);if(u){document.getElementById('profileBtnName').textContent=u.name||'Member';document.getElementById('headerRank').textContent=u.rankPoints||100;document.getElementById('headerAvatar').src=avatarSrc(u.avatar);b.onclick=()=>go('profile')}}
-function award(u,key,points){u.rankPoints=u.rankPoints||100;u.rankAwards=u.rankAwards||{};if(!u.rankAwards[key]){u.rankPoints+=points;u.rankAwards[key]=true;return points}return 0}
-function renderAvatarControls(){const u=state.user;if(!u)return;u.avatar={...defaultAvatar,...(u.avatar||{})};const unlocked=(u.rankPoints||100)>=1000;const wrap=document.getElementById('avatarControls');
-const group=(title,items,key,locked=false)=>`<div class="control-group"><b>${title}${locked?' <span class="lock">🔒 1,000 Rank</span>':''}</b><div>${items.map(([v,l])=>`<button type="button" class="choice ${u.avatar[key]===v?'active':''} ${locked?'locked':''}" data-g="${key}" data-v="${v}" ${locked?'disabled':''}>${l}</button>`).join('')}</div></div>`;
-wrap.innerHTML=group('Male complexion',maleOptions,'maleBase')+`<div class="control-group"><b>Female</b><div><button type="button" class="choice locked" disabled>Coming soon</button></div></div>`+group('Mask color',maskOptions,'maskColor',!unlocked)+group('Headwear',headwearOptions,'headwear',!unlocked)+group('Shirt color',shirtOptions,'shirtColor',!unlocked)+group('Background',bgOptions,'backgroundColor',!unlocked)+group('Eye glow',eyeOptions,'eyeGlowColor',!unlocked);
-wrap.querySelectorAll('.choice:not([disabled])').forEach(b=>b.onclick=()=>{u.avatar[b.dataset.g]=b.dataset.v;applyAvatar(u.avatar);renderAvatarControls()});applyAvatar(u.avatar);document.getElementById('rankValue').textContent=u.rankPoints||100;document.getElementById('unlockText').textContent=unlocked?'Customization unlocked 🎉':`${Math.max(0,1000-(u.rankPoints||100))} more points to unlock customization`}
-function applyAvatar(av){av={...defaultAvatar,...av};const img=document.getElementById('avatarCharacter');img.src=avatarSrc(av);img.style.background=({default:'#f7fbff',mint:'#e5f7f2',sky:'#eaf3ff',sand:'#f6eedc',night:'#182334'}[av.backgroundColor]||'#f7fbff');img.style.borderRadius='22px';document.getElementById('headerAvatar')?.setAttribute('src',avatarSrc(av))}
-function renderProfile(){const u=state.user;if(!u){document.getElementById('profileStatus').textContent='Sign in to edit your profile.';return}profileName.value=u.name||'';profileBio.value=u.bio||'';profileCity.value=u.city||'';profileState.value=u.state||'';profileCountry.value=u.country||'';profileMap.checked=!!u.map;renderAvatarControls();renderHeader()}
-document.getElementById('profileForm').onsubmit=e=>{e.preventDefault();if(!state.user){openAuth(true);return}const u=state.user;const before=u.rankPoints||100;Object.assign(u,{name:profileName.value.trim(),bio:profileBio.value.trim(),city:profileCity.value.trim(),state:profileState.value.trim(),country:profileCountry.value.trim(),map:profileMap.checked});award(u,'name',10);if(u.bio)award(u,'bio',10);if(u.city&&u.country)award(u,'location',15);if(u.map)award(u,'map',10);const i=state.profiles.findIndex(p=>p.id===u.id);if(i>=0)state.profiles[i]=u;save();renderHeader();renderAvatarControls();profileStatus.textContent=u.rankPoints>before?`Saved. You earned ${u.rankPoints-before} Rank points.`:'Saved.';toast(u.rankPoints>before?`Profile saved — Rank ${u.rankPoints}.`:'Profile updated.')};
-document.getElementById('saveAvatar').onclick=()=>{if(!state.user){openAuth(true);return}award(state.user,'avatar',25);save();renderHeader();renderAvatarControls();avatarStatus.textContent=`Avatar saved. Rank ${state.user.rankPoints}.`;toast(`Avatar saved — Rank ${state.user.rankPoints}.`)};
-function renderHome(){homeFeed.innerHTML=state.posts.slice().sort((a,b)=>b.time-a.time).slice(0,3).map(p=>`<article class="feed-item"><b>${esc(p.name)}</b><small>${fmt(p.time)}</small><p>${esc(p.body)}</p></article>`).join('');homeEvents.innerHTML=events.slice(0,3).map(e=>`<div class="event-mini"><b>${e.title}</b><span>${e.date} · ${e.city}</span></div>`).join('')}
-const events=[{title:'Community Welcome Night',date:'Sep 5',city:'Minneapolis',kind:'Community'},{title:"Qur'an Circle",date:'Sep 8',city:'Toronto',kind:'Learning'},{title:'New Muslim Meet & Greet',date:'Sep 12',city:'London',kind:'New Muslims'},{title:'Family Community Day',date:'Sep 20',city:'Minneapolis',kind:'Families'}];
-function renderEvents(){eventsGrid.innerHTML=events.map(e=>`<article class="event-card-large"><span>${e.kind}</span><h3>${e.title}</h3><p>📅 ${e.date}<br>📍 ${e.city}</p><button class="secondary">View event</button></article>`).join('')}
-function renderCommunity(){communityFeed.innerHTML=state.posts.slice().sort((a,b)=>b.time-a.time).map(p=>`<article class="feed-item"><div class="feed-head"><div class="initial">${esc((p.name||'OM').split(' ').map(x=>x[0]).join('').slice(0,2))}</div><div><b>${esc(p.name)}</b><small>${fmt(p.time)}</small></div></div><p>${esc(p.body)}</p></article>`).join('');composer.classList.toggle('hidden',!state.user)}
-postBody.oninput=e=>count.textContent=`${e.target.value.length}/500`;postBtn.onclick=()=>{if(!state.user){openAuth(true);return}const body=postBody.value.trim();if(!body)return;state.posts.push({id:'p'+Date.now(),name:state.user.name,body,time:Date.now()});award(state.user,'firstPost',10);save();postBody.value='';count.textContent='0/500';renderCommunity();renderHome();renderHeader();toast('Posted — Rank points updated.')};
-const mapSeed=[...state.profiles.filter(p=>p.map&&p.city).map(p=>({type:'members',name:p.name,city:p.city,state:p.state,country:p.country})) ,{type:'mosques',name:'Demo Mosque',city:'Minneapolis',state:'MN',country:'United States'},{type:'mosques',name:'Community Mosque',city:'Toronto',state:'ON',country:'Canada'},{type:'events',name:'Welcome Night',city:'Minneapolis',state:'MN',country:'United States'}];
-function renderMap(){const q=(mapSearch.value||'').toLowerCase();const type=mapFilter.value;const arr=mapSeed.filter(x=>(type===x.type)&&(!q||[x.name,x.city,x.state,x.country].join(' ').toLowerCase().includes(q)));mapResults.innerHTML=arr.length?arr.map((x,i)=>`<button class="map-result" data-i="${i}"><span class="pulse"></span><b>${esc(x.name)}</b><small>${esc(x.city)}${x.state?', '+esc(x.state):''} · ${esc(x.country)}</small></button>`).join(''):'<p class="muted">No matching locations yet.</p>';mapDots.innerHTML=arr.map((x,i)=>{const pos=[[25,38],[31,48],[44,31],[52,42],[62,35],[70,50],[78,32],[66,65]][i%8];return `<button class="map-dot" style="left:${pos[0]}%;top:${pos[1]}%" title="${esc(x.name)} — ${esc(x.city)}"><span></span></button>`}).join('')};mapSearch.oninput=renderMap;mapFilter.onchange=renderMap;
-(async()=>{if(supabaseClient){await hydrateUser()}renderHeader();renderHome();renderEvents();renderCommunity();if(location.hash)go(location.hash.slice(1));else go('home')})();
+/* Production client: Supabase Auth + Postgres/RLS. */
+const { createClient } = window.supabase;
+const cfg = window.APP_CONFIG || {};
+const sb = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+});
+
+const initials=n=>(n||"E").split(" ").filter(Boolean).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "'":"&#039;"}[m]));
+const fmt=t=>new Date(t).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+const $=id=>document.getElementById(id);
+let me=null;
+let profile=null;
+let posts=[];
+let editingPostId=null;
+
+function toast(msg){const x=$("toast");x.textContent=msg;x.classList.remove("hidden");clearTimeout(window.__toast);window.__toast=setTimeout(()=>x.classList.add("hidden"),2800)}
+function setScreen(id){document.querySelectorAll(".screen").forEach(x=>x.classList.add("hidden"));$(id).classList.remove("hidden")}
+function message(msg){const x=$("authMessage");x.textContent=msg;x.classList.remove("hidden")}
+function clearMessage(){$("authMessage").classList.add("hidden")}
+function errText(error){return error?.message || "Something went wrong. Please try again."}
+
+function showAuth(mode="login"){
+ setScreen("authView"); clearMessage();
+ const title=$("authTitle"),form=$("authForm"),sw=$("authSwitch");
+ if(mode==="signup"){
+  title.innerHTML="<h2>Create your account</h2><p>A few details make your member profile yours.</p>";
+  form.innerHTML=`
+   <div class="field"><label>First name</label><input id="firstName" required maxlength="50" placeholder="First name"></div>
+   <div class="field"><label>Last name</label><input id="lastName" required maxlength="50" placeholder="Last name"></div>
+   <div class="field"><label>Username</label><input id="username" required maxlength="30" pattern="[A-Za-z0-9_.-]+" placeholder="yourusername"></div>
+   <div class="field"><label>Email</label><input id="email" type="email" required autocomplete="email" placeholder="you@example.com"></div>
+   <div class="field"><label>Password</label><input id="password" type="password" minlength="8" required autocomplete="new-password" placeholder="At least 8 characters"></div>
+   <button class="primary" type="submit">Create account</button>`;
+  sw.innerHTML=`Already have an account? <button type="button" id="switchLogin">Sign in</button>`;
+ } else {
+  title.innerHTML="<h2>Welcome back</h2><p>Your private space is waiting.</p>";
+  form.innerHTML=`
+   <div class="field"><label>Email</label><input id="email" type="email" required autocomplete="email" placeholder="you@example.com"></div>
+   <div class="field"><label>Password</label><input id="password" type="password" required autocomplete="current-password" placeholder="Your password"></div>
+   <button type="button" class="forgot" id="forgot">Forgot password?</button>
+   <button class="primary" type="submit">Sign in</button>`;
+  sw.innerHTML=`New here? <button type="button" id="switchSignup">Create an account</button>`;
+ }
+ form.onsubmit=e=>{e.preventDefault();mode==="signup"?signup():login()};
+ $("switchLogin")?.addEventListener("click",()=>showAuth("login"));
+ $("switchSignup")?.addEventListener("click",()=>showAuth("signup"));
+ $("forgot")?.addEventListener("click",forgot);
+ document.querySelectorAll(".social").forEach(b=>b.onclick=()=>social(b.dataset.provider));
+}
+
+async function signup(){
+ clearMessage();
+ const firstName=$("firstName").value.trim();
+ const lastName=$("lastName").value.trim();
+ const username=$("username").value.trim().toLowerCase();
+ const email=$("email").value.trim().toLowerCase();
+ const password=$("password").value;
+
+ if(!/^[a-z0-9_.-]{3,30}$/.test(username)){
+   message("Username must be 3–30 characters and use letters, numbers, dots, underscores, or hyphens.");
+   return;
+ }
+ if(password.length<8){message("Password must be at least 8 characters.");return}
+
+ const {data,error}=await sb.auth.signUp({
+   email,password,
+   options:{data:{
+     display_name:`${firstName} ${lastName}`.trim(),
+     first_name:firstName,
+     last_name:lastName,
+     username
+   }}
+ });
+
+ if(error){
+   if(/already registered|already been registered|user already|already exists/i.test(error.message))
+     message("Sorry — that email already has an account. Sign in instead.");
+   else message(errText(error));
+   return;
+ }
+
+ if(!data.user){
+   message("We couldn't create the account. Please try again.");
+   return;
+ }
+
+ // If Supabase email confirmation is OFF, signUp returns a session.
+ // If it is ON, the user is created but cannot be signed in until confirmed.
+ if(data.session){
+   try{
+     await ensureProfile(data.user,{firstName,lastName,username});
+     await enterApp();
+     toast("Account created. Welcome! 🎉");
+   }catch(e){
+     console.error("Profile setup failed:",e);
+     message("Your account was created, but we couldn't finish your profile. Please sign in again.");
+   }
+   return;
+ }
+
+ // Try an immediate password sign-in. This succeeds when email confirmation is disabled
+ // even if the SDK didn't return a session in the signUp response.
+ const loginResult=await sb.auth.signInWithPassword({email,password});
+ if(!loginResult.error && loginResult.data?.session){
+   try{
+     await ensureProfile(loginResult.data.user,{firstName,lastName,username});
+     await enterApp();
+     toast("Account created. Welcome! 🎉");
+   }catch(e){
+     console.error("Profile setup failed:",e);
+     message("Account created, but profile setup failed. Please sign in again.");
+   }
+   return;
+ }
+
+ if(/email not confirmed/i.test(loginResult.error?.message||"")){
+   message("Your account was created. Email confirmation is currently required in Supabase. Turn off Confirm email for immediate sign-in, or configure SMTP so the confirmation email can be delivered.");
+ }else{
+   message("Your account was created. Sign in with your new email and password.");
+ }
+}
+async function login(){
+ clearMessage();
+ const email=$("email").value.trim().toLowerCase(),password=$("password").value;
+ const {data,error}=await sb.auth.signInWithPassword({email,password});
+ if(error){
+   // Supabase Auth performs server-side password/rate-limit protection. We do not store passwords or implement client-only security.
+   if(/email not confirmed/i.test(error.message)) message("Please confirm your email address before signing in.");
+   else message("Email or password is incorrect. If you forgot it, use the reset link below.");
+   return;
+ }
+ await enterApp(); toast("Signed in securely. 🔐");
+}
+
+async function forgot(){
+ const email=$("email")?.value.trim().toLowerCase();
+ if(!email){message("Enter your email first.");return}
+ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});
+ if(error){message(errText(error));return}
+ message("If that email belongs to an account, a password-reset link has been sent.");
+}
+
+async function social(provider){
+ clearMessage();
+ const redirectTo = `${window.location.origin}/`;
+ const {error}=await sb.auth.signInWithOAuth({
+   provider,
+   options:{redirectTo, queryParams:{access_type:"offline",prompt:"select_account"}}
+ });
+ if(error) message(errText(error));
+}
+
+async function loadProfile(){
+ if(!me)return;
+ const {data,error}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();
+ if(error) throw error;
+ if(!data) profile=await ensureProfile(me);
+ else profile=data;
+ return profile;
+}
+
+async function loadPosts(){
+ const {data,error}=await sb.from("posts").select("id,user_id,body,created_at,updated_at,profiles!posts_user_id_fkey(id,display_name,username,first_name,last_name,bio,location,website,avatar_url),post_likes(user_id)").order("created_at",{ascending:false});
+ if(error) throw error;
+ posts=(data||[]).map(p=>({...p,likeCount:(p.post_likes||[]).length,liked:(p.post_likes||[]).some(l=>l.user_id===me?.id)}));
+}
+
+async function enterApp(){
+ setScreen("appView"); $("sessionBadge").textContent="SECURE SESSION";
+ try{await loadProfile();await loadPosts();renderApp();}catch(e){console.error(e);message(errText(e));}
+}
+
+async function logout(){
+ const {error}=await sb.auth.signOut();
+ if(error){toast(errText(error));return}
+ me=null;profile=null;posts=[];setScreen("publicView");$("sessionBadge").textContent="LOCKED";toast("Signed out. Private information is hidden.");
+}
+
+function renderApp(){
+ if(!me||!profile){setScreen("publicView");return}
+ const display=profile.display_name || `${profile.first_name||""} ${profile.last_name||""}`.trim() || me.email?.split("@")[0] || "Member";
+ $("miniProfile").innerHTML=`<div class="avatar">${initials(display)}</div><b>${esc(display)}</b><small>@${esc(profile.username||"")} · ${esc(me.email||"")}</small>`;
+ $("composerAvatar").textContent=initials(display);
+ $("profilePanel").innerHTML=`<div class="profile-hero"><div class="avatar">${initials(display)}</div><div><h2>${esc(display)}</h2><p>@${esc(profile.username||"")} · ${esc(me.email||"")}</p></div></div><span class="private-tag">🔐 PRIVATE PROFILE</span><p style="margin-top:20px;color:#aaa0b2">${esc(profile.bio||"Tell the community a little about yourself.")}</p><div class="profile-meta"><span>${esc(profile.location||"Location not set")}</span>${profile.website?`<a href="${esc(profile.website)}" target="_blank" rel="noopener">${esc(profile.website)}</a>`:""}</div><button class="outline" id="editProfile">Edit profile</button>`;
+ $("editProfile").onclick=editProfile;
+ renderFeed();renderProfiles();
+}
+
+function renderFeed(){
+ const html=posts.map(p=>{
+  const u=p.profiles||{};const display=u.display_name||`${u.first_name||""} ${u.last_name||""}`.trim()||"Member";
+  const own=p.user_id===me?.id;
+  return `<article class="post" data-post="${p.id}"><div class="post-head"><div class="avatar">${initials(display)}</div><div class="post-author"><b>${esc(display)}</b><small>@${esc(u.username||"")} · ${fmt(p.created_at)}${p.updated_at&&p.updated_at!==p.created_at?" · edited":""}</small></div><div class="post-menu">${own?`<button class="tiny" data-edit="${p.id}">Edit</button><button class="tiny danger-text" data-delete="${p.id}">Delete</button>`:""}</div></div><p>${esc(p.body)}</p><div class="post-actions"><button class="like-btn ${p.liked?"liked":""}" data-like="${p.id}">${p.liked?"♥":"♡"} <span>${p.likeCount}</span></button></div></article>`;
+ }).join("");
+ $("feed").innerHTML=html||"<div class='post'><p>No posts yet. Be the first.</p></div>";
+ document.querySelectorAll("[data-like]").forEach(b=>b.onclick=()=>toggleLike(b.dataset.like));
+ document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editPost(b.dataset.edit));
+ document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deletePost(b.dataset.delete));
+}
+
+function renderProfiles(){
+ const seen=new Map();posts.forEach(p=>{if(p.profiles&&!seen.has(p.user_id))seen.set(p.user_id,p.profiles)});
+ if(profile&&!seen.has(me.id))seen.set(me.id,profile);
+ $("profilesGrid").innerHTML=[...seen.values()].map(u=>{const d=u.display_name||`${u.first_name||""} ${u.last_name||""}`.trim()||"Member";return `<div class="profile-card"><div class="avatar">${initials(d)}</div><h3>${esc(d)}</h3><p>@${esc(u.username||"")}</p><p>${esc(u.bio||"")}</p><span class="private-tag">MEMBER</span></div>`}).join("")||"<div class='profile-card'><p>No members yet.</p></div>";
+}
+
+async function publish(){
+ const body=$("postText").value.trim();if(!body)return;
+ if(body.length>500){toast("Keep posts to 500 characters or less.");return}
+ const {error}=await sb.from("posts").insert({user_id:me.id,body});
+ if(error){toast(errText(error));return}
+ $("postText").value="";$("charCount").textContent="0/500";await loadPosts();renderFeed();toast("Posted to the community.");
+}
+
+async function toggleLike(postId){
+ const p=posts.find(x=>x.id===postId);if(!p)return;
+ if(p.liked){
+  const {error}=await sb.from("post_likes").delete().eq("post_id",postId).eq("user_id",me.id);if(error){toast(errText(error));return}
+ }else{
+  const {error}=await sb.from("post_likes").insert({post_id:postId,user_id:me.id});if(error&&!/duplicate|unique/i.test(error.message)){toast(errText(error));return}
+ }
+ await loadPosts();renderFeed();
+}
+
+function editPost(id){
+ const p=posts.find(x=>x.id===id);if(!p||p.user_id!==me.id)return;
+ editingPostId=id;
+ $("postText").value=p.body;$("charCount").textContent=`${p.body.length}/500`;$("publish");
+ $("publish").textContent="Save edit";$("postText").focus();
+}
+
+async function saveEditedPost(){
+ const body=$("postText").value.trim();if(!editingPostId||!body)return;
+ const {error}=await sb.from("posts").update({body,updated_at:new Date().toISOString()}).eq("id",editingPostId).eq("user_id",me.id);
+ if(error){toast(errText(error));return}
+ editingPostId=null;$("postText").value="";$("charCount").textContent="0/500";$("publish").textContent="Post";await loadPosts();renderFeed();toast("Post updated.");
+}
+
+async function deletePost(id){
+ const p=posts.find(x=>x.id===id);if(!p||p.user_id!==me.id)return;
+ if(!confirm("Delete this post? This cannot be undone."))return;
+ const {error}=await sb.from("posts").delete().eq("id",id).eq("user_id",me.id);
+ if(error){toast(errText(error));return}
+ await loadPosts();renderFeed();toast("Post deleted.");
+}
+
+function editProfile(){
+ const d=profile||{};
+ const currentDisplay=d.display_name||"";
+ const panel=$("profilePanel");
+ panel.innerHTML=`<h2>Edit profile</h2><div class="profile-form"><label>Display name<input id="pfDisplay" maxlength="80" value="${esc(currentDisplay)}"></label><label>First name<input id="pfFirst" maxlength="50" value="${esc(d.first_name||"")}"></label><label>Last name<input id="pfLast" maxlength="50" value="${esc(d.last_name||"")}"></label><label>Username<input id="pfUser" maxlength="30" value="${esc(d.username||"")}"></label><label>Bio<textarea id="pfBio" maxlength="280">${esc(d.bio||"")}</textarea></label><label>Location<input id="pfLocation" maxlength="100" value="${esc(d.location||"")}"></label><label>Website<input id="pfWebsite" maxlength="200" type="url" value="${esc(d.website||"")}"></label><div class="actions"><button class="primary" id="saveProfile">Save profile</button><button class="outline" id="cancelProfile">Cancel</button></div></div>`;
+ $("saveProfile").onclick=saveProfile;$("cancelProfile").onclick=renderApp;
+}
+
+async function saveProfile(){
+ const username=$("pfUser").value.trim().toLowerCase();
+ if(!/^[a-z0-9_.-]{3,30}$/.test(username)){toast("Username must be 3–30 characters and use letters, numbers, dots, underscores, or hyphens.");return}
+ const payload={display_name:$("pfDisplay").value.trim(),first_name:$("pfFirst").value.trim(),last_name:$("pfLast").value.trim(),username,bio:$("pfBio").value.trim(),location:$("pfLocation").value.trim(),website:$("pfWebsite").value.trim()};
+ const {data,error}=await sb.from("profiles").update(payload).eq("id",me.id).select().single();
+ if(error){toast(/duplicate|unique/i.test(error.message)?"That username is already taken.":errText(error));return}
+ profile=data;await loadPosts();renderApp();toast("Profile updated.");
+}
+
+$("openLogin").onclick=()=>showAuth("login");
+$("openSignup").onclick=()=>showAuth("signup");
+$("backPublic").onclick=()=>setScreen("publicView");
+$("signOut").onclick=logout;
+$("publish").onclick=()=>editingPostId?saveEditedPost():publish();
+$("postText").oninput=e=>$("charCount").textContent=`${e.target.value.length}/500`;
+document.querySelectorAll(".side").forEach(b=>b.onclick=()=>{document.querySelectorAll(".side").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(b.dataset.page+"Page").classList.remove("hidden")});
+
+sb.auth.onAuthStateChange(async (event,session)=>{
+ if(session){
+   me=session.user;
+   try{
+     await loadProfile();
+     await loadPosts();
+     renderApp();
+   }catch(e){
+     console.error("Auth/profile load failed:",e);
+     setScreen("publicView");
+     message("We signed you in, but couldn't load your profile yet. Please try again.");
+   }
+ } else if(event==="SIGNED_OUT" || event==="INITIAL_SESSION"){
+   me=null;profile=null;posts=[];
+   setScreen("publicView");
+   $("sessionBadge").textContent="LOCKED";
+ }
+});
+
+(async()=>{
+ const {data}=await sb.auth.getSession();
+ if(data.session){me=data.session.user;try{await loadProfile();await loadPosts();renderApp()}catch(e){console.error(e);setScreen("publicView")}}
+ else setScreen("publicView");
+})();
