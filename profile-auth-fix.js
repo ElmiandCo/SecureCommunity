@@ -2,13 +2,14 @@
   const { createClient } = window.supabase || {};
   const cfg = window.APP_CONFIG || {};
   if (!createClient || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) return;
+  const projectRef = (() => { try { return new URL(cfg.SUPABASE_URL).hostname.split('.')[0]; } catch { return ''; } })();
   const sbFix = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
       storage: window.localStorage,
-      storageKey: 'e-secure-community-auth'
+      storageKey: projectRef ? `sb-${projectRef}-auth-token` : undefined
     }
   });
   const $ = id => document.getElementById(id);
@@ -21,7 +22,6 @@
     window.__profileFixToast = setTimeout(() => x.classList.add('hidden'), 2800);
   };
   const currentUser = async () => (await sbFix.auth.getUser()).data.user;
-  const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
   async function saveProfileFixed(button) {
     const user = await currentUser();
@@ -35,6 +35,7 @@
     if (checkError) { toastFix('We could not check that username. Please try again.'); return; }
     if (taken) { toastFix('That username is already taken.'); return; }
 
+    // Include ALL editable profile fields. The old handler omitted city/state/country/gender.
     const payload = {
       display_name: ($('pfDisplay')?.value || '').trim(),
       first_name: ($('pfFirst')?.value || '').trim(),
@@ -59,7 +60,6 @@
       return;
     }
 
-    // Keep auth metadata aligned with editable identity fields without changing the password/session.
     await sbFix.auth.updateUser({ data: {
       display_name: payload.display_name,
       first_name: payload.first_name,
@@ -88,12 +88,9 @@
     });
   }, true);
 
-  // Explicitly keep the Supabase session cached in localStorage. A normal page refresh/revisit
-  // should restore the session until the member signs out or the session expires.
+  // Supabase already persists sessions by default; this explicitly uses the same localStorage
+  // key as the main client, so a revisit restores the login instead of forcing a fresh sign-in.
   sbFix.auth.getSession().then(({ data }) => {
-    if (data.session) {
-      // The main app's Supabase client shares the same persisted auth session.
-      window.__secureCommunitySessionCached = true;
-    }
+    window.__secureCommunitySessionCached = !!data.session;
   });
 })();
