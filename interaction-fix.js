@@ -2,38 +2,57 @@
 'use strict';
 function boot(){
   const $=id=>document.getElementById(id);
+
+  // app.js defines showAuth as a global lexical function, not window.showAuth.
+  // Call the actual global function when it exists, with a direct DOM fallback.
   const auth=(mode)=>{
-    if(typeof window.showAuth==='function'){
-      window.showAuth(mode);
+    if(typeof showAuth==='function'){
+      showAuth(mode);
+      return true;
+    }
+    const publicView=$("publicView");
+    const authView=$("authView");
+    if(publicView && authView){
+      publicView.classList.add('hidden');
+      authView.classList.remove('hidden');
       return true;
     }
     return false;
   };
 
-  // Do not intercept the whole document or stop other handlers.
-  // The previous capture-phase handler could swallow legitimate clicks.
   const login=$("openLogin");
   const signup=$("openSignup");
   const back=$("backPublic");
 
-  if(login && typeof login.onclick !== 'function') login.addEventListener('click',()=>auth('login'));
-  if(signup && typeof signup.onclick !== 'function') signup.addEventListener('click',()=>auth('signup'));
-  if(back && typeof back.onclick !== 'function') back.addEventListener('click',()=>{
-    if(typeof window.setScreen==='function') window.setScreen('publicView');
-    else { $("authView")?.classList.add('hidden'); $("publicView")?.classList.remove('hidden'); }
-  });
+  if(login && !login.dataset.interactionFixBound){
+    login.dataset.interactionFixBound='1';
+    login.addEventListener('click',()=>auth('login'));
+  }
+  if(signup && !signup.dataset.interactionFixBound){
+    signup.dataset.interactionFixBound='1';
+    signup.addEventListener('click',()=>auth('signup'));
+  }
+  if(back && !back.dataset.interactionFixBound){
+    back.dataset.interactionFixBound='1';
+    back.addEventListener('click',()=>{
+      if(typeof setScreen==='function') setScreen('publicView');
+      else {
+        $("authView")?.classList.add('hidden');
+        $("publicView")?.classList.remove('hidden');
+      }
+    });
+  }
 
-  // App navigation is intentionally handled only for sidebar buttons.
   document.querySelectorAll('[data-page]').forEach(el=>{
-    if(el.dataset.interactionFixBound==='1') return;
-    el.dataset.interactionFixBound='1';
+    if(el.dataset.pageInteractionFixBound==='1') return;
+    el.dataset.pageInteractionFixBound='1';
     el.addEventListener('click',()=>{
       const page=el.getAttribute('data-page');
       if(!page) return;
       document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
       $(page+'Page')?.classList.remove('hidden');
       document.querySelectorAll('.side').forEach(b=>b.classList.toggle('active',b===el));
-      if(page==='feed' && typeof window.renderApp==='function') window.renderApp();
+      if(page==='feed' && typeof renderApp==='function') renderApp();
     });
   });
 }
