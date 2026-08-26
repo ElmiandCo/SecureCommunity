@@ -11,6 +11,7 @@
     const grid = $('lessonsGrid');
     if (!grid) return;
     grid.querySelectorAll('.lesson-card.completed').forEach(card => card.remove());
+    document.querySelectorAll('#lessonsGrid [data-lesson]').forEach(b => b.onclick = () => window.startLesson(b.dataset.lesson));
     if (!grid.querySelector('.lesson-card') && grid.classList.contains('hidden') === false) {
       grid.innerHTML = `<div class="lesson-card" style="grid-column:1/-1;text-align:center;padding:42px"><div class="lesson-number">✓</div><div class="lesson-content"><span class="lesson-difficulty">PATH COMPLETE</span><h3>You've completed every lesson.</h3><p>Your completed lessons are safely recorded. New lessons will appear here when they're added.</p></div></div>`;
     }
