@@ -1,0 +1,19 @@
+/* Safe theme override: replace hot pink/magenta-looking accents with emerald green without touching app logic. */
+:root{--brand-green:#20a85a;--brand-green-dark:#168448;--brand-green-soft:#eaf8ef;--brand-green-glow:#20a85a55}
+html,body{background:#f7fbf8!important;color:#18251d!important}
+body{background:radial-gradient(circle at 85% 0,#e9f8ee 0,#f7fbf8 38%,#fff 78%)!important}
+.topbar{background:#ffffffee!important;border-bottom-color:#d9eadf!important}
+.brand-mark,.auth-logo{background:var(--brand-green)!important;box-shadow:0 0 25px var(--brand-green-glow)!important}
+.eyebrow,.copy h1 span{color:var(--brand-green)!important;text-shadow:none!important}
+.primary{background:var(--brand-green)!important;border-color:var(--brand-green)!important;box-shadow:0 0 25px var(--brand-green-glow)!important;color:#fff!important}
+.ghost,.outline{border-color:var(--brand-green)!important;color:var(--brand-green-dark)!important}
+.hero-art{background:#fff!important;border-color:#d9eadf!important}
+.glow{background:#20a85a22!important}
+.hero-art img{border-color:#20a85a55!important;box-shadow:0 0 80px #20a85a33!important}
+.side.active,.side:hover{background:#20a85a14!important;color:#176c3c!important}
+.avatar{background:linear-gradient(135deg,#48c979,#168448)!important}
+.xp-card,.xp-badge{border-color:#20a85a44!important;background:#20a85a0d!important;color:#176c3c!important}
+.xp-bar i,.lesson-progress i{background:linear-gradient(90deg,#20a85a,#78d89b)!important;box-shadow:0 0 15px #20a85a55!important}
+.field input:focus,.profile-form input:focus,.profile-form textarea:focus,.profile-form select:focus{border-color:#20a85a!important}
+.attach-btn{color:#168448!important;border-color:#20a85a44!important;background:#20a85a0b!important}
+.online{color:#168448!important}
