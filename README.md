@@ -72,3 +72,16 @@ profile exists for every authenticated user. The database trigger is also instal
 in the production project as a second line of defense.
 
 Never expose a Supabase secret/service-role key in browser code.
+
+
+## V6 community expansion
+
+- Forgot-password flow now sends a Supabase recovery email and presents a secure new-password screen after the recovery link is opened.
+- Usernames are checked before signup and protected by a case-insensitive unique database index.
+- Posts support up to 4 private photos/videos per post (50 MB per file).
+- Authenticated members can comment on posts and attach photos/videos to comments.
+- Media lives in a private Supabase Storage bucket with authenticated RLS policies.
+- Media-only posts/comments are supported.
+- Community UI theme updated to a secure dark navy/cyan style.
+
+The production Supabase migration is included at `supabase/migrations/20260825_community_v6.sql`.

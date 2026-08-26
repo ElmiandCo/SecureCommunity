@@ -74,7 +74,13 @@
               <div class="avatar" id="composerAvatar">E</div>
               <div class="composer-body">
                 <textarea id="postText" maxlength="500" placeholder="Share something with the community..."></textarea>
-                <div class="composer-footer"><span id="charCount">0/500</span><button id="publish" class="primary">Post</button></div>
+                <div class="composer-footer">
+  <div class="composer-tools">
+    <label class="attach-btn">📎 Photo/video<input id="postMedia" type="file" accept="image/*,video/*" multiple hidden></label>
+    <span id="postFiles" class="file-summary"></span>
+  </div>
+  <div class="publish-tools"><span id="charCount">0/500</span><button id="publish" class="primary">Post</button></div>
+</div>
               </div>
             </div>
             <div id="feed"></div>
