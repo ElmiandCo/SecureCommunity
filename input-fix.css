@@ -1,0 +1,37 @@
+/* Production form readability fix */
+.composer textarea,
+.comment-composer textarea,
+.field input,
+.profile-form input,
+.profile-form textarea,
+.profile-form select,
+.lesson-player input,
+.lesson-player textarea,
+.lesson-player select {
+  background:#ffffff !important;
+  color:#17241c !important;
+  -webkit-text-fill-color:#17241c !important;
+  caret-color:#168746 !important;
+}
+.composer textarea::placeholder,
+.comment-composer textarea::placeholder,
+.field input::placeholder,
+.profile-form input::placeholder,
+.profile-form textarea::placeholder,
+.lesson-player input::placeholder,
+.lesson-player textarea::placeholder {
+  color:#71847a !important;
+  opacity:1 !important;
+}
+.composer textarea:focus,
+.comment-composer textarea:focus,
+.field input:focus,
+.profile-form input:focus,
+.profile-form textarea:focus,
+.profile-form select:focus,
+.lesson-player input:focus,
+.lesson-player textarea:focus,
+.lesson-player select:focus {
+  border-color:#20a85a !important;
+  box-shadow:0 0 0 3px #20a85a18 !important;
+}
