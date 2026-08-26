@@ -8,113 +8,53 @@
   const initials = n => (n || 'E').split(' ').filter(Boolean).map(x=>x[0]).join('').slice(0,2).toUpperCase();
   const displayName = u => u?.display_name || `${u?.first_name || ''} ${u?.last_name || ''}`.trim() || 'Member';
   const toast = msg => typeof window.toast === 'function' ? window.toast(msg) : null;
-  let currentUser = null;
-  let activeConversation = null;
-  let dmPoll = null;
+  let currentUser = null, activeConversation = null, dmPoll = null;
 
   function addStyles(){
     if($('socialFeaturesStyles')) return;
-    const s=document.createElement('style'); s.id='socialFeaturesStyles'; s.textContent=`
+    const s=document.createElement('style');s.id='socialFeaturesStyles';s.textContent=`
       .member-card-actions,.visited-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.member-card-actions button,.visited-actions button{flex:1;min-width:120px}
       .profile-big-avatar{width:78px;height:78px;font-size:24px}.visited-bio{line-height:1.6;margin:18px 0}.profile-posts-head{margin:25px 0 10px}.profile-posts-head h3{margin:6px 0}.profile-post-date{color:#78907f;font-size:10px}.profile-post{margin-top:10px}
       .dm-layout{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:520px;border:1px solid #dcebe1;border-radius:17px;overflow:hidden;background:#fff}.dm-list{background:#f7fcf8;border-right:1px solid #dcebe1;padding:8px}.dm-thread{width:100%;display:flex;gap:10px;align-items:center;text-align:left;border:0;background:transparent;border-radius:11px;padding:10px;margin-bottom:4px;color:#294035}.dm-thread:hover,.dm-thread.active{background:#20a85a12}.dm-thread span:last-child{min-width:0}.dm-thread b,.dm-thread small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dm-thread small,.dm-chat-head small{font-size:10px;color:#78907f;margin-top:3px}.dm-chat{display:flex;flex-direction:column;min-width:0}.dm-chat-head{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid #dcebe1}.dm-chat-head>div:nth-child(2){flex:1}.dm-messages{flex:1;min-height:360px;max-height:470px;overflow:auto;padding:18px;background:#fbfefc}.dm-message{max-width:78%;margin:7px 0}.dm-message>div{padding:10px 13px;border-radius:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.dm-message small{display:block;margin-top:4px;color:#8a9d92;font-size:9px}.dm-message.mine{margin-left:auto;text-align:right}.dm-message.mine>div{background:#20a85a;color:#fff;border-bottom-right-radius:4px}.dm-message.theirs>div{background:#edf5ef;color:#294035;border-bottom-left-radius:4px}.dm-composer{display:flex;gap:8px;padding:12px;border-top:1px solid #dcebe1;background:#fff}.dm-composer textarea{flex:1;min-height:48px;max-height:120px;resize:vertical;border:1px solid #d8e6dc;border-radius:11px;padding:11px;outline:none;background:#fff;color:#243129}.dm-composer textarea:focus{border-color:#20a85a}.dm-composer button{align-self:flex-end}.dm-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;height:100%;min-height:160px;text-align:center;color:#78907f;padding:25px}.dm-empty b{color:#294035}.small-avatar{min-width:36px;width:36px;height:36px;font-size:10px}@media(max-width:700px){.dm-layout{grid-template-columns:1fr}.dm-list{max-height:190px;overflow:auto;border-right:0;border-bottom:1px solid #dcebe1}.dm-messages{max-height:420px}.dm-message{max-width:88%}}
-    `; document.head.appendChild(s);
+    `;document.head.appendChild(s);
   }
 
   function ensureSocialPages(){
-    const content=document.querySelector('.content'); if(!content||$('messagesPage')) return;
-    content.insertAdjacentHTML('beforeend',`
-      <div id="visitProfilePage" class="page hidden"><div class="page-head"><div><span class="eyebrow">MEMBER PROFILE</span><h2>Profile</h2></div><button class="back" id="profileBack">← Back to People</button></div><div id="visitedProfilePanel"></div></div>
-      <div id="messagesPage" class="page hidden"><div class="page-head"><div><span class="eyebrow">PRIVATE MESSAGES</span><h2>Messages</h2></div></div><div class="dm-layout"><aside class="dm-list" id="dmList"><div class="dm-empty">Loading conversations…</div></aside><section class="dm-chat" id="dmChat"><div class="dm-empty"><b>Start a conversation</b><span>Open a member profile and choose Message.</span></div></section></div></div>`);
+    const content=document.querySelector('.content');if(!content||$('messagesPage'))return;
+    content.insertAdjacentHTML('beforeend',`<div id="visitProfilePage" class="page hidden"><div class="page-head"><div><span class="eyebrow">MEMBER PROFILE</span><h2>Profile</h2></div><button class="back" id="profileBack">← Back to People</button></div><div id="visitedProfilePanel"></div></div><div id="messagesPage" class="page hidden"><div class="page-head"><div><span class="eyebrow">PRIVATE MESSAGES</span><h2>Messages</h2></div></div><div class="dm-layout"><aside class="dm-list" id="dmList"><div class="dm-empty">Loading conversations…</div></aside><section class="dm-chat" id="dmChat"><div class="dm-empty"><b>Start a conversation</b><span>Open a member profile and choose Message.</span></div></section></div></div>`);
     $('profileBack').onclick=()=>showSocialPage('profiles');
   }
 
-  function addMessagesNav(){
-    const nav=document.querySelector('.sidebar nav'); if(!nav||nav.querySelector('[data-social-page="messages"]')) return;
-    const button=document.createElement('button'); button.className='side'; button.dataset.socialPage='messages'; button.innerHTML='✉ Messages'; button.onclick=()=>{showSocialPage('messages');loadConversations();}; nav.insertBefore(button,nav.lastElementChild);
-  }
-
-  function showSocialPage(page){
-    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-    const target=page==='profile'?$('visitProfilePage'):page==='messages'?$('messagesPage'):$(`${page}Page`); if(!target)return; target.classList.remove('hidden');
-    document.querySelectorAll('.side').forEach(x=>x.classList.remove('active'));
-    const side=page==='messages'?document.querySelector('[data-social-page="messages"]'):document.querySelector(`[data-page="${page}"]`); side?.classList.add('active');
-  }
-
-  async function getCurrentUser(){ if(currentUser)return currentUser; const {data}=await db.auth.getUser(); currentUser=data?.user||null; return currentUser; }
+  function addMessagesNav(){const nav=document.querySelector('.sidebar nav');if(!nav||nav.querySelector('[data-social-page="messages"]'))return;const button=document.createElement('button');button.className='side';button.dataset.socialPage='messages';button.innerHTML='✉ Messages';button.onclick=()=>{showSocialPage('messages');loadConversations();};nav.insertBefore(button,nav.lastElementChild);}
+  function showSocialPage(page){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));const target=page==='profile'?$('visitProfilePage'):page==='messages'?$('messagesPage'):$(`${page}Page`);if(!target)return;target.classList.remove('hidden');document.querySelectorAll('.side').forEach(x=>x.classList.remove('active'));const side=page==='messages'?document.querySelector('[data-social-page="messages"]'):document.querySelector(`[data-page="${page}"]`);side?.classList.add('active');}
+  async function getCurrentUser(){if(currentUser)return currentUser;const {data}=await db.auth.getUser();currentUser=data?.user||null;return currentUser;}
 
   async function loadMembers(){
-    const user=await getCurrentUser(); if(!user||!$('profilesGrid'))return;
-    const {data,error}=await db.from('profiles').select('*').neq('id',user.id).order('display_name');
-    if(error){toast(error.message);return;}
-    const rows=data||[];
+    const user=await getCurrentUser();if(!user||!$('profilesGrid'))return;const {data,error}=await db.from('profiles').select('*').neq('id',user.id).order('display_name');if(error){toast(error.message);return;}const rows=data||[];
     $('profilesGrid').innerHTML=rows.map(u=>{const name=displayName(u);return `<div class="profile-card member-card"><div class="avatar">${initials(name)}</div><h3>${esc(name)}</h3><p>@${esc(u.username||'')}</p><p>${esc(u.bio||'Member of the community.')}</p><div class="member-card-actions"><button class="outline" data-view-profile="${u.id}">View profile</button><button class="primary" data-message-user="${u.id}">Message</button></div></div>`;}).join('')||`<div class="profile-card"><p>No other members are available yet.</p></div>`;
-    document.querySelectorAll('[data-view-profile]').forEach(b=>b.onclick=()=>openUserProfile(b.dataset.viewProfile));
-    document.querySelectorAll('[data-message-user]').forEach(b=>b.onclick=()=>openDmWith(b.dataset.messageUser));
+    document.querySelectorAll('[data-view-profile]').forEach(b=>b.onclick=()=>openUserProfile(b.dataset.viewProfile));document.querySelectorAll('[data-message-user]').forEach(b=>b.onclick=()=>openDmWith(b.dataset.messageUser));
   }
-
   window.renderProfiles=loadMembers;
 
-  async function recordVisit(profileId){
-    const user=await getCurrentUser(); if(!user||user.id===profileId)return;
-    await db.from('profile_visits').upsert({visitor_id:user.id,profile_id:profileId,visited_at:new Date().toISOString()},{onConflict:'visitor_id,profile_id'});
-  }
-
-  async function openUserProfile(profileId,push=true){
-    const user=await getCurrentUser(); if(!user||!profileId)return;
-    if(profileId===user.id){ showSocialPage('profile'); return; }
-    const {data,error}=await db.from('profiles').select('*').eq('id',profileId).maybeSingle();
-    if(error||!data){toast(error?.message||'That profile could not be found.');return;}
-    await recordVisit(profileId); if(push)history.pushState({profileId},'',`?profile=${encodeURIComponent(profileId)}`); await renderVisitedProfile(data); showSocialPage('profile');
-  }
+  async function recordVisit(profileId){const user=await getCurrentUser();if(!user||user.id===profileId)return;await db.from('profile_visits').upsert({visitor_id:user.id,profile_id:profileId,visited_at:new Date().toISOString()},{onConflict:'visitor_id,profile_id'});}
+  async function openUserProfile(profileId,push=true){const user=await getCurrentUser();if(!user||!profileId)return;if(profileId===user.id){showSocialPage('profile');return;}const {data,error}=await db.from('profiles').select('*').eq('id',profileId).maybeSingle();if(error||!data){toast(error?.message||'That profile could not be found.');return;}await recordVisit(profileId);if(push)history.pushState({profileId},'',`?profile=${encodeURIComponent(profileId)}`);await renderVisitedProfile(data);showSocialPage('profile');}
 
   async function renderVisitedProfile(user){
-    const {data:postRows,error}=await db.from('posts').select('id,body,created_at,updated_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);
-    if(error){toast(error.message);return;}
-    const name=displayName(user), location=[user.city,user.state,user.country].filter(Boolean).join(', ');
-    const socials=[user.instagram_username?`Instagram · @${user.instagram_username}`:'',user.tiktok_username?`TikTok · @${user.tiktok_username}`:'',user.x_username?`X · @${user.x_username}`:''].filter(Boolean);
+    const {data:postRows,error}=await db.from('posts').select('id,body,created_at,updated_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);if(error){toast(error.message);return;}
+    const name=displayName(user),location=[user.city,user.state,user.country].filter(Boolean).join(', ');const socials=[user.instagram_handle?`Instagram · @${user.instagram_handle}`:'',user.tiktok_username?`TikTok · @${user.tiktok_username}`:'',user.x_handle?`X · @${user.x_handle}`:''].filter(Boolean);
     const posts=(postRows||[]).map(p=>`<article class="post profile-post"><small class="profile-post-date">${new Date(p.created_at).toLocaleString()}</small>${p.body?`<p>${esc(p.body)}</p>`:''}</article>`).join('');
     $('visitedProfilePanel').innerHTML=`<div class="profile-panel visited-profile-card"><div class="profile-hero"><div class="avatar profile-big-avatar">${initials(name)}</div><div><span class="eyebrow">MEMBER</span><h2>${esc(name)}</h2><p>@${esc(user.username||'')}</p></div><div class="profile-xp"><span>XP</span><b>${Number(user.xp_total||0).toLocaleString()}</b></div></div><div class="visited-actions"><button class="primary" id="profileMessageBtn">✉ Message</button><button class="outline" id="profilePeopleBtn">← People</button></div><span class="private-tag">🔐 MEMBER PROFILE</span><p class="visited-bio">${esc(user.bio||'This member has not added a bio yet.')}</p><div class="profile-meta">${location?`<span>📍 ${esc(location)}</span>`:''}${user.gender?`<span>◉ ${esc(user.gender)}</span>`:''}${user.website?`<a href="${esc(user.website)}" target="_blank" rel="noopener">${esc(user.website)}</a>`:''}${socials.map(x=>`<span>${esc(x)}</span>`).join('')}</div></div><div class="profile-posts-head"><span class="eyebrow">COMMUNITY ACTIVITY</span><h3>${esc(name)}'s posts</h3></div><div class="profile-posts">${posts||`<div class="post"><p>${esc(name)} hasn't posted anything yet.</p></div>`}</div>`;
-    $('profileMessageBtn').onclick=()=>openDmWith(user.id); $('profilePeopleBtn').onclick=()=>showSocialPage('profiles');
+    $('profileMessageBtn').onclick=()=>openDmWith(user.id);$('profilePeopleBtn').onclick=()=>showSocialPage('profiles');
   }
 
-  async function ensureConversation(otherId){
-    const user=await getCurrentUser(); if(!user||user.id===otherId)return null; const pair=[user.id,otherId].sort();
-    const existing=await db.from('conversations').select('*').eq('participant_a',pair[0]).eq('participant_b',pair[1]).maybeSingle(); if(existing.error)throw existing.error; if(existing.data)return existing.data;
-    const created=await db.from('conversations').insert({participant_a:pair[0],participant_b:pair[1]}).select().single();
-    if(created.error&&/duplicate|unique/i.test(created.error.message)){const retry=await db.from('conversations').select('*').eq('participant_a',pair[0]).eq('participant_b',pair[1]).single();if(retry.error)throw retry.error;return retry.data;}
-    if(created.error)throw created.error; return created.data;
-  }
+  async function ensureConversation(otherId){const user=await getCurrentUser();if(!user||user.id===otherId)return null;const pair=[user.id,otherId].sort();const existing=await db.from('conversations').select('*').eq('participant_a',pair[0]).eq('participant_b',pair[1]).maybeSingle();if(existing.error)throw existing.error;if(existing.data)return existing.data;const created=await db.from('conversations').insert({participant_a:pair[0],participant_b:pair[1]}).select().single();if(created.error&&/duplicate|unique/i.test(created.error.message)){const retry=await db.from('conversations').select('*').eq('participant_a',pair[0]).eq('participant_b',pair[1]).single();if(retry.error)throw retry.error;return retry.data;}if(created.error)throw created.error;return created.data;}
+  async function openDmWith(otherId){try{const c=await ensureConversation(otherId);if(!c)return;activeConversation=c;showSocialPage('messages');await loadConversations();await loadMessages(c.id,otherId);$('dmComposer')?.querySelector('textarea')?.focus();}catch(e){toast(e.message||'Could not open messages.');}}
 
-  async function openDmWith(otherId){
-    try{const c=await ensureConversation(otherId);if(!c)return;activeConversation=c;showSocialPage('messages');await loadConversations();await loadMessages(c.id,otherId);$('dmComposer')?.querySelector('textarea')?.focus();}catch(e){toast(e.message||'Could not open messages.');}
-  }
+  async function loadConversations(){const user=await getCurrentUser();if(!user||!$('dmList'))return;const {data:rows,error}=await db.from('conversations').select('*').or(`participant_a.eq.${user.id},participant_b.eq.${user.id}`).order('updated_at',{ascending:false});if(error){toast(error.message);return;}const ids=[...new Set((rows||[]).flatMap(c=>[c.participant_a,c.participant_b].filter(id=>id!==user.id)))];const r=ids.length?await db.from('profiles').select('id,display_name,username,first_name,last_name,avatar_url').in('id',ids):{data:[]};const map=new Map((r.data||[]).map(p=>[p.id,p]));$('dmList').innerHTML=(rows||[]).map(c=>{const otherId=c.participant_a===user.id?c.participant_b:c.participant_a,p=map.get(otherId)||{display_name:'Member'},active=activeConversation?.id===c.id?'active':'';return `<button class="dm-thread ${active}" data-conversation="${c.id}" data-other="${otherId}"><span class="avatar small-avatar">${initials(displayName(p))}</span><span><b>${esc(displayName(p))}</b><small>@${esc(p.username||'')}</small></span></button>`;}).join('')||`<div class="dm-empty"><b>No messages yet.</b><span>Visit a member profile and tap Message.</span></div>`;document.querySelectorAll('[data-conversation]').forEach(b=>b.onclick=async()=>{activeConversation=(rows||[]).find(c=>c.id===b.dataset.conversation)||activeConversation;await loadMessages(b.dataset.conversation,b.dataset.other);await loadConversations();});}
 
-  async function loadConversations(){
-    const user=await getCurrentUser(); if(!user||!$('dmList'))return;
-    const {data:rows,error}=await db.from('conversations').select('*').or(`participant_a.eq.${user.id},participant_b.eq.${user.id}`).order('updated_at',{ascending:false}); if(error){toast(error.message);return;}
-    const ids=[...new Set((rows||[]).flatMap(c=>[c.participant_a,c.participant_b].filter(id=>id!==user.id)))];
-    const r=ids.length?await db.from('profiles').select('id,display_name,username,first_name,last_name,avatar_url').in('id',ids):{data:[]}; const map=new Map((r.data||[]).map(p=>[p.id,p]));
-    $('dmList').innerHTML=(rows||[]).map(c=>{const otherId=c.participant_a===user.id?c.participant_b:c.participant_a,p=map.get(otherId)||{display_name:'Member'},active=activeConversation?.id===c.id?'active':'';return `<button class="dm-thread ${active}" data-conversation="${c.id}" data-other="${otherId}"><span class="avatar small-avatar">${initials(displayName(p))}</span><span><b>${esc(displayName(p))}</b><small>@${esc(p.username||'')}</small></span></button>`;}).join('')||`<div class="dm-empty"><b>No messages yet.</b><span>Visit a member profile and tap Message.</span></div>`;
-    document.querySelectorAll('[data-conversation]').forEach(b=>b.onclick=async()=>{activeConversation=(rows||[]).find(c=>c.id===b.dataset.conversation)||activeConversation;await loadMessages(b.dataset.conversation,b.dataset.other);await loadConversations();});
-  }
+  async function loadMessages(conversationId,otherId){const user=await getCurrentUser();const {data:rows,error}=await db.from('messages').select('id,sender_id,body,created_at,read_at').eq('conversation_id',conversationId).order('created_at',{ascending:true}).limit(200);if(error){toast(error.message);return;}const {data:other}=await db.from('profiles').select('id,display_name,username').eq('id',otherId).maybeSingle();const name=displayName(other||{display_name:'Member'});$('dmChat').innerHTML=`<div class="dm-chat-head"><div class="avatar small-avatar">${initials(name)}</div><div><b>${esc(name)}</b><small>@${esc(other?.username||'')}</small></div><button class="outline" id="dmViewProfile">View profile</button></div><div class="dm-messages" id="dmMessages">${(rows||[]).map(m=>`<div class="dm-message ${m.sender_id===user.id?'mine':'theirs'}"><div>${esc(m.body)}</div><small>${new Date(m.created_at).toLocaleString()}</small></div>`).join('')||`<div class="dm-empty"><b>Start the conversation.</b><span>Only you and ${esc(name)} can see these messages.</span></div>`}</div><form class="dm-composer" id="dmComposer"><textarea maxlength="2000" required placeholder="Write a private message…"></textarea><button class="primary" type="submit">Send</button></form>`;$('dmViewProfile').onclick=()=>openUserProfile(otherId);$('dmComposer').onsubmit=async e=>{e.preventDefault();const box=e.currentTarget.querySelector('textarea'),body=box.value.trim();if(!body)return;const result=await db.from('messages').insert({conversation_id:conversationId,sender_id:user.id,body}).select().single();if(result.error){toast(result.error.message);return;}await db.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',conversationId);box.value='';await loadMessages(conversationId,otherId);await loadConversations();};const sc=$('dmMessages');if(sc)sc.scrollTop=sc.scrollHeight;await db.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conversationId).neq('sender_id',user.id).is('read_at',null);if(dmPoll)clearInterval(dmPoll);dmPoll=setInterval(async()=>{if(activeConversation?.id===conversationId&&$('messagesPage')&&!$('messagesPage').classList.contains('hidden'))await loadMessages(conversationId,otherId);},5000);}
 
-  async function loadMessages(conversationId,otherId){
-    const user=await getCurrentUser(); const {data:rows,error}=await db.from('messages').select('id,sender_id,body,created_at,read_at').eq('conversation_id',conversationId).order('created_at',{ascending:true}).limit(200); if(error){toast(error.message);return;}
-    const {data:other}=await db.from('profiles').select('id,display_name,username').eq('id',otherId).maybeSingle(); const name=displayName(other||{display_name:'Member'});
-    $('dmChat').innerHTML=`<div class="dm-chat-head"><div class="avatar small-avatar">${initials(name)}</div><div><b>${esc(name)}</b><small>@${esc(other?.username||'')}</small></div><button class="outline" id="dmViewProfile">View profile</button></div><div class="dm-messages" id="dmMessages">${(rows||[]).map(m=>`<div class="dm-message ${m.sender_id===user.id?'mine':'theirs'}"><div>${esc(m.body)}</div><small>${new Date(m.created_at).toLocaleString()}</small></div>`).join('')||`<div class="dm-empty"><b>Start the conversation.</b><span>Only you and ${esc(name)} can see these messages.</span></div>`}</div><form class="dm-composer" id="dmComposer"><textarea maxlength="2000" required placeholder="Write a private message…"></textarea><button class="primary" type="submit">Send</button></form>`;
-    $('dmViewProfile').onclick=()=>openUserProfile(otherId); $('dmComposer').onsubmit=async e=>{e.preventDefault();const box=e.currentTarget.querySelector('textarea'),body=box.value.trim();if(!body)return;const result=await db.from('messages').insert({conversation_id:conversationId,sender_id:user.id,body}).select().single();if(result.error){toast(result.error.message);return;}await db.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',conversationId);box.value='';await loadMessages(conversationId,otherId);await loadConversations();};
-    const sc=$('dmMessages');if(sc)sc.scrollTop=sc.scrollHeight; await db.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conversationId).neq('sender_id',user.id).is('read_at',null);
-    if(dmPoll)clearInterval(dmPoll); dmPoll=setInterval(async()=>{if(activeConversation?.id===conversationId&&$('messagesPage')&&!$('messagesPage').classList.contains('hidden'))await loadMessages(conversationId,otherId);},5000);
-  }
-
-  function socialInit(){
-    addStyles();ensureSocialPages();addMessagesNav();
-    window.addEventListener('popstate',async()=>{const id=new URLSearchParams(location.search).get('profile');if(id)await openUserProfile(id,false);else showSocialPage('profiles');});
-    const id=new URLSearchParams(location.search).get('profile'); if(id)setTimeout(()=>openUserProfile(id,false),900);
-    setTimeout(()=>loadMembers(),1200);
-  }
-
+  function socialInit(){addStyles();ensureSocialPages();addMessagesNav();window.addEventListener('popstate',async()=>{const id=new URLSearchParams(location.search).get('profile');if(id)await openUserProfile(id,false);else showSocialPage('profiles');});const id=new URLSearchParams(location.search).get('profile');if(id)setTimeout(()=>openUserProfile(id,false),900);setTimeout(()=>loadMembers(),1200);}
   db.auth.onAuthStateChange((event,session)=>{currentUser=session?.user||null;if(!session&&dmPoll){clearInterval(dmPoll);dmPoll=null;}});
-  document.addEventListener('DOMContentLoaded',socialInit); socialInit();
+  document.addEventListener('DOMContentLoaded',socialInit);socialInit();
 })();
