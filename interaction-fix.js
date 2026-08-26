@@ -2,30 +2,40 @@
 'use strict';
 function boot(){
   const $=id=>document.getElementById(id);
-  const auth=(mode)=>{if(typeof window.showAuth==='function'){window.showAuth(mode);return false;}return true;};
-  document.addEventListener('click',async e=>{
-    const el=e.target.closest('button,[data-page]');
-    if(!el) return;
-    const id=el.id;
-    if(id==='openLogin'||id==='openSignup'){
-      e.preventDefault();e.stopImmediatePropagation();
-      if(auth(id==='openSignup'?'signup':'login')){
-        $('publicView')?.classList.add('hidden');$('authView')?.classList.remove('hidden');
-      }
-      return;
+  const auth=(mode)=>{
+    if(typeof window.showAuth==='function'){
+      window.showAuth(mode);
+      return true;
     }
-    if(id==='backPublic'){
-      e.preventDefault();e.stopImmediatePropagation();$('authView')?.classList.add('hidden');$('publicView')?.classList.remove('hidden');return;
-    }
-    const page=el.getAttribute('data-page');
-    if(page){
-      e.preventDefault();e.stopImmediatePropagation();
+    return false;
+  };
+
+  // Do not intercept the whole document or stop other handlers.
+  // The previous capture-phase handler could swallow legitimate clicks.
+  const login=$("openLogin");
+  const signup=$("openSignup");
+  const back=$("backPublic");
+
+  if(login && typeof login.onclick !== 'function') login.addEventListener('click',()=>auth('login'));
+  if(signup && typeof signup.onclick !== 'function') signup.addEventListener('click',()=>auth('signup'));
+  if(back && typeof back.onclick !== 'function') back.addEventListener('click',()=>{
+    if(typeof window.setScreen==='function') window.setScreen('publicView');
+    else { $("authView")?.classList.add('hidden'); $("publicView")?.classList.remove('hidden'); }
+  });
+
+  // App navigation is intentionally handled only for sidebar buttons.
+  document.querySelectorAll('[data-page]').forEach(el=>{
+    if(el.dataset.interactionFixBound==='1') return;
+    el.dataset.interactionFixBound='1';
+    el.addEventListener('click',()=>{
+      const page=el.getAttribute('data-page');
+      if(!page) return;
       document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
       $(page+'Page')?.classList.remove('hidden');
       document.querySelectorAll('.side').forEach(b=>b.classList.toggle('active',b===el));
       if(page==='feed' && typeof window.renderApp==='function') window.renderApp();
-    }
-  },true);
+    });
+  });
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 })();
