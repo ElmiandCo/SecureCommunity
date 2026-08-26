@@ -17,7 +17,11 @@ const $ = id => document.getElementById(id);
 let me = null;
 let profile = null;
 let posts = [];
+let lessons = [];
+let lessonCompletions = new Map();
 let editingPostId = null;
+let currentLesson = null;
+let currentLessonAnswers = [];
 
 function toast(msg){
   const x = $("toast");
@@ -266,6 +270,17 @@ async function loadProfile(){
   return profile;
 }
 
+async function loadLessons(){
+  const {data,error}=await sb.from("lessons").select("id,slug,title,description,difficulty,points_per_question,sort_order").eq("active",true).order("sort_order");
+  if(error) throw error;
+  lessons=data||[];
+  lessonCompletions=new Map();
+  for(const lesson of lessons){
+    const {data:c,error:e}=await sb.from("lesson_completions").select("lesson_id,passed,awarded_points").eq("lesson_id",lesson.id).eq("user_id",me.id).maybeSingle();
+    if(!e && c) lessonCompletions.set(lesson.id,c);
+  }
+}
+
 async function loadPosts(){
   const {data,error} = await sb.from("posts").select(`
     id,user_id,body,created_at,updated_at,
@@ -300,6 +315,7 @@ async function enterApp(){
   $("sessionBadge").textContent = "SECURE SESSION";
   try{
     await loadProfile();
+    await loadLessons();
     await loadPosts();
     renderApp();
   }catch(e){
@@ -312,7 +328,7 @@ async function enterApp(){
 async function logout(){
   const {error} = await sb.auth.signOut();
   if(error){ toast(errText(error)); return; }
-  me=null; profile=null; posts=[];
+  me=null; profile=null; posts=[]; lessons=[]; lessonCompletions=new Map();
   setScreen("publicView");
   $("sessionBadge").textContent="LOCKED";
   toast("Signed out. Private information is hidden.");
@@ -323,14 +339,73 @@ function renderApp(){
   const display = displayName(profile);
   $("miniProfile").innerHTML = `<div class="avatar">${initials(display)}</div><b>${esc(display)}</b><small>@${esc(profile.username||"")} · ${esc(me.email||"")}</small>`;
   $("composerAvatar").textContent = initials(display);
+  updateXpUi();
+  const completedFields=[profile.city,profile.state,profile.country,profile.gender].filter(v=>String(v||"").trim()).length;
   $("profilePanel").innerHTML = `
-    <div class="profile-hero"><div class="avatar">${initials(display)}</div><div><h2>${esc(display)}</h2><p>@${esc(profile.username||"")} · ${esc(me.email||"")}</p></div></div>
+    <div class="profile-hero"><div class="avatar">${initials(display)}</div><div><h2>${esc(display)}</h2><p>@${esc(profile.username||"")} · ${esc(me.email||"")}</p></div><div class="profile-xp"><span>XP</span><b>${Number(profile.xp_total||0).toLocaleString()}</b></div></div>
     <span class="private-tag">🔐 PRIVATE PROFILE</span>
     <p style="margin-top:20px;color:#aaa0b2">${esc(profile.bio||"Tell the community a little about yourself.")}</p>
-    <div class="profile-meta"><span>${esc(profile.location||"Location not set")}</span>${profile.website?`<a href="${esc(profile.website)}" target="_blank" rel="noopener">${esc(profile.website)}</a>`:""}</div>
+    <div class="profile-meta"><span>📍 ${esc([profile.city,profile.state,profile.country].filter(Boolean).join(", ")||"Location not set")}</span>${profile.gender?`<span>◉ ${esc(profile.gender)}</span>`:""}${profile.website?`<a href="${esc(profile.website)}" target="_blank" rel="noopener">${esc(profile.website)}</a>`:""}</div>
+    <div class="profile-xp-progress"><div><b>Profile XP</b><span>${completedFields}/4 fields completed · +100 XP each</span></div><div class="xp-bar"><i style="width:${completedFields*25}%"></i></div></div>
     <button class="outline" id="editProfile">Edit profile</button>`;
   $("editProfile").onclick = editProfile;
-  renderFeed(); renderProfiles();
+  renderFeed(); renderProfiles(); renderLessons();
+}
+
+function updateXpUi(){
+  const xp=Number(profile?.xp_total||0);
+  if($("sidebarXp")) $("sidebarXp").textContent=xp.toLocaleString();
+  if($("lessonsXp")) $("lessonsXp").textContent=xp.toLocaleString();
+}
+
+function celebrateXp(points,messageText){
+  if(points<=0){ toast(messageText); return; }
+  const burst=document.createElement("div");
+  burst.className="xp-burst";
+  burst.innerHTML=`<div class="xp-burst-ring"></div><div class="xp-burst-core">+${points.toLocaleString()} XP</div><div class="xp-sparkles">✦ ✧ ✦ ✧ ✦</div>`;
+  document.body.appendChild(burst);
+  setTimeout(()=>burst.remove(),1800);
+  toast(messageText);
+}
+
+function renderLessons(){
+  if(!$("lessonsGrid")) return;
+  $("lessonsXp").textContent=Number(profile?.xp_total||0).toLocaleString();
+  $("lessonsGrid").innerHTML=lessons.map((l,i)=>{
+    const c=lessonCompletions.get(l.id);
+    const total=Number(l.points_per_question)*4;
+    return `<article class="lesson-card ${c?.passed?"completed":""}">
+      <div class="lesson-number">0${i+1}</div><div class="lesson-content"><span class="lesson-difficulty">${esc(l.difficulty)} · ${Number(l.points_per_question).toLocaleString()} XP / question</span><h3>${esc(l.title)}</h3><p>${esc(l.description)}</p><div class="lesson-bottom"><span>4 questions · up to ${total.toLocaleString()} XP</span><button class="primary lesson-start" data-lesson="${l.id}">${c?.passed?"Review lesson":"Start lesson"}</button></div></div>
+    </article>`;
+  }).join("");
+  document.querySelectorAll("[data-lesson]").forEach(b=>b.onclick=()=>startLesson(b.dataset.lesson));
+}
+
+async function startLesson(id){
+  const lesson=lessons.find(l=>l.id===id); if(!lesson) return;
+  const {data,error}=await sb.from("lesson_questions").select("id,question_number,question_text,options,points,is_lock_in").eq("lesson_id",id).order("question_number");
+  if(error){toast(errText(error));return;}
+  currentLesson=lesson; currentLessonAnswers=new Array(data.length).fill(null);
+  $("lessonsGrid").classList.add("hidden"); $("lessonPlayer").classList.remove("hidden");
+  renderLessonQuestion(data,0);
+}
+
+function renderLessonQuestion(questions,index){
+  const q=questions[index];
+  const answered=currentLessonAnswers[index];
+  $("lessonPlayer").innerHTML=`<div class="lesson-top"><button class="back" id="closeLesson">← Back to lessons</button><span>Question ${index+1} of 4</span></div><div class="lesson-progress"><i style="width:${((index+1)/4)*100}%"></i></div><div class="lesson-question ${q.is_lock_in?"lock-in":""}"><span class="lesson-difficulty">${q.is_lock_in?"🔒 LOCK IT IN":"QUESTION"} · ${Number(q.points).toLocaleString()} XP</span><h2>${esc(q.question_text)}</h2><div class="answer-list">${q.options.map((opt,i)=>`<button class="answer-option ${answered===String(i)?"selected":""}" data-answer="${i}"><span>${String.fromCharCode(65+i)}</span>${esc(opt)}</button>`).join("")}</div><button class="primary lesson-next" id="lessonNext" disabled>${index===3?"LOCK IT IN":"Continue"}</button></div>`;
+  $("closeLesson").onclick=()=>{$("lessonPlayer").classList.add("hidden");$("lessonsGrid").classList.remove("hidden");};
+  document.querySelectorAll("[data-answer]").forEach(b=>b.onclick=()=>{currentLessonAnswers[index]=b.dataset.answer;document.querySelectorAll("[data-answer]").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("lessonNext").disabled=false;});
+  if(answered!==null) $("lessonNext").disabled=false;
+  $("lessonNext").onclick=async()=>{if(currentLessonAnswers[index]===null)return;if(index<3)renderLessonQuestion(questions,index+1);else await finishLesson();};
+}
+
+async function finishLesson(){
+  const {data,error}=await sb.rpc("grade_lesson",{p_lesson_id:currentLesson.id,p_answers:currentLessonAnswers});
+  if(error){toast(errText(error));return;}
+  $("lessonPlayer").innerHTML=`<div class="lesson-result ${data.passed?"success":"failed"}"><div class="result-icon">${data.passed?"🏆":"🔒"}</div><h2>${data.passed?"Locked in!":"Not this time."}</h2><p>${data.passed?`You earned <b>${Number(data.awarded_points).toLocaleString()} XP</b>. The points from this lesson have been added to your total.`:"The lock-in answer was incorrect, so the lesson awarded 0 XP. Review the lesson and try again."}</p><button class="primary" id="lessonDone">Back to lessons</button></div>`;
+  $("lessonDone").onclick=async()=>{await loadProfile();await loadLessons();updateXpUi();renderLessons();$("lessonPlayer").classList.add("hidden");$("lessonsGrid").classList.remove("hidden");};
+  if(data.passed) celebrateXp(Number(data.awarded_points),`Lesson complete! +${Number(data.awarded_points).toLocaleString()} XP 🎉`); else toast("Lock-in missed. Review it and try again.");
 }
 
 function renderFeed(){
@@ -551,12 +626,18 @@ function editProfile(){
       <label>Username<input id="pfUser" maxlength="30" value="${esc(d.username||"")}"></label>
       <label>Bio<textarea id="pfBio" maxlength="280">${esc(d.bio||"")}</textarea></label>
       <label>Location<input id="pfLocation" maxlength="100" value="${esc(d.location||"")}"></label>
+      <div class="profile-xp-fields"><b>Complete these fields to earn XP</b><span>+100 XP each · awarded once per field</span></div>
+      <label>City <span class="field-xp">+100 XP</span><input id="pfCity" maxlength="80" value="${esc(d.city||"")}" placeholder="Minneapolis"></label>
+      <label>State <span class="field-xp">+100 XP</span><input id="pfState" maxlength="80" value="${esc(d.state||"")}" placeholder="Minnesota"></label>
+      <label>Country <span class="field-xp">+100 XP</span><input id="pfCountry" maxlength="80" value="${esc(d.country||"")}" placeholder="United States"></label>
+      <label>Gender <span class="field-xp">+100 XP</span><select id="pfGender"><option value="">Select</option><option value="Male" ${d.gender==='Male'?'selected':''}>Male</option><option value="Female" ${d.gender==='Female'?'selected':''}>Female</option><option value="Non-binary" ${d.gender==='Non-binary'?'selected':''}>Non-binary</option><option value="Prefer not to say" ${d.gender==='Prefer not to say'?'selected':''}>Prefer not to say</option></select></label>
       <label>Website<input id="pfWebsite" maxlength="200" type="url" value="${esc(d.website||"")}"></label>
       <div class="actions"><button class="primary" id="saveProfile">Save profile</button><button class="outline" id="cancelProfile">Cancel</button></div>
     </div>`;
   $("saveProfile").onclick=saveProfile;
   $("cancelProfile").onclick=renderApp;
 }
+
 async function saveProfile(){
   const username=$("pfUser").value.trim().toLowerCase();
   if(!/^[a-z0-9_.-]{3,30}$/.test(username)){
@@ -577,7 +658,13 @@ async function saveProfile(){
   };
   const {data,error}=await sb.from("profiles").update(payload).eq("id",me.id).select().single();
   if(error){ toast(/duplicate|unique/i.test(error.message)?"That username is already taken.":errText(error)); return; }
-  profile=data; await loadPosts(); renderApp(); toast("Profile updated.");
+  const beforeFields=[profile.city,profile.state,profile.country,profile.gender].filter(v=>String(v||"").trim()).length;
+  profile=data;
+  await loadProfile();
+  const afterFields=[profile.city,profile.state,profile.country,profile.gender].filter(v=>String(v||"").trim()).length;
+  await loadPosts(); renderApp();
+  const gained=Math.max(0,afterFields-beforeFields)*100;
+  if(gained) celebrateXp(gained,`Profile upgraded! +${gained} XP ✨`); else toast("Profile updated.");
 }
 
 $("openLogin").onclick=()=>showAuth("login");
@@ -609,6 +696,7 @@ sb.auth.onAuthStateChange(async (event,session)=>{
     me=session.user;
     try{
       await loadProfile();
+      await loadLessons();
       await loadPosts();
       renderApp();
     }catch(e){
@@ -617,7 +705,7 @@ sb.auth.onAuthStateChange(async (event,session)=>{
       toast("We signed you in, but couldn't load your profile yet.");
     }
   }else if(event==="SIGNED_OUT" || event==="INITIAL_SESSION"){
-    me=null; profile=null; posts=[];
+    me=null; profile=null; posts=[]; lessons=[]; lessonCompletions=new Map();
     setScreen("publicView");
     $("sessionBadge").textContent="LOCKED";
   }

@@ -34,6 +34,7 @@
           <div class="glow"></div>
           <img src="assets/mascot.jpeg" alt="E mascot">
           <div class="art-badge">ACCESS<br><b>REQUIRED</b></div>
+
         </div>
       </div>
     </section>
@@ -58,11 +59,12 @@
     <section id="appView" class="screen hidden">
       <div class="app-layout">
         <aside class="sidebar">
-          <div class="mini-profile" id="miniProfile"></div>
+          <div class="mini-profile" id="miniProfile"></div><div class="xp-card">⭐ <span>XP</span><b id="sidebarXp">0</b></div>
           <nav>
             <button class="side active" data-page="feed">⌂ Home</button>
             <button class="side" data-page="profiles">◉ People</button>
             <button class="side" data-page="profile">◎ My Profile</button>
+            <button class="side" data-page="lessons">★ Lessons</button>
           </nav>
           <button id="signOut" class="logout">Sign out</button>
         </aside>
@@ -94,6 +96,12 @@
           <div id="profilePage" class="page hidden">
             <div class="page-head"><div><span class="eyebrow">YOUR PRIVATE PROFILE</span><h2>My Profile</h2></div></div>
             <div id="profilePanel"></div>
+          </div>
+
+          <div id="lessonsPage" class="page hidden">
+            <div class="page-head"><div><span class="eyebrow">EARN XP</span><h2>Lessons</h2></div><div class="xp-badge">XP <b id="lessonsXp">0</b></div></div>
+            <div id="lessonsGrid" class="lessons-grid"></div>
+            <div id="lessonPlayer" class="lesson-player hidden"></div>
           </div>
         </div>
       </div>
