@@ -24,6 +24,9 @@
       .site-nav-actions button:hover{background:#eef4f0;color:#1f5b49;border-color:#a9c0b6}
       .site-nav-actions .home-btn{background:#1f5b49;color:#fff;border-color:#1f5b49}
       .site-nav-actions .home-btn:hover{background:#174838;color:#fff}
+      .auth-nav-actions{display:flex;justify-content:space-between;gap:8px;margin-bottom:12px}
+      .auth-nav-actions button{border:1px solid #d8ded8;background:#fff;color:#35564a;border-radius:999px;padding:8px 13px;font-weight:700;font-size:12px;cursor:pointer}
+      .auth-nav-actions .home-btn{background:#1f5b49;color:#fff;border-color:#1f5b49}
       @media(max-width:850px){body.dashboard-theme #appView .app-layout{grid-template-columns:1fr!important}body.dashboard-theme #appView .sidebar{min-height:auto!important;border-right:0!important;border-bottom:1px solid #e8e3d8!important;padding:14px!important}.site-nav-actions{gap:5px}.site-nav-actions button{padding:7px 10px}.site-nav-actions .back-label{display:none}body.dashboard-theme #appView .content{padding:16px 14px 40px!important}}
     `; document.head.appendChild(s);
   }
@@ -52,7 +55,17 @@
       home.onclick=function(){ history=['feed']; suppress=true; clickPage('feed'); setTimeout(()=>suppress=false,0); };
       actions.append(back,home); head.appendChild(actions);
     }
-    function scan(){ pages.forEach(p=>{ const page=document.getElementById(p+'Page'); if(page){ addControls(page.querySelector('.page-head'),p); }}); }
+    function addAuthHome(){
+      const card=document.querySelector('#authView .auth-card');
+      if(!card || card.querySelector('.auth-nav-actions')) return;
+      const row=document.createElement('div'); row.className='auth-nav-actions';
+      const back=document.createElement('button'); back.type='button'; back.textContent='← Back';
+      const home=document.createElement('button'); home.type='button'; home.className='home-btn'; home.textContent='Home';
+      back.onclick=()=>document.getElementById('backPublic')?.click();
+      home.onclick=()=>document.getElementById('backPublic')?.click();
+      card.insertBefore(row,card.firstChild); row.append(back,home);
+    }
+    function scan(){ pages.forEach(p=>{ const page=document.getElementById(p+'Page'); if(page) addControls(page.querySelector('.page-head'),p); }); addAuthHome(); }
     scan(); setTimeout(scan,300); setTimeout(scan,900);
     const observer=new MutationObserver(scan); observer.observe(document.body,{childList:true,subtree:true});
   }
