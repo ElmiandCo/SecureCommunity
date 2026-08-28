@@ -1,7 +1,7 @@
 (function(){
 const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
-load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');
-['start-pack.js','guest-xp.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
+load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');
+['start-pack.js','guest-xp.js','landing-enhancements.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
 document.body.classList.add('dashboard-theme','onemuslim-theme');const pv=document.getElementById('publicView'),app=document.getElementById('appView');if(!pv)return;
 function landing(){pv.innerHTML=`<div class="om-landing" id="oneMuslimLanding">
 <nav class="om-site-nav" aria-label="One Muslim site navigation"><a class="om-site-brand" href="#top" data-scroll="top"><span class="om-site-mark">1</span><span><b>ONE MUSLIM</b><small>LLC</small></span></a><div class="om-site-links"><button data-scroll="about">About</button><button data-scroll="news">News</button><button data-scroll="enroll">Enroll</button><button data-scroll="book">Book</button><button data-scroll="shop">Shop</button><button class="om-connect" data-public-auth="signup">Connect</button></div></nav>
