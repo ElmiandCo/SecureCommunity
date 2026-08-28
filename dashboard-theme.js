@@ -2,22 +2,10 @@
   const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   load('dashboard-theme.css','oneMuslimDashboardBase'); load('onemuslim-home.css','oneMuslimHomeStyles');
   const pack=document.createElement('script');pack.src='start-pack.js';pack.defer=true;document.head.appendChild(pack);
+  const guest=document.createElement('script');guest.src='guest-xp.js';guest.defer=true;document.head.appendChild(guest);
   document.body.classList.add('dashboard-theme','onemuslim-theme');
   const pv=document.getElementById('publicView'),app=document.getElementById('appView'); if(!pv)return;
-  function configureNav(){
-    const top=document.querySelectorAll('#appView .app-nav-link');
-    if(top[0]){top[0].dataset.page='public-home';top[0].textContent='Home'}
-    if(top[1]){top[1].dataset.page='feed';top[1].textContent='Community'}
-    if(!document.querySelector('#appView .app-nav-link[data-page="profiles"]')){
-      const b=document.createElement('button');b.className='app-nav-link';b.dataset.page='profiles';b.textContent='People';top[1]?.parentElement?.appendChild(b)
-    }
-    const side=document.querySelectorAll('#appView .side');
-    if(side[0]){side[0].dataset.page='public-home';side[0].textContent='⌂ Home'}
-    if(side[1]){side[1].dataset.page='feed';side[1].textContent='◉ Community'}
-    if(!document.querySelector('#appView .side[data-page="profiles"]')){
-      const b=document.createElement('button');b.className='side';b.dataset.page='profiles';b.textContent='◉ People';document.querySelector('#appView .sidebar nav')?.appendChild(b)
-    }
-  }
+  function configureNav(){const top=document.querySelectorAll('#appView .app-nav-link');if(top[0]){top[0].dataset.page='public-home';top[0].textContent='Home'}if(top[1]){top[1].dataset.page='feed';top[1].textContent='Community'}const side=document.querySelectorAll('#appView .side');if(side[0]){side[0].dataset.page='public-home';side[0].textContent='⌂ Home'}if(side[1]){side[1].dataset.page='feed';side[1].textContent='◉ Community'}}
   configureNav();
   function landing(){pv.innerHTML=`<div class="om-landing" id="oneMuslimLanding">
     <section class="om-hero" id="top"><div><span class="om-kicker">✦ A NEW GENERATION OF MUSLIM VOICES</span><h1>Know your faith. <em>Defend it.</em><br>Live it.</h1><p class="om-lead">One Muslim is a modern Islamic organization built for young aspiring apologists, influencers, students, and believers who want to learn deeply and speak confidently.</p><div class="om-actions"><button class="om-btn primary" data-public-auth="signup">Join One Muslim</button><button class="om-btn" data-scroll="news">Explore the News →</button></div></div><div class="om-hero-art"><span class="om-moon">☾</span><div class="om-mosque"><span class="mark">✦</span><b>ONE MUSLIM</b><small>Knowledge · Conviction · Community</small></div></div></section>
@@ -32,9 +20,8 @@
     <section class="om-section" id="community"><div class="om-newsletter"><div><span class="om-kicker">STAY CONNECTED</span><h3>The conversation doesn't end here.</h3><p>Get new articles, videos, enrollment announcements, and community updates.</p></div><button class="om-btn" data-public-auth="signup">Join the conversation</button></div></section>
   </div>`;wire(pv);mountPack(pv)}
   function wire(root){root.querySelectorAll('[data-public-auth]').forEach(b=>b.onclick=()=>document.getElementById('openSignup')?.click());root.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>root.querySelector('#'+b.dataset.scroll)?.scrollIntoView({behavior:'smooth',block:'start'}))}
-  function mountPack(root){const host=root.querySelector('#startPackHost');if(host&&window.OneMuslimStartPack)window.OneMuslimStartPack.render(host)}
+  function mountPack(root){const host=root?.querySelector('#startPackHost');if(host&&window.OneMuslimStartPack)window.OneMuslimStartPack.render(host)}
   landing();
   function appLanding(){if(!app)return;let p=document.getElementById('publicHomePage');if(!p){p=document.createElement('section');p.id='publicHomePage';p.className='page hidden';app.querySelector('.content')?.prepend(p)}const src=pv.querySelector('#oneMuslimLanding');if(src)p.innerHTML=src.outerHTML;wire(p);mountPack(p)}
-  const boot=()=>setTimeout(()=>{configureNav();appLanding();if(window.OneMuslimStartPack){mountPack(pv);mountPack(document.getElementById('publicHomePage'))}},300);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+  const boot=()=>setTimeout(()=>{configureNav();appLanding();if(window.OneMuslimStartPack){mountPack(pv);mountPack(document.getElementById('publicHomePage'))}},400);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
