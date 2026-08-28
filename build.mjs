@@ -15,13 +15,13 @@ fs.rmSync("dist", { recursive: true, force: true });
 fs.mkdirSync("dist/assets/avatars", { recursive: true });
 fs.mkdirSync("dist/assets/onemuslim", { recursive: true });
 
-for (const f of ["index.html","styles.css","app.js","floating-profile-notes.js","home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-builder-v2.css","dashboard-theme.css","dashboard-theme.js","one-muslim-navigation.js","navigation.css","onemuslim-theme.css","onemuslim-home.css","homepage-navigation.css","ui-fixes.css","one-muslim-final-ui.css","ui-fixes.js","start-pack.js","guest-xp.js","auth-session-guard.js"])
+for (const f of ["index.html","styles.css","app.js","floating-profile-notes.js","home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-builder-v2.css","dashboard-theme.css","dashboard-theme.js","landing-enhancements.css","landing-enhancements.js","one-muslim-navigation.js","navigation.css","onemuslim-theme.css","onemuslim-home.css","homepage-navigation.css","ui-fixes.css","one-muslim-final-ui.css","ui-fixes.js","start-pack.js","guest-xp.js","auth-session-guard.js","coming-soon.html","coming-soon.css","coming-soon.js"])
   fs.copyFileSync(f, path.join("dist", f));
 
 fs.copyFileSync("assets/mascot.jpeg", "dist/assets/mascot.jpeg");
-for (const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg","pearl.svg"])
+for (const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg","pearl.svg","platinum-male.PNG","platinum-female.PNG"])
   fs.copyFileSync(`assets/avatars/${f}`, path.join("dist/assets/avatars", f));
-for (const f of ["pattern-light.svg","pattern-dark.svg","mosque-light.svg","mosque-dark.svg","crescent-gold.svg","divider-gold.svg","divider-green.svg","arch-gold.svg","corner-ornament.svg"])
+for (const f of ["pattern-light.svg","pattern-dark.svg","mosque-light.svg","mosque-dark.svg","crescent-gold.svg","divider-gold.svg","divider-green.svg","arch-gold.svg","corner-ornament.svg","hero-ornament.svg"])
   fs.copyFileSync(`assets/onemuslim/${f}`, path.join("dist/assets/onemuslim", f));
 
 let html = fs.readFileSync("dist/index.html", "utf8");
