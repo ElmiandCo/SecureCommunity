@@ -1,6 +1,8 @@
 /* OneMuslim Profile Builder v5 — scalable community creation + profile editor. */
 (function(){
 'use strict';
+/* Mr. Elmi note: load the persistence bridge from the existing Profile Builder so this remains one app/codebase. */
+if(!document.querySelector('script[src="profile-persistence.js"]')){const s=document.createElement('script');s.src='profile-persistence.js';s.defer=true;document.head.appendChild(s)}
 const groups=['Islamic Society','Apologetics','Da’wah','Qur’an Study','Tafsir Circle','Hadith Study','Tajweed','The Belt Boys','Torah Boys'];
 const backgrounds=[['Islamic Geometry','linear-gradient(135deg,#fbf5e8,#f1e6cf)'],['Mosque Silhouette','linear-gradient(135deg,#f7ecd6,#ead8b5)'],['Islamic Arch','linear-gradient(135deg,#f8f2e5,#e9dfcc)'],['Crescent & Stars','linear-gradient(135deg,#0e2d27,#193f35)'],['Luxury Gold','linear-gradient(135deg,#fff8e8,#d8b66a)'],['Emerald','linear-gradient(135deg,#0d4b3d,#1f6b57)'],['Dark Mosque','linear-gradient(135deg,#061e1a,#173a31)'],['Minimal Cream','linear-gradient(135deg,#fffdf8,#f4f0e7)']];
 const accents=[['emerald','#1f6a55'],['gold','#c89d3c'],['navy','#243b62'],['plum','#70536f'],['ruby','#a34d52']];
