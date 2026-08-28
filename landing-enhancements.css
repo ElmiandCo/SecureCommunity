@@ -1,0 +1,7 @@
+/* Approved landing visual treatment. Keep this separate from dashboard-theme.css so the decorative layer can evolve without destabilizing the application shell. */
+.om-approved-ornament{width:min(100%,1120px);margin:0 auto 42px;display:flex;justify-content:center;pointer-events:none}
+.om-approved-ornament img{display:block;width:100%;height:auto;max-height:240px;object-fit:contain}
+.om-coming-soon-wrap{display:flex;justify-content:center;margin:28px 0 0}
+.om-coming-soon-link{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:220px}
+.om-coming-soon-link span{font-size:1.1em;line-height:1}
+@media (max-width:700px){.om-approved-ornament{margin-bottom:24px}.om-approved-ornament img{max-height:120px}.om-coming-soon-link{width:100%;max-width:320px}}
