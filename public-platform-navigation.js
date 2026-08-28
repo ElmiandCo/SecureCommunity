@@ -1,0 +1,5 @@
+/* OneMuslim public navigation: same visual language, guides guests to public sections and One Shahada. */
+(function(){
+  function wire(){const home=document.querySelector('.social-home');if(!home||home.dataset.omPublicPlatform==='1')return;const nav=home.querySelector('.social-nav');if(!nav)return;home.dataset.omPublicPlatform='1';const add=(label,action,cls='')=>{const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.onclick=action;nav.appendChild(b)};add('One Shahada',()=>{const start=document.getElementById('start-pack')||document.querySelector('.om-start-pack');if(start){start.scrollIntoView({behavior:'smooth'});return}window.OneMuslimStartPack?.render(document.querySelector('.social-home .social-feed')||document.body)});add('Sign In',()=>document.getElementById('openLogin')?.click());}
+  function init(){wire();new MutationObserver(wire).observe(document.body,{childList:true,subtree:true})} if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
