@@ -3,70 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f6fff8">
-<title>E — Secure Community</title>
+<meta name="theme-color" content="#fbf8f1">
+<title>OneMuslim | Knowledge. Conviction. Community.</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="onemuslim-theme.css">
 <style>
-/* Light white + green theme */
-html,body{background:#f6fff8!important;color:#17241c!important}
-body{background:radial-gradient(circle at 78% 12%,#d8f5e1 0,#f6fff8 32%,#fff 75%)!important}
-.topbar{background:#ffffffeb!important;border-bottom:1px solid #d8eadd!important}
-.brand-mark,.auth-logo{background:#20a85a!important;box-shadow:0 0 25px #20a85a44!important}
-.session-badge{color:#587563!important;border-color:#d8eadd!important}
-.eyebrow{color:#168746!important}
-.copy h1 span{color:#169b50!important;text-shadow:0 0 30px #169b5040!important}
-.lead{color:#587064!important}
-.security-note,.composer,.post,.profile-card,.profile-panel,.lesson-card,.lesson-player,.auth-card{background:#ffffff!important;border-color:#dcebe1!important;box-shadow:0 10px 40px #238a4b12!important}
-.security-note small,.mini-profile small,.auth-card p,.profile-card p,.post-head small,.profile-meta,.lesson-bottom{color:#72857a!important}
-.primary{background:#20a85a!important;border-color:#20a85a!important;box-shadow:0 0 25px #20a85a33!important}
-.ghost,.outline{color:#168746!important;border-color:#20a85a!important}
-.hero-art img{border-color:#20a85a55!important;box-shadow:0 0 80px #20a85a25!important}
-.glow{background:#20a85a22!important}
-.art-badge{background:#ffffffee!important;border-color:#20a85a55!important;color:#587563!important}
-.art-badge b{color:#17241c!important}
-.auth-card{box-shadow:0 25px 80px #238a4b18!important}
-.back,.side,.logout{color:#60756a!important}
-.side.active,.side:hover{background:#20a85a12!important;color:#214b31!important}
-.logout{color:#c94d5d!important}
-.field input,.profile-form input,.profile-form textarea,.profile-form select{background:#fff!important;color:#243129!important;border-color:#d8e6dc!important}
-.field input:focus,.profile-form input:focus,.profile-form textarea:focus,.profile-form select:focus{border-color:#20a85a!important}
-.divider{color:#84968b!important}
-.divider:before,.divider:after{background:#e0e9e3!important}
-.social{background:#f7fcf8!important;color:#3c5145!important;border-color:#d8e6dc!important}
-.switch{color:#72857a!important}
-.switch button,.forgot{color:#168746!important}
-.message{background:#ecfff2!important;color:#237443!important}
-.online{color:#2f9b5d!important}
-.avatar{background:linear-gradient(135deg,#62d68f,#168746)!important}
-.xp-card,.xp-badge,.profile-xp-fields{background:#edfff3!important;border-color:#bfe5cb!important;color:#168746!important}
-.xp-card b,.xp-badge b{color:#214b31!important}
-.post p,.profile-card p,.lesson-card p{color:#53665b!important}
-.private-tag{background:#20a85a14!important;color:#168746!important}
-.toast{background:#ffffff!important;border-color:#20a85a66!important;color:#263a2d!important;box-shadow:0 10px 30px #238a4b18!important}
-.attach-btn{color:#168746!important;border-color:#20a85a44!important;background:#20a85a0b!important}
-.attach-btn:hover{background:#20a85a18!important;border-color:#20a85a77!important}
-.file-summary{color:#72857a!important}
-.like-btn{background:#f7fcf8!important;color:#6b8074!important;border-color:#d8e6dc!important}
-.like-btn.liked{color:#d34862!important;border-color:#d3486255!important;background:#d348620d!important}
-.comment-toggle{background:#f7fcf8!important;color:#60756a!important;border-color:#d8e6dc!important}
-.comments{border-top-color:#e1eae4!important}
-.comment-body{background:#f7fcf8!important;border-color:#e0e9e3!important}
-.comment-head small{color:#84968b!important}
-.comment-text{color:#53665b!important}
-.comment-composer textarea{background:#fff!important;color:#243129!important;border-color:#d8e6dc!important}
-.tiny{color:#71877a!important}
-.lesson-card:hover{border-color:#20a85a66!important;box-shadow:0 14px 45px #238a4b15!important}
-.lesson-number{color:#20a85a99!important}
-.lesson-difficulty{color:#168746!important}
-.lesson-progress,.xp-bar{background:#e4eee7!important}
-.xp-bar i,.lesson-progress i{background:linear-gradient(90deg,#20a85a,#78d69c)!important;box-shadow:0 0 15px #20a85a44!important}
-.lesson-question h2{color:#294035!important}
+/* OneMuslim base theme */
+html,body{background:#fbf8f1!important;color:#182c25!important}
+body{background:radial-gradient(circle at 78% 12%,#f4ecd9 0,#fbf8f1 34%,#fff 78%)!important}
+.topbar{background:#ffffffeb!important;border-bottom:1px solid #e5e1d7!important}
+.brand-mark,.auth-logo{background:#fbf8f1!important;box-shadow:0 5px 18px rgba(200,157,60,.18)!important;color:#1f5b49!important;border:2px solid #c89d3c!important}
+.session-badge{color:#587064!important;border-color:#e5e1d7!important}
+.eyebrow{color:#1f5b49!important}.copy h1 span{color:#1f5b49!important;text-shadow:none!important}.lead{color:#65766f!important}
+.security-note,.composer,.post,.profile-card,.profile-panel,.lesson-card,.lesson-player,.auth-card{background:#fff!important;border-color:#e5e1d7!important;box-shadow:0 10px 40px rgba(18,48,39,.07)!important}
+.security-note small,.mini-profile small,.auth-card p,.profile-card p,.post-head small,.profile-meta,.lesson-bottom{color:#728078!important}
+.primary{background:#1f5b49!important;border-color:#1f5b49!important;box-shadow:0 7px 18px rgba(31,91,73,.18)!important}.ghost,.outline{color:#1f5b49!important;border-color:#1f5b49!important}
+.hero-art img{border-color:#c89d3c55!important;box-shadow:0 0 80px rgba(200,157,60,.15)!important}.glow{background:rgba(31,91,73,.08)!important}.art-badge{background:#fff!important;border-color:#c89d3c55!important;color:#65766f!important}.art-badge b{color:#182c25!important}
+.auth-card{box-shadow:0 25px 80px rgba(18,48,39,.11)!important}.back,.side,.logout{color:#60756a!important}.side.active,.side:hover{background:#e8f0eb!important;color:#1f5b49!important}.logout{color:#b44756!important}
+.field input,.profile-form input,.profile-form textarea,.profile-form select{background:#fff!important;color:#243129!important;border-color:#e5e1d7!important}.field input:focus,.profile-form input:focus,.profile-form textarea:focus,.profile-form select:focus{border-color:#2d705b!important}
+.divider{color:#84968b!important}.divider:before,.divider:after{background:#e5e1d7!important}.social{background:#f7f7f3!important;color:#3c5145!important;border-color:#e5e1d7!important}.switch{color:#72857a!important}.switch button,.forgot{color:#1f5b49!important}.message{background:#e8f0eb!important;color:#237443!important}.online{color:#2d705b!important}.avatar{background:linear-gradient(135deg,#b9cbbf,#234d40)!important}
+.xp-card,.xp-badge,.profile-xp-fields{background:#f3f7f4!important;border-color:#cbded4!important;color:#1f5b49!important}.xp-card b,.xp-badge b{color:#214b31!important}.post p,.profile-card p,.lesson-card p{color:#53665b!important}.private-tag{background:#e8f0eb!important;color:#1f5b49!important}.toast{background:#fff!important;border-color:#c89d3c66!important;color:#263a2d!important;box-shadow:0 10px 30px rgba(18,48,39,.08)!important}.attach-btn{color:#1f5b49!important;border-color:#cbded4!important;background:#f3f7f4!important}.file-summary{color:#72857a!important}.like-btn,.comment-toggle{background:#f7f7f3!important;color:#6b8074!important;border-color:#e5e1d7!important}.comments{border-top-color:#e1eae4!important}.comment-body{background:#f7f7f3!important;border-color:#e5e1d7!important}.comment-head small{color:#84968b!important}.comment-text{color:#53665b!important}.comment-composer textarea{background:#fff!important;color:#243129!important;border-color:#e5e1d7!important}.tiny{color:#71877a!important}.lesson-card:hover{border-color:#c89d3c66!important;box-shadow:0 14px 45px rgba(18,48,39,.09)!important}.lesson-number{color:#b28b2f!important}.lesson-difficulty{color:#1f5b49!important}.lesson-progress,.xp-bar{background:#e4eee7!important}.xp-bar i,.lesson-progress i{background:linear-gradient(90deg,#1f5b49,#c89d3c)!important;box-shadow:none!important}.lesson-question h2{color:#294035!important}
 </style>
 </head>
-<body>
+<body class="onemuslim-theme">
 <div class="app-shell">
   <header class="topbar">
-    <div class="brand"><span class="brand-mark">E</span><span>E</span></div>
+    <div class="brand"><span class="brand-mark">✦</span><span>OneMuslim</span></div>
     <div id="sessionBadge" class="session-badge">LOCKED</div>
   </header>
 
@@ -74,23 +36,22 @@ body{background:radial-gradient(circle at 78% 12%,#d8f5e1 0,#f6fff8 32%,#fff 75%
     <section id="publicView" class="screen">
       <div class="public-grid">
         <div class="copy">
-          <span class="eyebrow">PRIVATE • SECURE • CONNECTED</span>
+          <span class="eyebrow">KNOWLEDGE • CONVICTION • COMMUNITY</span>
           <h1>Your people.<br><span>Your space.</span></h1>
-          <p class="lead">A private profile community where your information stays behind the lock until you sign in.</p>
+          <p class="lead">A private Muslim community where you can learn, connect, share, and grow on your own journey.</p>
           <div class="security-note">
-            <div class="lock">🔐</div>
-            <div><b>Security first.</b><small>Profiles and posts are only available to authenticated members.</small></div>
+            <div class="lock">🕌</div>
+            <div><b>Built for the Ummah.</b><small>Learn through lessons, connect with people, share reminders, and track your progress with XP.</small></div>
           </div>
           <div class="auth-buttons">
             <button id="openLogin" class="primary">Sign in</button>
-            <button id="openSignup" class="ghost">Create account</button>
+            <button id="openSignup" class="ghost">Begin your journey</button>
           </div>
         </div>
         <div class="hero-art">
           <div class="glow"></div>
-          <img src="assets/mascot.jpeg" alt="E mascot">
-          <div class="art-badge">ACCESS<br><b>REQUIRED</b></div>
-
+          <img src="assets/mascot.jpeg" alt="OneMuslim community">
+          <div class="art-badge">ONE MUSLIM<br><b>KNOWLEDGE • CONVICTION • COMMUNITY</b></div>
         </div>
       </div>
     </section>
@@ -98,7 +59,7 @@ body{background:radial-gradient(circle at 78% 12%,#d8f5e1 0,#f6fff8 32%,#fff 75%
     <section id="authView" class="screen hidden">
       <div class="auth-card">
         <button id="backPublic" class="back">← Back</button>
-        <div class="auth-logo">E</div>
+        <div class="auth-logo">✦</div>
         <div id="authTitle"></div>
         <div id="authMessage" class="message hidden"></div>
         <form id="authForm" class="form"></form>
@@ -113,8 +74,20 @@ body{background:radial-gradient(circle at 78% 12%,#d8f5e1 0,#f6fff8 32%,#fff 75%
     </section>
 
     <section id="appView" class="screen hidden">
+      <nav class="app-nav" aria-label="Application navigation">
+        <div class="app-nav-brand"><span class="om-nav-mark">✦</span><span>OneMuslim</span></div>
+        <button class="app-nav-menu" id="appMenuToggle" aria-label="Open menu">☰</button>
+        <div class="app-nav-links">
+          <button class="app-nav-link active" data-page="feed">Home</button>
+          <button class="app-nav-link" data-page="profiles">People</button>
+          <button class="app-nav-link" data-page="profile">My Profile</button>
+          <button class="app-nav-link" data-page="lessons">Lessons</button>
+        </div>
+        <button class="app-nav-back" id="appBack" type="button">← Back</button>
+        <input class="app-nav-search" id="appSearch" aria-label="Search OneMuslim" placeholder="Search OneMuslim…">
+      </nav>
       <div class="app-layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="mobileAppSidebar">
           <div class="mini-profile" id="miniProfile"></div><div class="xp-card">⭐ <span>XP</span><b id="sidebarXp">0</b></div>
           <nav>
             <button class="side active" data-page="feed">⌂ Home</button>
@@ -132,39 +105,19 @@ body{background:radial-gradient(circle at 78% 12%,#d8f5e1 0,#f6fff8 32%,#fff 75%
               <div class="avatar" id="composerAvatar">E</div>
               <div class="composer-body">
                 <textarea id="postText" maxlength="500" placeholder="Share something with the community..."></textarea>
-                <div class="composer-footer">
-  <div class="composer-tools">
-    <label class="attach-btn">📎 Photo/video<input id="postMedia" type="file" accept="image/*,video/*" multiple hidden></label>
-    <span id="postFiles" class="file-summary"></span>
-  </div>
-  <div class="publish-tools"><span id="charCount">0/500</span><button id="publish" class="primary">Post</button></div>
-</div>
+                <div class="composer-footer"><div class="composer-tools"><label class="attach-btn">📎 Photo/video<input id="postMedia" type="file" accept="image/*,video/*" multiple hidden></label><span id="postFiles" class="file-summary"></span></div><div class="publish-tools"><span id="charCount">0/500</span><button id="publish" class="primary">Post</button></div></div>
               </div>
             </div>
             <div id="feed"></div>
           </div>
-
-          <div id="profilesPage" class="page hidden">
-            <div class="page-head"><div><span class="eyebrow">MEMBERS</span><h2>People</h2></div></div>
-            <div id="profilesGrid" class="profiles-grid"></div>
-          </div>
-
-          <div id="profilePage" class="page hidden">
-            <div class="page-head"><div><span class="eyebrow">YOUR PRIVATE PROFILE</span><h2>My Profile</h2></div></div>
-            <div id="profilePanel"></div>
-          </div>
-
-          <div id="lessonsPage" class="page hidden">
-            <div class="page-head"><div><span class="eyebrow">EARN XP</span><h2>Lessons</h2></div><div class="xp-badge">XP <b id="lessonsXp">0</b></div></div>
-            <div id="lessonsGrid" class="lessons-grid"></div>
-            <div id="lessonPlayer" class="lesson-player hidden"></div>
-          </div>
+          <div id="profilesPage" class="page hidden"><div class="page-head"><div><span class="eyebrow">MEMBERS</span><h2>People</h2></div></div><div id="profilesGrid" class="profiles-grid"></div></div>
+          <div id="profilePage" class="page hidden"><div class="page-head"><div><span class="eyebrow">YOUR PRIVATE PROFILE</span><h2>My Profile</h2></div></div><div id="profilePanel"></div></div>
+          <div id="lessonsPage" class="page hidden"><div class="page-head"><div><span class="eyebrow">EARN XP</span><h2>Lessons</h2></div><div class="xp-badge">XP <b id="lessonsXp">0</b></div></div><div id="lessonsGrid" class="lessons-grid"></div><div id="lessonPlayer" class="lesson-player hidden"></div></div>
         </div>
       </div>
     </section>
   </main>
 </div>
-
 <div id="toast" class="toast hidden"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
