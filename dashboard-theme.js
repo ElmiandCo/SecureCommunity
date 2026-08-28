@@ -1,8 +1,24 @@
 (function(){
   const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   load('dashboard-theme.css','oneMuslimDashboardBase'); load('onemuslim-home.css','oneMuslimHomeStyles');
+  const pack=document.createElement('script');pack.src='start-pack.js';pack.defer=true;document.head.appendChild(pack);
   document.body.classList.add('dashboard-theme','onemuslim-theme');
   const pv=document.getElementById('publicView'),app=document.getElementById('appView'); if(!pv)return;
+  function configureNav(){
+    const top=document.querySelectorAll('#appView .app-nav-link');
+    if(top[0]){top[0].dataset.page='public-home';top[0].textContent='Home'}
+    if(top[1]){top[1].dataset.page='feed';top[1].textContent='Community'}
+    if(!document.querySelector('#appView .app-nav-link[data-page="profiles"]')){
+      const b=document.createElement('button');b.className='app-nav-link';b.dataset.page='profiles';b.textContent='People';top[1]?.parentElement?.appendChild(b)
+    }
+    const side=document.querySelectorAll('#appView .side');
+    if(side[0]){side[0].dataset.page='public-home';side[0].textContent='⌂ Home'}
+    if(side[1]){side[1].dataset.page='feed';side[1].textContent='◉ Community'}
+    if(!document.querySelector('#appView .side[data-page="profiles"]')){
+      const b=document.createElement('button');b.className='side';b.dataset.page='profiles';b.textContent='◉ People';document.querySelector('#appView .sidebar nav')?.appendChild(b)
+    }
+  }
+  configureNav();
   function landing(){pv.innerHTML=`<div class="om-landing" id="oneMuslimLanding">
     <section class="om-hero" id="top"><div><span class="om-kicker">✦ A NEW GENERATION OF MUSLIM VOICES</span><h1>Know your faith. <em>Defend it.</em><br>Live it.</h1><p class="om-lead">One Muslim is a modern Islamic organization built for young aspiring apologists, influencers, students, and believers who want to learn deeply and speak confidently.</p><div class="om-actions"><button class="om-btn primary" data-public-auth="signup">Join One Muslim</button><button class="om-btn" data-scroll="news">Explore the News →</button></div></div><div class="om-hero-art"><span class="om-moon">☾</span><div class="om-mosque"><span class="mark">✦</span><b>ONE MUSLIM</b><small>Knowledge · Conviction · Community</small></div></div></section>
     <div class="om-stats"><div class="om-stat"><strong>01</strong><span>Faith</span></div><div class="om-stat"><strong>02</strong><span>Knowledge</span></div><div class="om-stat"><strong>03</strong><span>Influence</span></div></div>
@@ -14,9 +30,11 @@
     <section class="om-section"><div class="om-book"><div><span class="om-kicker">☾ ONE MUSLIM PRESENTS</span><h3>THE CASE FOR ONE</h3><p>A Study Guide</p></div><div><h2>Go deeper than the <em>debate.</em></h2><p>A practical guide for Muslims who want to understand the questions behind the questions—and build arguments rooted in revelation, reason, and good character.</p><button class="om-btn" data-scroll="shop">Get the Book</button></div></div></section>
     <section class="om-section" id="shop"><div class="om-section-head"><div><span class="om-kicker">05 / SHOP</span><h2>Wear the <em>message.</em></h2></div><button class="om-btn">Shop everything →</button></div><div class="om-shop"><article class="om-product"><div class="om-product-art">QAMIS</div><div class="om-product-body"><small>01 · MEN · QAMIS</small><h4>Essential Qamis</h4><b>$79</b></div></article><article class="om-product"><div class="om-product-art">MODEST</div><div class="om-product-body"><small>02 · WOMEN · OUTFIT</small><h4>Everyday Modest Set</h4><b>$95</b></div></article><article class="om-product"><div class="om-product-art">ﷲ</div><div class="om-product-body"><small>03 · ACCESSORIES · QUR’AN</small><h4>Pocket Qur’an</h4><b>$24</b></div></article><article class="om-product"><div class="om-product-art">SIGNATURE</div><div class="om-product-body"><small>04 · MEN · QAMIS</small><h4>Signature Qamis</h4><b>$89</b></div></article></div></section>
     <section class="om-section" id="community"><div class="om-newsletter"><div><span class="om-kicker">STAY CONNECTED</span><h3>The conversation doesn't end here.</h3><p>Get new articles, videos, enrollment announcements, and community updates.</p></div><button class="om-btn" data-public-auth="signup">Join the conversation</button></div></section>
-  </div>`;wire(pv);const host=pv.querySelector('#startPackHost');if(host&&window.OneMuslimStartPack)window.OneMuslimStartPack.render(host)}
+  </div>`;wire(pv);mountPack(pv)}
   function wire(root){root.querySelectorAll('[data-public-auth]').forEach(b=>b.onclick=()=>document.getElementById('openSignup')?.click());root.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>root.querySelector('#'+b.dataset.scroll)?.scrollIntoView({behavior:'smooth',block:'start'}))}
+  function mountPack(root){const host=root.querySelector('#startPackHost');if(host&&window.OneMuslimStartPack)window.OneMuslimStartPack.render(host)}
   landing();
-  function appLanding(){if(!app)return;let p=document.getElementById('publicHomePage');if(!p){p=document.createElement('section');p.id='publicHomePage';p.className='page hidden';app.querySelector('.content')?.prepend(p)}const src=pv.querySelector('#oneMuslimLanding');if(src)p.innerHTML=src.outerHTML;const host=p.querySelector('#startPackHost');if(host&&window.OneMuslimStartPack)window.OneMuslimStartPack.render(host);wire(p)}
-  const boot=()=>setTimeout(appLanding,250);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+  function appLanding(){if(!app)return;let p=document.getElementById('publicHomePage');if(!p){p=document.createElement('section');p.id='publicHomePage';p.className='page hidden';app.querySelector('.content')?.prepend(p)}const src=pv.querySelector('#oneMuslimLanding');if(src)p.innerHTML=src.outerHTML;wire(p);mountPack(p)}
+  const boot=()=>setTimeout(()=>{configureNav();appLanding();if(window.OneMuslimStartPack){mountPack(pv);mountPack(document.getElementById('publicHomePage'))}},300);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
