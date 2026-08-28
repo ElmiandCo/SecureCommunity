@@ -1,0 +1,53 @@
+/* OneMuslim shared design system — light/dark, reusable Islamic visual language */
+:root{
+  --om-green-950:#0b211b;--om-green-900:#103a2e;--om-green-800:#174b3b;--om-green-700:#1f5b49;--om-green-600:#2d705b;
+  --om-green-100:#e8f0eb;--om-green-50:#f3f7f4;--om-gold-700:#8f6d21;--om-gold-600:#b28b2f;--om-gold-500:#c89d3c;--om-gold-100:#f4ecd9;
+  --om-cream:#fbf8f1;--om-white:#fff;--om-ink:#182c25;--om-muted:#65766f;--om-border:#e5e1d7;--om-surface:#f7f7f3;
+  --om-radius-sm:10px;--om-radius-md:16px;--om-radius-lg:22px;--om-radius-xl:28px;--om-shadow:0 8px 30px rgba(18,48,39,.07);--om-shadow-lg:0 18px 55px rgba(18,48,39,.11);
+  --om-pattern:url('assets/onemuslim/pattern-light.svg');
+}
+
+/* Apply the system by adding class="onemuslim-theme" to body/app root. */
+.onemuslim-theme{background:var(--om-cream);color:var(--om-ink);overflow-x:hidden;}
+.onemuslim-theme::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.15;background-image:var(--om-pattern);background-size:420px 420px;}
+.onemuslim-theme h1,.onemuslim-theme h2,.onemuslim-theme h3,.onemuslim-theme h4,.onemuslim-theme b,.onemuslim-theme strong{color:var(--om-ink);}
+.onemuslim-theme p{color:var(--om-muted);}
+.onemuslim-theme .om-eyebrow{color:var(--om-green-700);font-size:11px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;}
+
+/* Shared cards / surfaces */
+.om-card{background:var(--om-white);border:1px solid var(--om-border);border-radius:var(--om-radius-md);box-shadow:var(--om-shadow);color:var(--om-ink);}
+.om-card-lg{border-radius:var(--om-radius-xl);box-shadow:var(--om-shadow-lg);}
+
+/* Brand accents */
+.om-mark{display:grid;place-items:center;background:var(--om-cream);color:var(--om-green-700);border:2px solid var(--om-gold-500);box-shadow:0 5px 18px rgba(200,157,60,.18);}
+.om-brand-rule{height:1px;background:linear-gradient(90deg,transparent,var(--om-gold-500),transparent);opacity:.5;}
+
+/* Buttons */
+.om-primary{background:var(--om-green-700);border:1px solid var(--om-green-700);color:#fff;border-radius:999px;box-shadow:0 7px 18px rgba(31,91,73,.18);}
+.om-primary:hover{background:var(--om-green-800);}
+.om-secondary{background:transparent;border:1px solid var(--om-green-700);color:var(--om-green-700);border-radius:999px;}
+.om-secondary:hover{background:var(--om-green-50);}
+
+/* Inputs */
+.om-input{background:#fff;color:var(--om-ink);border:1px solid var(--om-border);border-radius:var(--om-radius-sm);outline:none;}
+.om-input:focus{border-color:var(--om-green-600);box-shadow:0 0 0 3px rgba(31,91,73,.08);}
+
+/* Islamic decorative assets */
+.om-pattern{background-image:var(--om-pattern);background-size:420px 420px;}
+.om-divider{height:22px;background:url('assets/onemuslim/divider-gold.svg') center/contain no-repeat;opacity:.75;}
+.om-arch{background:url('assets/onemuslim/arch-gold.svg') center top/100% auto no-repeat;}
+.om-crescent{background:url('assets/onemuslim/crescent-gold.svg') center/contain no-repeat;}
+.om-corner{background:url('assets/onemuslim/corner-ornament.svg') left top/contain no-repeat;}
+.om-mosque{background:url('assets/onemuslim/mosque-light.svg') center bottom/contain no-repeat;}
+
+/* Dark theme */
+.onemuslim-theme[data-theme="dark"],
+[data-theme="dark"] .onemuslim-theme{
+  --om-cream:#0b211b;--om-white:#102d24;--om-ink:#f4f1e8;--om-muted:#b8c5bf;--om-border:#29483d;--om-surface:#14362b;--om-green-50:#153b30;--om-pattern:url('assets/onemuslim/pattern-dark.svg');
+}
+.onemuslim-theme[data-theme="dark"]::before{opacity:.11;}
+.onemuslim-theme[data-theme="dark"] .om-input{background:#0c241d;color:var(--om-ink);border-color:#315447;}
+.onemuslim-theme[data-theme="dark"] .om-card{background:var(--om-white);border-color:var(--om-border);}
+.onemuslim-theme[data-theme="dark"] .om-mark{background:#102d24;color:#e2b95a;}
+
+@media(max-width:780px){.onemuslim-theme::before{background-size:300px 300px;opacity:.1}.om-card-lg{border-radius:20px;}}
