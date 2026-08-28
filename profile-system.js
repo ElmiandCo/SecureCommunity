@@ -1,8 +1,8 @@
-/* OneMuslim Profile System v3 — persistent avatar/background tiers + explicit XP unlock rules. */
+/* OneMuslim Profile System v4 — Platinum 50k / Gold 20k. */
 (function () {
   "use strict";
   const RANKS = Object.freeze(["Muslim","Mu'min","Expert","Da'wah Expert","Elite Sheikh","Platinum Muhsin"]);
-  const PLATINUM_XP = 10000;
+  const PLATINUM_XP = 50000;
   const GOLD_XP = 20000;
   const AVATAR_ASSETS = Object.freeze({male:"assets/avatars/platinum-male.PNG",female:"assets/avatars/platinum-female.PNG"});
   const PROFILE_DEFAULTS = Object.freeze({avatar_gender:"male",avatar_base:"default",avatar_package:"default",avatar_asset:null,avatar_accessory:"none",avatar_ring:"default",profile_banner:"default",profile_background:"default",profile_accent:"emerald",profile_title:"Muslim",custom_photo:null,unlocked_packages:["default"]});
