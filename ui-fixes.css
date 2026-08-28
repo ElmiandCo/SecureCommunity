@@ -1,0 +1,51 @@
+/* OneMuslim UI refinement: Islamic accents + responsive member shell. */
+:root{--om-green:#174d3d;--om-green-2:#0f392d;--om-gold:#b9974b;--om-cream:#fbf8f1;--om-ink:#172b24;--om-line:#e5dfd2}
+body.dashboard-theme{background:var(--om-cream)!important;color:var(--om-ink)!important}
+body.dashboard-theme #appView{max-width:none!important;padding:0!important}
+/* Desktop member navigation: elegant, persistent, and clearly separated from content. */
+body.dashboard-theme .sidebar{position:sticky;top:0;height:100vh;min-height:100vh!important;width:280px;box-sizing:border-box;padding:28px 18px!important;border:0!important;border-right:1px solid var(--om-line)!important;border-radius:0!important;background:linear-gradient(180deg,#fff 0%,#fff 68%,#f5efe3 100%)!important;color:var(--om-ink)!important;overflow:hidden}
+body.dashboard-theme .sidebar:before{content:"";position:absolute;inset:0;background:url('assets/onemuslim/pattern-light.svg') center bottom/360px repeat-y;opacity:.38;pointer-events:none}
+body.dashboard-theme .sidebar>*{position:relative;z-index:1}
+body.dashboard-theme .sidebar:after{content:"☾";position:absolute;right:18px;bottom:70px;color:#b9974b55;font-size:74px;z-index:0}
+body.dashboard-theme .mini-profile{padding:8px 10px 20px;border-bottom:1px solid #ece7dc;margin-bottom:14px}
+body.dashboard-theme .xp-card{margin:0 4px 18px!important;background:#f1f6f2!important;border:1px solid #d7e3da!important;color:var(--om-green)!important;border-radius:16px!important}
+body.dashboard-theme .side{position:relative;border:1px solid transparent!important;background:transparent!important;color:#34463f!important;border-radius:15px!important;padding:13px 14px!important;font-size:15px!important;text-align:left!important;transition:all .18s ease}
+body.dashboard-theme .side:hover{background:#f2f5f1!important;color:var(--om-green)!important;transform:translateX(2px)}
+body.dashboard-theme .side.active{background:var(--om-green)!important;color:#fff!important;box-shadow:0 8px 22px rgba(23,77,61,.18)!important}
+body.dashboard-theme .logout{margin-top:auto!important;position:relative;border:1px solid #e5d9c7!important;background:#fffaf1!important;color:#8b5548!important;border-radius:14px!important;padding:12px 14px!important}
+/* Hide the old compact top nav on desktop; the sidebar is the primary navigation. */
+body.dashboard-theme .app-nav{display:none!important}
+/* Content canvas: roomy, editorial, with subtle Islamic texture. */
+body.dashboard-theme .content{min-width:0;background:radial-gradient(circle at 95% 4%,#f3ead7 0,transparent 24%),#fbf8f1!important}
+body.dashboard-theme .page{max-width:1180px;margin:0 auto;padding:30px 34px 70px;position:relative}
+body.dashboard-theme .page:before{content:"";position:absolute;right:0;top:18px;width:115px;height:115px;background:url('assets/onemuslim/corner-ornament.svg') top right/contain no-repeat;opacity:.45;pointer-events:none}
+body.dashboard-theme .page-head{position:relative;z-index:1;margin-bottom:22px}
+body.dashboard-theme .page-head h2{color:var(--om-green)!important;font-family:Georgia,'Times New Roman',serif!important;letter-spacing:-.5px}
+/* Public/home landing inside authenticated shell: preserve content hierarchy but make Start Pack unmistakable. */
+body.dashboard-theme #publicHomePage .om-landing{max-width:none!important;padding:0 0 40px!important;color:var(--om-ink)}
+body.dashboard-theme #publicHomePage .om-hero{padding:32px 0 26px!important;grid-template-columns:minmax(0,1.05fr) minmax(320px,.75fr)!important}
+body.dashboard-theme #publicHomePage .om-hero-art{background:linear-gradient(145deg,#173f32,#102c24)!important;border-color:#b9974b66!important;box-shadow:0 20px 55px rgba(18,56,46,.14)!important}
+body.dashboard-theme #publicHomePage .om-hero-art:before{opacity:.18}
+body.dashboard-theme #publicHomePage .om-section{padding:32px 0 54px!important}
+body.dashboard-theme #publicHomePage .om-section[id="start-pack"]{padding-top:38px!important}
+body.dashboard-theme #publicHomePage .om-section[id="start-pack"]:before{content:"LEARNING CENTER";display:block;color:var(--om-gold);font-size:10px;font-weight:900;letter-spacing:.22em;margin-bottom:10px}
+body.dashboard-theme #publicHomePage .sp-hero{background:linear-gradient(135deg,#173f32,#102c24)!important;border-color:#b9974b80!important;color:#fff;box-shadow:0 18px 50px rgba(18,56,46,.16)}
+body.dashboard-theme #publicHomePage .sp-hero h2,body.dashboard-theme #publicHomePage .sp-intro h3{color:#fff!important}
+body.dashboard-theme #publicHomePage .sp-hero p,body.dashboard-theme #publicHomePage .sp-intro p{color:#d6e2dc!important}
+body.dashboard-theme #publicHomePage .sp-xp{background:#fffaf0!important;border-color:#dfd3b2!important;color:var(--om-green)}
+body.dashboard-theme #publicHomePage .sp-topic{background:#fff!important;border-color:#e4dfd5!important;box-shadow:0 8px 24px rgba(40,60,50,.045)}
+body.dashboard-theme #publicHomePage .sp-topic:after{content:"✦";position:absolute;right:14px;bottom:9px;color:#b9974b40;font-size:26px}
+body.dashboard-theme #publicHomePage .om-card,body.dashboard-theme #publicHomePage .om-program,body.dashboard-theme #publicHomePage .om-product{box-shadow:0 8px 28px rgba(40,60,50,.05)!important}
+body.dashboard-theme #publicHomePage .om-card:after{content:"✦";color:#b9974b45}
+body.dashboard-theme #publicHomePage .om-quran{background:#fffaf0!important;border-color:#dfd3b2!important;background-image:url('assets/onemuslim/divider-gold.svg');background-repeat:no-repeat;background-position:center 94%;background-size:90px}
+body.dashboard-theme #publicHomePage .om-book{background:#173f32!important}
+body.dashboard-theme #publicHomePage .om-book:before{opacity:.25}
+/* Dark theme keeps the same identity. */
+body.dark-theme.dashboard-theme .sidebar{background:#102c24!important;border-color:#315447!important;color:#edf4ef!important}
+body.dark-theme.dashboard-theme .sidebar:before{opacity:.12}
+body.dark-theme.dashboard-theme .side{color:#d9e6df!important}
+body.dark-theme.dashboard-theme .side:hover{background:#173f32!important;color:#f1d48a!important}
+body.dark-theme.dashboard-theme .side.active{background:#b9974b!important;color:#102c24!important}
+body.dark-theme.dashboard-theme .content{background:#0d211b!important}
+@media(max-width:900px){body.dashboard-theme .sidebar{position:relative;width:100%;height:auto;min-height:0!important;padding:14px!important;border-right:0!important;border-bottom:1px solid var(--om-line)!important}body.dashboard-theme .sidebar:before{background-size:260px}.sidebar nav{display:flex;gap:7px;overflow:auto}.sidebar .side{white-space:nowrap}.sidebar .logout{margin-top:10px!important}.app-layout{display:block!important}body.dashboard-theme .page{padding:22px 18px 50px}body.dashboard-theme #publicHomePage .om-hero{grid-template-columns:1fr!important}}
+@media(max-width:600px){body.dashboard-theme #publicHomePage .om-hero-art{min-height:250px!important}.om-stats{grid-template-columns:1fr!important}.om-three,.om-media,.om-shop{grid-template-columns:1fr!important}.om-enroll{grid-template-columns:1fr!important}}
