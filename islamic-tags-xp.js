@@ -1,75 +1,85 @@
+/* Community feed cleanup + compact media viewer.
+ * Mr. Elmi note: Islamic topic tags are intentionally removed from the visible composer/feed UI.
+ * Existing tag data remains in Supabase; this is a presentation change, not a destructive migration.
+ */
 (() => {
-  const { createClient } = window.supabase || {};
-  const cfg = window.APP_CONFIG || {};
-  if (!createClient || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) return;
-  const db = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true} });
+  'use strict';
   const $ = id => document.getElementById(id);
-  const esc = s => String(s ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  let tags = [], selected = new Set(), activeTag = '', decorating = false;
 
-  function styles(){
-    if($('islamicTagsStyles')) return;
-    const s=document.createElement('style'); s.id='islamicTagsStyles';
+  function injectStyles(){
+    if($('communityFeedCleanupStyles')) return;
+    const s=document.createElement('style'); s.id='communityFeedCleanupStyles';
     s.textContent=`
-      .islamic-tag-panel{margin:8px 0 12px}.islamic-tag-label{font-size:11px;font-weight:800;color:#168746;display:block;margin-bottom:7px}.islamic-tags{display:flex;gap:7px;flex-wrap:wrap}.islamic-tag{border:1px solid #bfe5cb;background:#f5fff8;color:#168746;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer;transition:.15s}.islamic-tag:hover,.islamic-tag.selected{background:#20a85a;color:#fff;border-color:#20a85a}.post-tags{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.post-tag{border:1px solid #bfe5cb;background:#f5fff8;color:#168746;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:800;cursor:pointer}.post-tag:hover{background:#20a85a;color:#fff}.tag-filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}.tag-filter-title{font-size:11px;font-weight:800;color:#587563}.tag-filter-clear{border:0;background:transparent;color:#168746;font-size:11px;font-weight:800;cursor:pointer}.xp-reward-note{font-size:10px;color:#71877a;margin-top:6px}
+      #islamicTagPanel,#tagFilterBar,.islamic-tag-panel,.tag-filter-bar,.post-tags{display:none!important}
+      .media-grid.community-media-compact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+      .community-media-thumb{width:100%;height:150px;display:block;object-fit:cover;border-radius:14px;border:1px solid #e5e1d7;cursor:zoom-in;background:#f4f0e7;transition:transform .16s ease,box-shadow .16s ease}
+      .community-media-thumb:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(18,48,39,.12)}
+      .community-media-thumb.single{height:210px}.community-media-video{cursor:zoom-in}
+      .community-media-more{position:relative;overflow:hidden;border-radius:14px;cursor:zoom-in}
+      .community-media-more::after{content:attr(data-more);position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,31,25,.46);color:#fff;font-size:18px;font-weight:800;pointer-events:none}
+      .community-media-lightbox{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,18,14,.88);backdrop-filter:blur(8px)}
+      .community-media-lightbox[hidden]{display:none}.community-media-viewer{position:relative;width:min(1100px,96vw);height:min(88vh,900px);display:flex;align-items:center;justify-content:center}
+      .community-media-viewer img,.community-media-viewer video{max-width:100%;max-height:100%;object-fit:contain;border-radius:14px;box-shadow:0 20px 80px rgba(0,0,0,.35)}
+      .community-media-close,.community-media-nav{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff;cursor:pointer}
+      .community-media-close{position:absolute;top:-8px;right:-8px;width:42px;height:42px;border-radius:50%;font-size:26px;line-height:1;z-index:2}
+      .community-media-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;font-size:24px}.community-media-prev{left:-58px}.community-media-next{right:-58px}
+      .community-media-counter{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.82);font-size:12px}
+      @media(max-width:700px){.media-grid.community-media-compact{gap:6px}.community-media-thumb{height:105px;border-radius:11px}.community-media-thumb.single{height:180px}.community-media-lightbox{padding:12px}.community-media-viewer{width:100%;height:82vh}.community-media-prev{left:4px}.community-media-next{right:4px}.community-media-close{top:4px;right:4px}}
     `; document.head.appendChild(s);
   }
-  async function loadTags(){const r=await db.from('islamic_tags').select('tag,label,emoji,sort_order').order('sort_order');if(!r.error)tags=r.data||[];}
-  function renderTagChooser(){
-    const composer=document.querySelector('.composer'); if(!composer || $('islamicTagPanel')) return;
-    const body=composer.querySelector('.composer-body'); if(!body) return;
-    const panel=document.createElement('div'); panel.id='islamicTagPanel'; panel.className='islamic-tag-panel';
-    panel.innerHTML=`<span class="islamic-tag-label">🏷️ Add Islamic tags · +50 XP each</span><div class="islamic-tags">${tags.map(t=>`<button type="button" class="islamic-tag" data-select-tag="${esc(t.tag)}">${esc(t.emoji)} ${esc(t.label)}</button>`).join('')}</div><div class="xp-reward-note">Post: +100 XP · Image post: +100 bonus XP · Each unique tag: +50 XP</div>`;
-    body.insertBefore(panel,body.querySelector('.composer-footer'));
-    panel.querySelectorAll('[data-select-tag]').forEach(b=>b.onclick=()=>{const t=b.dataset.selectTag;if(selected.has(t)){selected.delete(t);b.classList.remove('selected')}else{selected.add(t);b.classList.add('selected')}});
+
+  function removeTagUi(){
+    document.querySelectorAll('#islamicTagPanel,#tagFilterBar,.islamic-tag-panel,.tag-filter-bar,.post-tags').forEach(el=>el.remove());
   }
-  async function attachTagsToNewestPost(){
-    if(!selected.size) return;
-    const {data:u}=await db.auth.getUser(); if(!u) return;
-    const r=await db.from('posts').select('id').eq('user_id',u.user.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
-    if(r.error || !r.data?.id) return;
-    const rows=[...selected].map(tag=>({post_id:r.data.id,tag}));
-    const ins=await db.from('post_tags').upsert(rows,{onConflict:'post_id,tag'});
-    if(ins.error) console.error('Tag save failed',ins.error);
-    selected.clear(); document.querySelectorAll('[data-select-tag]').forEach(b=>b.classList.remove('selected'));
-    await decoratePosts();
+
+  function collectMedia(card){return [...card.querySelectorAll('.media-item')].filter(el=>el.tagName==='IMG'||el.tagName==='VIDEO');}
+  let viewer=null,stage=null,counter=null,prev=null,next=null,currentItems=[],currentIndex=0;
+
+  function ensureViewer(){
+    if(viewer)return;
+    viewer=document.createElement('div'); viewer.className='community-media-lightbox'; viewer.hidden=true;
+    viewer.innerHTML='<div class="community-media-viewer" role="dialog" aria-modal="true" aria-label="Media viewer"><button type="button" class="community-media-close" aria-label="Close">×</button><button type="button" class="community-media-nav community-media-prev" aria-label="Previous">‹</button><div class="community-media-stage"></div><button type="button" class="community-media-nav community-media-next" aria-label="Next">›</button><div class="community-media-counter"></div></div>';
+    document.body.appendChild(viewer); stage=viewer.querySelector('.community-media-stage'); counter=viewer.querySelector('.community-media-counter'); prev=viewer.querySelector('.community-media-prev'); next=viewer.querySelector('.community-media-next');
+    viewer.querySelector('.community-media-close').onclick=closeViewer;
+    viewer.onclick=e=>{if(e.target===viewer)closeViewer()};
+    prev.onclick=e=>{e.stopPropagation();showViewer(currentIndex-1)}; next.onclick=e=>{e.stopPropagation();showViewer(currentIndex+1)};
+    document.addEventListener('keydown',e=>{if(!viewer||viewer.hidden)return;if(e.key==='Escape')closeViewer();if(e.key==='ArrowLeft')showViewer(currentIndex-1);if(e.key==='ArrowRight')showViewer(currentIndex+1)});
   }
-  async function decoratePosts(){
-    if(decorating)return; decorating=true;
-    try{
-      const feed=$('feed'); if(!feed) return;
-      const cards=[...feed.querySelectorAll('[data-post]')]; if(!cards.length) return;
-      const ids=cards.map(x=>x.dataset.post);
-      const r=await db.from('post_tags').select('post_id,tag').in('post_id',ids); if(r.error)return;
-      const by={}; (r.data||[]).forEach(x=>(by[x.post_id]??=[]).push(x.tag));
-      cards.forEach(card=>{
-        card.querySelector('.post-tags')?.remove(); const row=by[card.dataset.post]||[]; if(!row.length)return;
-        const div=document.createElement('div'); div.className='post-tags';
-        div.innerHTML=row.map(t=>{const meta=tags.find(x=>x.tag===t);return `<button type="button" class="post-tag" data-filter-tag="${esc(t)}">${esc(meta?.emoji||'🏷️')} ${esc(meta?.label||t)}</button>`}).join('');
-        card.querySelector('.post-actions')?.before(div); div.querySelectorAll('[data-filter-tag]').forEach(b=>b.onclick=()=>filterTag(b.dataset.filterTag));
-      });
-    }finally{decorating=false;}
+
+  function showViewer(index){
+    if(!currentItems.length)return;
+    currentIndex=(index+currentItems.length)%currentItems.length;
+    const source=currentItems[currentIndex],src=source.currentSrc||source.src;
+    stage.innerHTML=''; if(!src)return;
+    let media;
+    if(source.tagName==='VIDEO'){media=document.createElement('video');media.controls=true;media.autoplay=true;media.playsInline=true}else{media=document.createElement('img');media.alt=source.alt||'Post media'}
+    media.src=src; stage.appendChild(media); counter.textContent=`${currentIndex+1} / ${currentItems.length}`;
+    prev.style.display=next.style.display=currentItems.length>1?'':'none';
   }
-  function ensureFilterBar(){
-    const feed=$('feed'); if(!feed || $('tagFilterBar')) return;
-    const bar=document.createElement('div'); bar.id='tagFilterBar'; bar.className='tag-filter-bar';
-    bar.innerHTML=`<span class="tag-filter-title">Explore Islamic topics:</span><div class="islamic-tags" id="globalTagChoices"></div>`;
-    feed.parentNode.insertBefore(bar,feed); renderGlobalTags();
+
+  function openViewer(card,index){ensureViewer();currentItems=collectMedia(card);if(!currentItems.length)return;viewer.hidden=false;document.body.style.overflow='hidden';showViewer(Number(index)||0)}
+  function closeViewer(){if(!viewer)return;viewer.hidden=true;stage.innerHTML='';document.body.style.overflow=''}
+
+  function compactMedia(card){
+    const grid=card.querySelector('.media-grid'); if(!grid||grid.dataset.compactMedia==='1')return;
+    const items=collectMedia(card); if(!items.length)return;
+    grid.dataset.compactMedia='1';grid.classList.add('community-media-compact');
+    items.forEach((item,index)=>{item.classList.add('community-media-thumb');if(items.length===1)item.classList.add('single');item.dataset.mediaIndex=String(index);item.setAttribute('role','button');item.setAttribute('aria-label','Open media');if(item.tagName==='VIDEO'){item.controls=false;item.preload='metadata'}});
+    if(items.length>4){items.slice(4).forEach(item=>item.style.display='none');const more=document.createElement('div');more.className='community-media-more';more.dataset.more=`+${items.length-4}`;more.dataset.mediaIndex='4';const clone=items[4].cloneNode(true);clone.style.display='';more.appendChild(clone);grid.appendChild(more)}
   }
-  function renderGlobalTags(){
-    const box=$('globalTagChoices'); if(!box)return;
-    box.innerHTML=tags.map(t=>`<button type="button" class="islamic-tag ${activeTag===t.tag?'selected':''}" data-global-tag="${esc(t.tag)}">${esc(t.emoji)} ${esc(t.label)}</button>`).join('')+(activeTag?`<button type="button" class="tag-filter-clear" id="clearTagFilter">Clear ×</button>`:'');
-    box.querySelectorAll('[data-global-tag]').forEach(b=>b.onclick=()=>filterTag(b.dataset.globalTag)); $('clearTagFilter')?.addEventListener('click',()=>filterTag(''));
+
+  function wireMedia(){
+    document.querySelectorAll('[data-post]').forEach(card=>{compactMedia(card);card.querySelectorAll('.community-media-thumb,.community-media-more').forEach(item=>{if(item.dataset.mediaWired==='1')return;item.dataset.mediaWired='1';item.onclick=e=>{e.preventDefault();e.stopPropagation();openViewer(card,item.dataset.mediaIndex||0)}})});
   }
-  function filterTag(tag){activeTag=tag;renderGlobalTags();document.querySelectorAll('[data-post]').forEach(card=>{if(!tag){card.style.display='';return;}const has=[...card.querySelectorAll('[data-filter-tag]')].some(x=>x.dataset.filterTag===tag);card.style.display=has?'':'none';});}
-  function hookPublish(){
-    const btn=$('publish'); if(!btn || btn.dataset.tagsHooked)return; btn.dataset.tagsHooked='1'; const original=btn.onclick;
-    btn.onclick=async e=>{await original?.(e);await new Promise(r=>setTimeout(r,300));await attachTagsToNewestPost();};
-  }
-  async function init(){
-    styles();await loadTags();renderTagChooser();ensureFilterBar();hookPublish();await decoratePosts();
-    const feed=$('feed'); if(feed&&!feed.dataset.tagObserver){feed.dataset.tagObserver='1';new MutationObserver(()=>{hookPublish();ensureFilterBar();decoratePosts();}).observe(feed,{childList:true,subtree:true});}
+
+  function init(){
+    injectStyles();removeTagUi();wireMedia();
+    const feed=$('feed');
+    if(feed&&!feed.dataset.communityCleanupObserver){
+      feed.dataset.communityCleanupObserver='1';
+      new MutationObserver(()=>{removeTagUi();wireMedia()}).observe(feed,{childList:true,subtree:true});
+    }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-  setInterval(()=>{renderTagChooser();hookPublish();ensureFilterBar();},1200);
+  setInterval(()=>{removeTagUi();wireMedia()},1500);
 })();
