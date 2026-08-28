@@ -1,6 +1,6 @@
 /* OneMuslim XP Tier UI
  * Presentation-only layer. Unlock authority stays in profile-system.js.
- * This keeps tier thresholds centralized and makes the visual treatment reusable.
+ * This keeps tier thresholds centralized and the visual treatment reusable.
  */
 (function () {
   "use strict";
@@ -25,20 +25,20 @@
         white-space:nowrap;
       }
       .om-xp-tier::before { content:"✦"; font-size:9px; }
-      .om-xp-tier--base { color:#1f6a55; background:#edf6f1; }
-      .om-xp-tier--platinum {
+      .om-xp-tier.tier-base { color:#1f6a55; background:#edf6f1; }
+      .om-xp-tier.tier-platinum {
         color:#4f5963;
         background:linear-gradient(135deg,#f8f9fa,#d9dde2,#ffffff);
         border-color:#aeb5bd;
         box-shadow:0 0 14px rgba(191,197,204,.55), inset 0 1px rgba(255,255,255,.95);
       }
-      .om-xp-tier--gold {
+      .om-xp-tier.tier-gold {
         color:#6b4d05;
         background:linear-gradient(135deg,#fff8d9,#d4af37,#fff2b2);
         border-color:#c49a22;
         box-shadow:0 0 16px rgba(212,175,55,.5), inset 0 1px rgba(255,255,255,.95);
       }
-      .om-xp-tier--diamond {
+      .om-xp-tier.tier-diamond {
         color:#15506f;
         background:linear-gradient(135deg,#effaff,#aee2ff,#ffffff);
         border-color:#76c5ed;
@@ -69,14 +69,15 @@
 
     const refreshPreview = () => {
       const preview = document.querySelector(".om-pb-preview-meta");
-      if (!preview) return;
-      let badge = preview.parentElement?.querySelector(".om-pb-preview-tier");
+      if (!preview?.parentElement) return;
+      let badge = preview.parentElement.querySelector(".om-pb-preview-tier");
       if (!badge) {
         badge = document.createElement("div");
         badge.className = "om-pb-preview-tier";
-        preview.parentElement?.appendChild(badge);
+        preview.parentElement.appendChild(badge);
       }
-      badge.innerHTML = tierBadge();
+      const html = tierBadge();
+      if (badge.innerHTML !== html) badge.innerHTML = html;
     };
 
     const injectTierCard = () => {
@@ -102,12 +103,18 @@
       panel.appendChild(card);
     };
 
+    let scheduled = false;
     const render = () => {
+      scheduled = false;
       refreshPreview();
       injectTierCard();
     };
 
-    const observer = new MutationObserver(render);
+    const observer = new MutationObserver(() => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(render);
+    });
     observer.observe(document.body, { childList: true, subtree: true });
     render();
   };
