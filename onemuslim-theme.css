@@ -6,39 +6,62 @@
   --om-radius-sm:10px;--om-radius-md:16px;--om-radius-lg:22px;--om-radius-xl:28px;--om-shadow:0 8px 30px rgba(18,48,39,.07);--om-shadow-lg:0 18px 55px rgba(18,48,39,.11);
   --om-pattern:url('assets/onemuslim/pattern-light.svg');
 }
-
-/* Apply the system by adding class="onemuslim-theme" to body/app root. */
 .onemuslim-theme{background:var(--om-cream);color:var(--om-ink);overflow-x:hidden;}
 .onemuslim-theme::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.15;background-image:var(--om-pattern);background-size:420px 420px;}
 .onemuslim-theme h1,.onemuslim-theme h2,.onemuslim-theme h3,.onemuslim-theme h4,.onemuslim-theme b,.onemuslim-theme strong{color:var(--om-ink);}
 .onemuslim-theme p{color:var(--om-muted);}
 .onemuslim-theme .om-eyebrow{color:var(--om-green-700);font-size:11px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;}
-
-/* Shared cards / surfaces */
 .om-card{background:var(--om-white);border:1px solid var(--om-border);border-radius:var(--om-radius-md);box-shadow:var(--om-shadow);color:var(--om-ink);}
 .om-card-lg{border-radius:var(--om-radius-xl);box-shadow:var(--om-shadow-lg);}
-
-/* Brand accents */
 .om-mark{display:grid;place-items:center;background:var(--om-cream);color:var(--om-green-700);border:2px solid var(--om-gold-500);box-shadow:0 5px 18px rgba(200,157,60,.18);}
 .om-brand-rule{height:1px;background:linear-gradient(90deg,transparent,var(--om-gold-500),transparent);opacity:.5;}
-
-/* Buttons */
 .om-primary{background:var(--om-green-700);border:1px solid var(--om-green-700);color:#fff;border-radius:999px;box-shadow:0 7px 18px rgba(31,91,73,.18);}
 .om-primary:hover{background:var(--om-green-800);}
 .om-secondary{background:transparent;border:1px solid var(--om-green-700);color:var(--om-green-700);border-radius:999px;}
 .om-secondary:hover{background:var(--om-green-50);}
-
-/* Inputs */
 .om-input{background:#fff;color:var(--om-ink);border:1px solid var(--om-border);border-radius:var(--om-radius-sm);outline:none;}
 .om-input:focus{border-color:var(--om-green-600);box-shadow:0 0 0 3px rgba(31,91,73,.08);}
-
-/* Islamic decorative assets */
 .om-pattern{background-image:var(--om-pattern);background-size:420px 420px;}
 .om-divider{height:22px;background:url('assets/onemuslim/divider-gold.svg') center/contain no-repeat;opacity:.75;}
 .om-arch{background:url('assets/onemuslim/arch-gold.svg') center top/100% auto no-repeat;}
 .om-crescent{background:url('assets/onemuslim/crescent-gold.svg') center/contain no-repeat;}
 .om-corner{background:url('assets/onemuslim/corner-ornament.svg') left top/contain no-repeat;}
 .om-mosque{background:url('assets/onemuslim/mosque-light.svg') center bottom/contain no-repeat;}
+
+/* Shared authenticated navigation */
+.app-nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;min-height:68px;padding:10px clamp(16px,4vw,48px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--om-border);backdrop-filter:blur(16px);}
+.app-nav-brand{display:flex;align-items:center;gap:10px;margin-right:14px;color:var(--om-green-900);font-family:Georgia,serif;font-size:22px;font-weight:700;white-space:nowrap;}
+.app-nav-brand .om-nav-mark{width:38px;height:38px;border:2px solid var(--om-gold-500);border-radius:50%;display:grid;place-items:center;color:var(--om-green-700);background:var(--om-cream);}
+.app-nav-links{display:flex;align-items:center;gap:4px;}
+.app-nav button{font:inherit;cursor:pointer;}
+.app-nav-link{border:0;background:transparent;color:var(--om-muted);padding:10px 13px;border-radius:999px;font-weight:700;}
+.app-nav-link:hover,.app-nav-link.active{background:var(--om-green-50);color:var(--om-green-700);}
+.app-nav-back{border:1px solid var(--om-border);background:var(--om-white);color:var(--om-green-700);padding:9px 13px;border-radius:999px;font-weight:800;}
+.app-nav-back:hover{border-color:var(--om-gold-500);background:var(--om-gold-100);}
+.app-nav-search{margin-left:auto;width:min(320px,28vw);border:1px solid var(--om-border);background:var(--om-surface);color:var(--om-ink);border-radius:999px;padding:11px 16px;outline:0;}
+.app-nav-search:focus{border-color:var(--om-green-600);}
+.app-nav-menu{display:none;border:1px solid var(--om-border);background:var(--om-white);color:var(--om-green-700);border-radius:12px;padding:9px 11px;font-size:20px;}
+
+/* Public social Home: desktop top navigation, mobile drawer */
+.dashboard-theme .social-sidebar{display:none!important;}
+.dashboard-theme .social-home{display:block!important;min-height:100vh;background:var(--om-cream)!important;color:var(--om-ink)!important;}
+.dashboard-theme .social-home .social-top{height:72px!important;position:sticky;top:0;z-index:20;display:flex!important;gap:18px!important;justify-content:flex-start!important;padding:0 clamp(16px,4vw,48px)!important;box-shadow:0 4px 18px rgba(18,48,39,.04);}
+.dashboard-theme .social-home .social-top:before{content:'OneMuslim';font-family:Georgia,serif;font-size:24px;font-weight:700;color:var(--om-green-900);white-space:nowrap;}
+.dashboard-theme .social-home .social-top:after{content:'✦';width:36px;height:36px;border:2px solid var(--om-gold-500);border-radius:50%;display:grid;place-items:center;color:var(--om-green-700);background:var(--om-cream);position:absolute;left:calc(clamp(16px,4vw,48px) - 1px);font-size:18px;}
+.dashboard-theme .social-home .social-top:before{padding-left:48px;}
+.dashboard-theme .social-home .social-search{margin-left:auto;}
+.dashboard-theme .social-grid{max-width:1240px!important;grid-template-columns:minmax(0,1fr) 330px!important;gap:32px!important;padding-top:24px!important;}
+.dashboard-theme .social-home .social-nav{display:none!important;}
+.dashboard-theme .social-home .mobile-social-menu{display:none;}
+
+/* Auth/app screens inherit the same surfaces */
+.dashboard-theme #authView,.dashboard-theme #appView{background:transparent!important;color:var(--om-ink)!important;}
+.dashboard-theme #appView{max-width:none!important;padding:0!important;}
+.dashboard-theme #appView .app-layout{max-width:1280px;margin:0 auto;padding:28px clamp(16px,4vw,48px) 45px;grid-template-columns:1fr!important;gap:0!important;}
+.dashboard-theme #appView .sidebar{display:none!important;}
+.dashboard-theme #appView .content{max-width:900px;}
+.dashboard-theme #appView .page-head{margin-top:4px;}
+.dashboard-theme #appView .back{border:1px solid var(--om-border);background:#fff;border-radius:999px;padding:8px 13px;}
 
 /* Dark theme */
 .onemuslim-theme[data-theme="dark"],
@@ -49,5 +72,25 @@
 .onemuslim-theme[data-theme="dark"] .om-input{background:#0c241d;color:var(--om-ink);border-color:#315447;}
 .onemuslim-theme[data-theme="dark"] .om-card{background:var(--om-white);border-color:var(--om-border);}
 .onemuslim-theme[data-theme="dark"] .om-mark{background:#102d24;color:#e2b95a;}
+.onemuslim-theme[data-theme="dark"] .app-nav{background:rgba(16,45,36,.96);border-color:var(--om-border);}
+.onemuslim-theme[data-theme="dark"] .app-nav-brand,.onemuslim-theme[data-theme="dark"] .app-nav-link{color:#dfe9e4;}
+.onemuslim-theme[data-theme="dark"] .app-nav-link:hover,.onemuslim-theme[data-theme="dark"] .app-nav-link.active{background:#194638;color:#f7f2e7;}
+.onemuslim-theme[data-theme="dark"] .app-nav-back,.onemuslim-theme[data-theme="dark"] .app-nav-search{background:#0c241d;color:#f4f1e8;border-color:#315447;}
 
-@media(max-width:780px){.onemuslim-theme::before{background-size:300px 300px;opacity:.1}.om-card-lg{border-radius:20px;}}
+@media(max-width:780px){
+  .onemuslim-theme::before{background-size:300px 300px;opacity:.1}.om-card-lg{border-radius:20px;}
+  .app-nav{justify-content:space-between;}.app-nav-menu{display:block}.app-nav-links{display:none}.app-nav-search{order:2;flex:1;max-width:none;margin:0 8px;width:auto}.app-nav-brand{margin:0}.app-nav-back{order:0;padding:8px 10px;font-size:12px;}
+  .dashboard-theme .social-home .social-top{height:64px!important;overflow:visible!important;}
+  .dashboard-theme .social-home .social-top:before{font-size:20px;}
+  .dashboard-theme .social-grid{grid-template-columns:1fr!important;padding:16px!important;}
+  .dashboard-theme .social-home .social-tools{margin-left:auto;gap:10px!important;}
+  .dashboard-theme .social-home .social-search{display:none;}
+  .dashboard-theme .social-home .mobile-social-menu{display:flex;position:fixed;inset:64px auto 0 0;width:min(290px,86vw);z-index:30;transform:translateX(-105%);transition:transform .2s ease;background:#fff;border-right:1px solid var(--om-border);box-shadow:20px 0 45px rgba(18,48,39,.12);padding:20px;flex-direction:column;gap:7px;}
+  .dashboard-theme .social-home .mobile-social-menu.open{transform:translateX(0);}
+  .dashboard-theme .social-home .mobile-social-menu button{border:0;background:transparent;text-align:left;padding:12px 14px;border-radius:12px;color:var(--om-ink);font-weight:700;}
+  .dashboard-theme .social-home .mobile-social-menu button:hover{background:var(--om-green-50);color:var(--om-green-700);}
+  .dashboard-theme #appView .app-layout{padding:18px 16px 30px;}
+  .dashboard-theme #appView .sidebar{display:block!important;position:fixed;inset:0 auto 0 0;width:min(290px,86vw);z-index:35;transform:translateX(-105%);transition:transform .2s ease;background:var(--om-white);border-right:1px solid var(--om-border);padding:82px 18px 18px;box-shadow:20px 0 45px rgba(18,48,39,.12);}
+  .dashboard-theme #appView .sidebar.open{transform:translateX(0);}
+  .dashboard-theme #appView .sidebar nav{display:grid;overflow:visible;}
+}
