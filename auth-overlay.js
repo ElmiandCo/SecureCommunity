@@ -41,6 +41,39 @@
     document.querySelectorAll('[data-public-auth="login"]').forEach(b=>b.style.display=logged?'none':'');
     if(logged)modalState(false);
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync);else sync();
+
+  /* Session repair: Supabase persists browser sessions by default, so a refresh must
+     never be treated as a sign-out while the persisted session is still resolving.
+     The existing app bootstrap owns the user state; this bridge simply re-enters the
+     app if that bootstrap briefly rendered the public screen during initialization. */
+  let repairRunning=false;
+  async function repairSession(){
+    if(repairRunning)return;
+    repairRunning=true;
+    try{
+      const client=window.OneMuslimSupabaseClient?.getClient?.() || null;
+      if(!client)return;
+      const {data,error}=await client.auth.getSession();
+      if(error||!data?.session)return;
+      const app=document.getElementById('appView');
+      if(app?.classList.contains('hidden') && typeof window.enterApp==='function'){
+        await window.enterApp();
+      }
+    }catch(e){console.warn('OneMuslim session restore:',e)}
+    finally{repairRunning=false}
+  }
+
+  function bootRepair(){
+    repairSession();
+    [250,750,1500,3000,5000].forEach(ms=>setTimeout(repairSession,ms));
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{sync();bootRepair()});
+  else {sync();bootRepair()}
   new MutationObserver(sync).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+
+  const client=window.OneMuslimSupabaseClient?.getClient?.();
+  client?.auth.onAuthStateChange((event,session)=>{
+    if(session && event!=='SIGNED_OUT') setTimeout(repairSession,0);
+  });
 })();
