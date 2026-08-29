@@ -1,9 +1,8 @@
 /* OneMuslim profile page UI bridge.
-   Connects the existing Profile Builder to the rendered My Profile card and
-   keeps the authenticated user's saved avatar visible in the app. */
+   Connects the existing Profile Builder to the rendered My Profile card
+   without replacing the builder-owned click handler. */
 (function(){
   'use strict';
-
   const style=document.createElement('style');
   style.id='om-profile-ui-fix-css';
   style.textContent=`
@@ -15,60 +14,43 @@
     .om-profile-avatar-img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
   `;
   document.head.appendChild(style);
-
   function avatarUrl(){
     const p=window.profile||{};
     if(p.avatar_url) return p.avatar_url;
     const sys=window.OneMuslimProfileSystem;
     return sys?.getAvatarAsset?.(p)||null;
   }
-
   function repairProfilePanel(){
     const panel=document.getElementById('profilePanel');
-    if(!panel) return;
+    if(!panel)return;
     panel.classList.add('profile-panel');
-
     const edit=panel.querySelector('#editProfile');
-    if(edit){
-      edit.textContent='Customize Avatar & Profile';
-      if(!edit.dataset.omBuilderBridge){
-        /* Remove app.js's old inline profile-editor listener. The dedicated
-           Profile Builder owns this button now. */
-        const replacement=edit.cloneNode(true);
-        replacement.dataset.omBuilderBridge='1';
-        edit.replaceWith(replacement);
-      }
-    }
-
+    if(edit) edit.textContent='Customize Avatar & Profile';
     const url=avatarUrl();
     const heroAvatar=panel.querySelector('.profile-hero .avatar');
-    if(url && heroAvatar && !heroAvatar.querySelector('img')){
+    if(url&&heroAvatar&&!heroAvatar.querySelector('img')){
       heroAvatar.textContent='';
       const img=document.createElement('img');
-      img.src=url; img.alt='Profile avatar'; img.className='om-profile-avatar-img';
+      img.src=url;img.alt='Profile avatar';img.className='om-profile-avatar-img';
       heroAvatar.appendChild(img);
     }
   }
-
   function refreshOtherAvatars(){
     const url=avatarUrl();
-    if(!url) return;
-    const selectors=['#miniProfile .avatar','#composerAvatar'];
-    selectors.forEach(sel=>{
+    if(!url)return;
+    ['#miniProfile .avatar','#composerAvatar'].forEach(sel=>{
       const el=document.querySelector(sel);
-      if(!el || el.querySelector('img')) return;
+      if(!el||el.querySelector('img'))return;
       el.textContent='';
       const img=document.createElement('img');
-      img.src=url; img.alt='Profile avatar'; img.className='om-profile-avatar-img';
+      img.src=url;img.alt='Profile avatar';img.className='om-profile-avatar-img';
       el.appendChild(img);
     });
   }
-
   function init(){
     repairProfilePanel();
     refreshOtherAvatars();
     new MutationObserver(()=>{repairProfilePanel();refreshOtherAvatars()}).observe(document.body,{childList:true,subtree:true});
   }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
