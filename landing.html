@@ -6,22 +6,22 @@
 <meta name="theme-color" content="#05070d">
 <title>OneMuslim — One Muslim. One God.</title>
 <link rel="stylesheet" href="landing.css">
+<link rel="stylesheet" href="landing-nature.css">
 </head>
 <body>
 <div class="landing" id="landing">
   <canvas id="landingStars" aria-hidden="true"></canvas>
   <header class="landing-nav">
     <a class="brand" href="landing.html" aria-label="OneMuslim home"><span class="brand-mark">1</span><span class="brand-word">MUSLIM</span></a>
-    <nav class="nav-links" aria-label="Primary navigation">
-      <a href="#space">HOME</a><a href="#earth">ABOUT</a><a href="#sky">LEARN</a><a href="index.html">COMMUNITY</a><a href="coming-soon.html">GAMES</a>
-    </nav>
+    <nav class="nav-links" aria-label="Primary navigation"><a href="#space">HOME</a><a href="#earth">ABOUT</a><a href="#sky">LEARN</a><a href="index.html">COMMUNITY</a><a href="coming-soon.html">GAMES</a></nav>
     <div class="nav-actions"><button class="nav-signin" id="signInBtn">SIGN IN</button><button class="nav-journey" id="joinBtn">JOIN THE JOURNEY</button><button class="nav-avatar hidden" id="profileBtn" aria-label="Open my profile"></button></div>
   </header>
-  <aside class="progress" aria-hidden="true"><span class="active"></span><span></span><span></span></aside>
+  <aside class="progress" aria-hidden="true"><span class="active"></span><span></span><span></span><span></span></aside>
   <main>
     <section class="scene scene-space" id="space"><div class="space-nebula layer" data-speed="0.10"></div><div class="space-stars layer" data-speed="0.20"></div><div class="moon layer" data-speed="0.34"></div><div class="scene-ornament layer" data-speed="0.44"><img src="assets/onemuslim/hero-ornament.svg" alt=""></div><div class="copy" data-speed="0.50"><span class="scene-no">01</span><span class="kicker">THE BEGINNING</span><h1><span>1 Muslim</span><em>1 God</em></h1><p>One journey. One purpose. One Muslim.</p><button class="scroll-cta" data-scroll="#earth">SCROLL TO BEGIN <span>↓</span></button></div></section>
     <section class="scene scene-earth" id="earth"><div class="earth-space layer" data-speed="0.08"></div><div class="earth-glow layer" data-speed="0.20"></div><div class="earth layer" data-speed="0.34"><div class="earth-land"></div><div class="earth-lights"></div></div><div class="earth-haze layer" data-speed="0.48"></div><div class="scene-ornament layer" data-speed="0.58"><img src="assets/onemuslim/hero-ornament.svg" alt=""></div><div class="copy copy-earth" data-speed="0.64"><span class="scene-no">02</span><span class="kicker">THE FIRST QUESTION</span><h2>Do you know<br><em>the Shahada?</em></h2><p class="meaning">It’s the key to Paradise.</p><button class="gold-cta" data-scroll="#sky">READ MORE <span>✦</span></button></div></section>
     <section class="scene scene-sky" id="sky"><div class="sky-base layer" data-speed="0.08"></div><div class="sun-halo layer" data-speed="0.16"></div><div class="clouds layer" data-speed="0.28"><img src="landing-clouds.svg" alt=""></div><div class="birds layer" data-speed="0.40" aria-hidden="true">⌁ &nbsp; 𓅃 &nbsp; ⌁</div><div class="scene-ornament light layer" data-speed="0.54"><img src="assets/onemuslim/hero-ornament.svg" alt=""></div><div class="copy copy-sky" data-speed="0.60"><span class="scene-no">03</span><span class="kicker">WELCOME</span><h2>Welcome to<br><em>One Muslim</em></h2><p>“The One Muslim App”</p><div class="sky-actions"><button class="clear-cta" id="skyLearn">START LEARNING <span>→</span></button></div></div></section>
+    <section class="scene scene-nature" id="nature"><div class="nature-base layer" data-speed="0.12"></div><div class="nature-vignette layer" data-speed="0.20"></div><div class="nature-fade-top"></div><div class="nature-fade-bottom"></div><div class="scene-ornament light layer" data-speed="0.48"><img src="assets/onemuslim/hero-ornament.svg" alt=""></div><div class="copy copy-nature" data-speed="0.58"><span class="scene-no">04</span><span class="kicker">THE JOURNEY</span><h2>Find beauty<br><em>in creation.</em></h2><p>Every step is part of the journey.</p></div></section>
   </main>
   <div class="auth-overlay hidden" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle"><canvas id="authCanvas" aria-hidden="true"></canvas><div class="auth-card"><button class="auth-close" id="authClose" aria-label="Close">×</button><div class="auth-symbol">✦</div><span class="kicker">ONE MUSLIM</span><h2 id="authTitle">Welcome back.</h2><p class="auth-sub" id="authSub">Sign in to continue your journey.</p><form id="authForm"><label>Email<input id="authEmail" type="email" autocomplete="email" required></label><label>Password<input id="authPassword" type="password" autocomplete="current-password" required></label><button class="auth-submit" type="submit" id="authSubmit">SIGN IN</button></form><button class="auth-switch" id="authSwitch" type="button">New here? Create an account</button><p class="auth-error" id="authError" role="alert"></p></div></div>
 </div>
