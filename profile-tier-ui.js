@@ -5,9 +5,26 @@
 (function () {
   "use strict";
 
+  const loadProfileView = () => {
+    if (!document.querySelector('link[href="profile-view.css"]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "profile-view.css";
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[src="profile-view.js"]')) {
+      const script = document.createElement("script");
+      script.src = "profile-view.js";
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+  };
+
   const boot = () => {
     const system = window.OneMuslimProfileSystem;
     if (!system || document.getElementById("om-tier-ui-styles")) return;
+
+    loadProfileView();
 
     const style = document.createElement("style");
     style.id = "om-tier-ui-styles";
