@@ -3,150 +3,28 @@
   'use strict';
   let opened=false;
   let syncing=false;
-
-  function client(){
-    return window.OneMuslimSupabaseClient?.getClient?.()
-      || window.supabase?.createClient?.(window.APP_CONFIG?.SUPABASE_URL,window.APP_CONFIG?.SUPABASE_ANON_KEY);
-  }
-
-  function loadAvatarSync(){
-    if(document.querySelector('script[data-selected-avatar-sync]'))return;
-    const s=document.createElement('script');
-    s.src='selected-avatar-sync.js';
-    s.dataset.selectedAvatarSync='1';
-    s.defer=true;
-    document.body.appendChild(s);
-  }
-
-  async function syncProfile(){
-    if(syncing)return window.profile||null;
-    const sb=client();
-    if(!sb)return null;
-    syncing=true;
-    try{
-      const {data:{user}}=await sb.auth.getUser();
-      if(!user)return null;
-      const {data,error}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
-      if(error)throw error;
-      if(data)window.profile=data;
-      return data||null;
-    }catch(e){
-      console.error('Profile sync failed:',e);
-      return window.profile||null;
-    }finally{syncing=false;}
-  }
-
-  function openUnifiedEditor(){
-    loadAvatarSync();
-    const open=window.OneMuslimProfileBuilder?.open||window.openProfileBuilder||window.OneMuslimOpenProfileEditor;
-    if(typeof open!=='function'){
-      console.error('Unified profile builder is not available.');
-      window.toast?.('Profile editor is still loading. Please try again.');
-      return false;
-    }
-    open();
-    return true;
-  }
-
-  function wireEditButton(){
-    const btn=document.getElementById('editProfile');
-    if(!btn||btn.dataset.unifiedProfileEditor==='1')return;
-    btn.dataset.unifiedProfileEditor='1';
-    btn.addEventListener('click',async function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      await syncProfile();
-      openUnifiedEditor();
-    },true);
-  }
-
-  function cardStyles(){
-    if(document.getElementById('om-personal-card-styles'))return;
-    const s=document.createElement('style');s.id='om-personal-card-styles';s.textContent=`
-      .om-personal-card{position:relative;overflow:hidden;margin:34px 0 20px;border:1px solid #e5dfd0;border-radius:28px;min-height:270px;background:#fff;box-shadow:0 18px 55px rgba(18,48,39,.09)}
-      .om-personal-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.9);transform:scale(1.04)}
-      .om-personal-card-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,34,27,.12),rgba(255,255,255,.1) 42%,rgba(255,255,255,.96) 68%)}
-      .om-personal-card-fg{position:relative;z-index:1;margin-top:92px;background:rgba(255,255,255,.96);border-radius:34px 34px 28px 28px;padding:28px 26px 22px;min-height:180px}
-      .om-personal-card-head{display:flex;align-items:center;gap:16px}.om-personal-avatar{width:82px;height:82px;border-radius:50%;border:5px solid #fff;box-shadow:0 8px 22px #0002;background:#b9cbbf;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;color:#173c31;flex:none}.om-personal-avatar img{width:100%;height:100%;object-fit:contain}
-      .om-personal-rank{margin-left:auto;text-align:right}.om-personal-rank strong{display:block;color:#c89d3c;font-size:18px}.om-personal-rank span{font-size:12px;color:#61756b}.om-personal-name{font-size:25px;font-weight:800;color:#18362c}.om-personal-user{font-size:14px;color:#708078;margin-top:3px}
-      .om-personal-progress{height:8px;border-radius:99px;background:#e5ece8;overflow:hidden;margin:20px 0 8px}.om-personal-progress i{display:block;height:100%;background:linear-gradient(90deg,#1f6a55,#c89d3c);border-radius:99px}.om-personal-xp{text-align:right;font-size:11px;color:#63766d}
-      .om-personal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid #eee9df;margin-top:17px;padding-top:16px}.om-personal-stat{text-align:center}.om-personal-stat b{display:block;color:#1d4e40;font-size:20px}.om-personal-stat span{font-size:11px;color:#728078}
-      @media(max-width:620px){.om-personal-card{border-radius:22px}.om-personal-card-fg{padding:22px 18px}.om-personal-avatar{width:70px;height:70px}.om-personal-rank strong{font-size:16px}}
-    `;document.head.appendChild(s);
-  }
-
-  function avatarFor(p){
-    if(window.OneMuslimProfileSystem?.getAvatarAsset){const a=window.OneMuslimProfileSystem.getAvatarAsset(p);if(a)return a}
-    if(p.avatar_url)return p.avatar_url;
-    if(p.avatar_config&&typeof p.avatar_config==='object')return p.avatar_config.asset||p.avatar_config.url||'';
-    return '';
-  }
-
-  function backgroundFor(p){
-    const name=p?.profile_background||p?.profile_banner||'default';
-    const backgrounds={
-      'Islamic Geometry':'linear-gradient(135deg,#0f4b3d,#1d6b58)',
-      'Mosque Silhouette':'linear-gradient(135deg,#f1dfbb,#d2b77a)',
-      'Islamic Arch':'linear-gradient(135deg,#eee2c9,#c9b58d)',
-      'Crescent & Stars':'linear-gradient(135deg,#0b2630,#173f52)',
-      'Luxury Gold':'linear-gradient(135deg,#fff5d9,#c89d3c)',
-      'Emerald':'linear-gradient(135deg,#0d4b3d,#1f6b57)',
-      'Dark Mosque':'linear-gradient(135deg,#061e1a,#173a31)',
-      'Minimal Cream':'linear-gradient(135deg,#fffdf8,#eee8dc)',
-      'default':'linear-gradient(135deg,#0e4437,#214e42)'
-    };
-    return backgrounds[name]||backgrounds.default;
-  }
-
-  function renderPersonalCard(){
-    const panel=document.getElementById('profilePanel');
-    if(!panel||panel.querySelector('.om-personal-card'))return;
-    const p=window.profile||{};
-    const button=document.getElementById('editProfile');
-    if(!button)return;
-    cardStyles();
-    const xp=Number(p.xp_total??p.xp??p.rank_points??0)||0;
-    const rank=p.profile_title||window.OneMuslimProfileSystem?.getTier?.(p)?.label||'Muslim';
-    const title=rank==='Muslim'?'Seeker of Truth':rank;
-    const tier=window.OneMuslimProfileSystem?.getTierProgress?.(p);
-    const next=tier?.nextTier;
-    const percent=tier?.percent??Math.min(100,(xp%5000)/50);
-    const avatar=avatarFor(p);
-    const name=p.display_name||`${p.first_name||''} ${p.last_name||''}`.trim()||'Your Name';
-    const following=Number(p.following_count??p.following??0)||0;
-    const badges=Number(p.badges_count??p.badges??0)||0;
-    const card=document.createElement('article');card.className='om-personal-card';
-    card.innerHTML=`<div class="om-personal-card-bg" style="background:${backgroundFor(p)}"></div><div class="om-personal-card-fg"><div class="om-personal-card-head"><div class="om-personal-avatar">${avatar?`<img src="${String(avatar).replace(/"/g,'&quot;')}" alt="Selected avatar">`:String((name.match(/\b\w/g)||[]).slice(0,2).join('')).toUpperCase()}</div><div><div class="om-personal-name">${escapeHtml(name)}</div><div class="om-personal-user">@${escapeHtml(p.username||'username')}</div></div><div class="om-personal-rank"><strong>Rank ${window.OneMuslimProfileSystem?.rankIndex?.(rank)+1||1}</strong><span>${escapeHtml(title)}</span></div></div><div class="om-personal-progress"><i style="width:${percent}%"></i></div><div class="om-personal-xp">${xp.toLocaleString()} XP${next?` · ${Math.max(0,next.minXP-xp).toLocaleString()} to ${escapeHtml(next.label)}`:''}</div><div class="om-personal-stats"><div class="om-personal-stat"><b>${xp.toLocaleString()}</b><span>Total XP</span></div><div class="om-personal-stat"><b>${badges}</b><span>Badges</span></div><div class="om-personal-stat"><b>${following}</b><span>Following</span></div></div></div>`;
-    button.insertAdjacentElement('afterend',card);
-  }
-
+  function client(){return window.OneMuslimSupabaseClient?.getClient?.()||window.supabase?.createClient?.(window.APP_CONFIG?.SUPABASE_URL,window.APP_CONFIG?.SUPABASE_ANON_KEY)}
+  function loadAvatarSync(){if(document.querySelector('script[data-selected-avatar-sync]'))return;const s=document.createElement('script');s.src='selected-avatar-sync.js';s.dataset.selectedAvatarSync='1';s.defer=true;document.body.appendChild(s)}
+  async function syncProfile(){if(syncing)return window.profile||null;const sb=client();if(!sb)return null;syncing=true;try{const {data:{user}}=await sb.auth.getUser();if(!user)return null;const {data,error}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();if(error)throw error;if(data)window.profile=data;return data||null}catch(e){console.error('Profile sync failed:',e);return window.profile||null}finally{syncing=false}}
+  function openUnifiedEditor(){loadAvatarSync();const open=window.OneMuslimProfileBuilder?.open||window.openProfileBuilder||window.OneMuslimOpenProfileEditor;if(typeof open!=='function'){console.error('Unified profile builder is not available.');window.toast?.('Profile editor is still loading. Please try again.');return false}open();return true}
+  function wireEditButton(){const btn=document.getElementById('editProfile');if(!btn||btn.dataset.unifiedProfileEditor==='1')return;btn.dataset.unifiedProfileEditor='1';btn.addEventListener('click',async function(e){e.preventDefault();e.stopImmediatePropagation();await syncProfile();openUnifiedEditor()},true)}
+  function purgeLegacyEditor(){const panel=document.getElementById('profilePanel');if(!panel)return;const legacy=panel.querySelector('.profile-form,#saveProfile');if(!legacy)return;panel.innerHTML='';openUnifiedEditor()}
+  function cardStyles(){if(document.getElementById('om-personal-card-styles'))return;const s=document.createElement('style');s.id='om-personal-card-styles';s.textContent=`
+    .om-personal-card{position:relative;overflow:hidden;margin:34px 0 20px;border:1px solid #e5dfd0;border-radius:28px;min-height:270px;background:#fff;box-shadow:0 18px 55px rgba(18,48,39,.09)}
+    .om-personal-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.9);transform:scale(1.04)}
+    .om-personal-card-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,34,27,.12),rgba(255,255,255,.1) 42%,rgba(255,255,255,.96) 68%)}
+    .om-personal-card-fg{position:relative;z-index:1;margin-top:92px;background:rgba(255,255,255,.96);border-radius:34px 34px 28px 28px;padding:28px 26px 22px;min-height:180px}
+    .om-personal-card-head{display:flex;align-items:center;gap:16px}.om-personal-avatar{width:82px;height:82px;border-radius:50%;border:5px solid #fff;box-shadow:0 8px 22px #0002;background:#b9cbbf;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;color:#173c31;flex:none}.om-personal-avatar img{width:100%;height:100%;object-fit:contain}
+    .om-personal-rank{margin-left:auto;text-align:right}.om-personal-rank strong{display:block;color:#c89d3c;font-size:18px}.om-personal-rank span{font-size:12px;color:#61756b}.om-personal-name{font-size:25px;font-weight:800;color:#18362c}.om-personal-user{font-size:14px;color:#708078;margin-top:3px}
+    .om-personal-progress{height:8px;border-radius:99px;background:#e5ece8;overflow:hidden;margin:20px 0 8px}.om-personal-progress i{display:block;height:100%;background:linear-gradient(90deg,#1f6a55,#c89d3c);border-radius:99px}.om-personal-xp{text-align:right;font-size:11px;color:#63766d}
+    .om-personal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid #eee9df;margin-top:17px;padding-top:16px}.om-personal-stat{text-align:center}.om-personal-stat b{display:block;color:#1d4e40;font-size:20px}.om-personal-stat span{font-size:11px;color:#728078}
+    @media(max-width:620px){.om-personal-card{border-radius:22px}.om-personal-card-fg{padding:22px 18px}.om-personal-avatar{width:70px;height:70px}.om-personal-rank strong{font-size:16px}}
+  `;document.head.appendChild(s)}
+  function avatarFor(p){if(window.OneMuslimProfileSystem?.getAvatarAsset){const a=window.OneMuslimProfileSystem.getAvatarAsset(p);if(a)return a}if(p.avatar_url)return p.avatar_url;if(p.avatar_config&&typeof p.avatar_config==='object')return p.avatar_config.asset||p.avatar_config.url||'';return ''}
+  function backgroundFor(p){const name=p?.profile_background||p?.profile_banner||'default';const b={'Islamic Geometry':'linear-gradient(135deg,#0f4b3d,#1d6b58)','Mosque Silhouette':'linear-gradient(135deg,#f1dfbb,#d2b77a)','Islamic Arch':'linear-gradient(135deg,#eee2c9,#c9b58d)','Crescent & Stars':'linear-gradient(135deg,#0b2630,#173f52)','Luxury Gold':'linear-gradient(135deg,#fff5d9,#c89d3c)','Emerald':'linear-gradient(135deg,#0d4b3d,#1f6b57)','Dark Mosque':'linear-gradient(135deg,#061e1a,#173a31)','Minimal Cream':'linear-gradient(135deg,#fffdf8,#eee8dc)','default':'linear-gradient(135deg,#0e4437,#214e42)'};return b[name]||b.default}
+  function renderPersonalCard(){const panel=document.getElementById('profilePanel');if(!panel||panel.querySelector('.om-personal-card'))return;const p=window.profile||{};const button=document.getElementById('editProfile');if(!button)return;cardStyles();const xp=Number(p.xp_total??p.xp??p.rank_points??0)||0;const rank=p.profile_title||window.OneMuslimProfileSystem?.getTier?.(p)?.label||'Muslim';const title=rank==='Muslim'?'Seeker of Truth':rank;const tier=window.OneMuslimProfileSystem?.getTierProgress?.(p);const next=tier?.nextTier;const percent=tier?.percent??Math.min(100,(xp%5000)/50);const avatar=avatarFor(p);const name=p.display_name||`${p.first_name||''} ${p.last_name||''}`.trim()||'Your Name';const following=Number(p.following_count??p.following??0)||0;const badges=Number(p.badges_count??p.badges??0)||0;const card=document.createElement('article');card.className='om-personal-card';card.innerHTML=`<div class="om-personal-card-bg" style="background:${backgroundFor(p)}"></div><div class="om-personal-card-fg"><div class="om-personal-card-head"><div class="om-personal-avatar">${avatar?`<img src="${String(avatar).replace(/"/g,'&quot;')}" alt="Selected avatar">`:String((name.match(/\b\w/g)||[]).slice(0,2).join('')).toUpperCase()}</div><div><div class="om-personal-name">${escapeHtml(name)}</div><div class="om-personal-user">@${escapeHtml(p.username||'username')}</div></div><div class="om-personal-rank"><strong>Rank ${window.OneMuslimProfileSystem?.rankIndex?.(rank)+1||1}</strong><span>${escapeHtml(title)}</span></div></div><div class="om-personal-progress"><i style="width:${percent}%"></i></div><div class="om-personal-xp">${xp.toLocaleString()} XP${next?` · ${Math.max(0,next.minXP-xp).toLocaleString()} to ${escapeHtml(next.label)}`:''}</div><div class="om-personal-stats"><div class="om-personal-stat"><b>${xp.toLocaleString()}</b><span>Total XP</span></div><div class="om-personal-stat"><b>${badges}</b><span>Badges</span></div><div class="om-personal-stat"><b>${following}</b><span>Following</span></div></div></div>`;button.insertAdjacentElement('afterend',card)}
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-
-  async function tryOpenLanding(){
-    const app=document.getElementById('appView');
-    if(!app||app.classList.contains('hidden'))return;
-    await syncProfile();
-    wireEditButton();
-    renderPersonalCard();
-    if(opened)return;
-    if(typeof window.OneMuslimOpenProfileEditor!=='function')return;
-    const profileButton=document.querySelector('#appView [data-page="profile"]');
-    if(profileButton)profileButton.click();
-    opened=true;
-    openUnifiedEditor();
-  }
-
-  function init(){
-    loadAvatarSync();
-    wireEditButton();
-    [150,400,800,1200,2000,3500].forEach(ms=>setTimeout(()=>{tryOpenLanding();wireEditButton();renderPersonalCard()},ms));
-    new MutationObserver(()=>{
-      wireEditButton();
-      renderPersonalCard();
-      const app=document.getElementById('appView');
-      if(app&&!app.classList.contains('hidden')&&!opened)tryOpenLanding();
-    }).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
-  }
-
+  async function tryOpenLanding(){const app=document.getElementById('appView');if(!app||app.classList.contains('hidden'))return;await syncProfile();wireEditButton();purgeLegacyEditor();renderPersonalCard();if(opened)return;if(typeof window.OneMuslimOpenProfileEditor!=='function')return;const profileButton=document.querySelector('#appView [data-page="profile"]');if(profileButton)profileButton.click();opened=true;openUnifiedEditor()}
+  function init(){loadAvatarSync();wireEditButton();[150,400,800,1200,2000,3500].forEach(ms=>setTimeout(()=>{tryOpenLanding();wireEditButton();purgeLegacyEditor();renderPersonalCard()},ms));new MutationObserver(()=>{wireEditButton();purgeLegacyEditor();renderPersonalCard();const app=document.getElementById('appView');if(app&&!app.classList.contains('hidden')&&!opened)tryOpenLanding()}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
