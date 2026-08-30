@@ -1,4 +1,6 @@
 (function(){
+  'use strict';
+
   function style(){
     if(document.getElementById('oneMuslimNavigationStyles'))return;
     const s=document.createElement('style');s.id='oneMuslimNavigationStyles';
@@ -30,12 +32,13 @@ body.dashboard-theme #appView #publicHomePage>.om-landing>.om-site-nav{display:n
 body.dashboard-theme #appView #publicHomePage>.om-landing{padding-top:10px!important}
 @media(max-width:1000px){
  body.dashboard-theme #appView .app-layout{display:block!important;min-height:100vh!important}
- body.dashboard-theme #appView .sidebar{position:fixed!important;left:0!important;top:0!important;width:min(300px,86vw)!important;height:100vh!important;min-height:100vh!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:20px 0 50px rgba(18,56,46,.16)!important}
+ body.dashboard-theme #appView .sidebar{position:fixed!important;left:0!important;top:0!important;width:min(300px,86vw)!important;height:100vh!important;min-height:100vh!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:20px 0 50px rgba(18,56,46,.16)!important;z-index:1400!important}
  body.dashboard-theme #appView .sidebar.open{transform:translateX(0)!important}
  body.dashboard-theme #appView .app-nav{display:flex!important;position:sticky!important;top:0!important;z-index:1200!important;height:68px!important;align-items:center!important;gap:9px!important;padding:0 12px!important;background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--om-line)!important;box-shadow:0 3px 18px rgba(27,55,45,.04)!important;backdrop-filter:blur(12px)!important}
- body.dashboard-theme #appView .app-nav-menu{display:block!important;order:1!important;border:1px solid #d6ddd7!important;background:#fff!important;color:var(--om-green)!important;border-radius:12px!important;padding:8px 11px!important;font-size:20px!important;cursor:pointer!important}
+ body.dashboard-theme #appView .app-nav-menu{display:block!important;order:1!important;border:1px solid #d6ddd7!important;background:#fff!important;color:var(--om-green)!important;border-radius:12px!important;padding:8px 11px!important;font-size:20px!important;cursor:pointer!important;position:relative!important;z-index:1500!important;touch-action:manipulation!important}
  body.dashboard-theme #appView .app-nav-brand{display:flex!important;order:2!important;align-items:center!important;gap:9px!important;min-width:0!important;font-family:Georgia,'Times New Roman',serif!important;font-size:20px!important;font-weight:700!important;color:var(--om-green)!important;white-space:nowrap!important}
- body.dashboard-theme #appView .om-nav-mark{display:grid!important;place-items:center!important;width:36px!important;height:36px!important;border:2px solid var(--om-gold)!important;border-radius:50%!important;background:#fffaf0!important;color:var(--om-green)!important;font-size:18px!important;flex:0 0 auto!important}
+ body.dashboard-theme #appView .om-nav-mark{display:grid!important;place-items:center!important;width:36px!important;height:36px!important;border:2px solid var(--om-gold)!important;border-radius:50%!important;background:#fffaf0!important;color:var(--om-green)!important;font-size:18px!important;flex:0 0 auto!important;overflow:hidden!important}
+ body.dashboard-theme #appView .om-nav-mark img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border-radius:50%!important}
  body.dashboard-theme #appView .app-nav-links{display:none!important}
  body.dashboard-theme #appView .app-nav-search{order:3!important;flex:1 1 auto!important;min-width:0!important;max-width:none!important;height:40px!important;margin-left:auto!important;border:1px solid var(--om-line)!important;border-radius:999px!important;background:#f8f8f5!important;color:var(--om-text)!important;padding:0 13px!important;font-size:14px!important;outline:none!important}
  body.dashboard-theme #appView .app-nav-back{order:4!important;border:1px solid #d6ddd7!important;background:#fff!important;color:#456258!important;border-radius:999px!important;padding:9px 11px!important;font-size:0!important;cursor:pointer!important}.app-nav-back:before{content:'←';font-size:17px!important}
@@ -46,26 +49,79 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
 `;
     document.head.appendChild(s);
   }
+
+  function avatarSrc(){
+    const p=window.profile||{};
+    if(p.avatar_url)return String(p.avatar_url);
+    if(p.avatar_config&&typeof p.avatar_config==='object'&&(p.avatar_config.asset||p.avatar_config.url))return String(p.avatar_config.asset||p.avatar_config.url);
+    if(p.avatar_package==='platinum_package')return `assets/avatars/${p.avatar_gender==='female'?'platinum-female.PNG':'platinum-male.PNG'}`;
+    if(p.avatar_gender==='female')return 'assets/avatar/base/master.png';
+    if(p.avatar_gender==='male')return 'assets/avatar/male/male-1-original.jpg';
+    return '';
+  }
+
+  function syncNavAvatar(){
+    const mark=document.querySelector('#appView .om-nav-mark');
+    if(!mark)return;
+    const src=avatarSrc();
+    if(!src){if(mark.querySelector('img'))mark.innerHTML='✦';return;}
+    const existing=mark.querySelector('img');
+    if(existing&&existing.getAttribute('src')===src)return;
+    mark.innerHTML='';
+    const img=document.createElement('img');img.src=src;img.alt='Profile photo';img.loading='eager';
+    img.onerror=()=>{mark.innerHTML='✦';};
+    mark.appendChild(img);
+  }
+
   function show(page){
     const map={'public-home':'publicHomePage',feed:'feedPage',profiles:'profilesPage',profile:'profilePage',lessons:'lessonsPage'};
-    const target=document.getElementById(map[page]||page);if(!target)return false;
-    document.querySelectorAll('#appView .content > .page').forEach(p=>p.classList.add('hidden'));target.classList.remove('hidden');
+    const target=document.getElementById(map[page]||page);
+    if(!target)return false;
+    document.querySelectorAll('#appView .content > .page').forEach(p=>p.classList.add('hidden'));
+    target.classList.remove('hidden');
     document.querySelectorAll('#appView .app-nav-link,#appView .side').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-    window.scrollTo({top:0,behavior:'smooth'});return true;
+    document.getElementById('mobileAppSidebar')?.classList.remove('open');
+    window.scrollTo({top:0,behavior:'smooth'});
+    syncNavAvatar();
+    return true;
   }
+
   function init(){
     style();
-    let history=['profile'];
     const app=document.getElementById('appView');
     if(!app)return;
-    const menu=document.getElementById('appMenuToggle');const sidebar=document.getElementById('mobileAppSidebar');const back=document.getElementById('appBack');
+    let history=['profile'];
+    const sidebar=()=>document.getElementById('mobileAppSidebar');
+
+    // Single routing path for both the top navigation and drawer.
+    // Do not call side.click() from here: another navigation listener is already installed,
+    // and doing so can recurse indefinitely on mobile.
     document.addEventListener('click',e=>{
-      const nav=e.target.closest('#appView .app-nav-link[data-page],#appView .side[data-page]');
-      if(!nav)return;
-      const page=nav.dataset.page;if(history[history.length-1]!==page)history.push(page);show(page);sidebar?.classList.remove('open');
+      const nav=e.target.closest?.('#appView .app-nav-link[data-page],#appView .side[data-page]');
+      if(nav){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const page=nav.dataset.page||'feed';
+        if(history[history.length-1]!==page)history.push(page);
+        show(page);
+        return;
+      }
+      const menu=e.target.closest?.('#appView #appMenuToggle');
+      if(menu){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        sidebar()?.classList.toggle('open');
+        return;
+      }
+      const back=e.target.closest?.('#appView #appBack');
+      if(back){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if(history.length>1)history.pop();
+        show(history[history.length-1]||'profile');
+      }
     },true);
-    menu?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();sidebar?.classList.toggle('open')});
-    back?.addEventListener('click',()=>{if(history.length>1)history.pop();show(history[history.length-1]||'profile')});
+
     function scan(){
       const publicHome=document.querySelector('#appView #publicHomePage .om-site-nav');if(publicHome)publicHome.remove();
       const card=document.querySelector('#authView .auth-card');
@@ -81,14 +137,21 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
         const sw=card.querySelector('#authSwitch');const form=card.querySelector('#authForm');
         if(sw&&form&&form.previousElementSibling!==sw)form.parentNode.insertBefore(sw,form);
       }
+      syncNavAvatar();
     }
-    scan();setTimeout(scan,250);setTimeout(scan,800);new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
+
+    scan();
+    setTimeout(scan,250);setTimeout(scan,800);setTimeout(scan,1600);
+    new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
+    setInterval(syncNavAvatar,1000);
+
     const activateProfile=()=>{
-      if(document.getElementById('profilePage')&&!document.getElementById('profilePage').classList.contains('hidden'))return;
+      if(document.getElementById('profilePage')&&!document.getElementById('profilePage').classList.contains('hidden')){syncNavAvatar();return;}
       if(document.getElementById('appView')&&!document.getElementById('appView').classList.contains('hidden'))show('profile');
     };
     setTimeout(activateProfile,350);
     setTimeout(activateProfile,1000);
   }
+
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
