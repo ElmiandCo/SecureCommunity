@@ -1,0 +1,32 @@
+/* OneMuslim OneReport v1 — personal activity + engagement dashboard. */
+(function(){
+  'use strict';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const client=()=>window.OneMuslimSupabaseClient?.getClient?.()||window.supabase?.createClient?.(window.APP_CONFIG?.SUPABASE_URL,window.APP_CONFIG?.SUPABASE_ANON_KEY);
+  const me=()=>window.profile||{};
+  const toast=m=>window.toast?window.toast(m):console.log(m);
+  async function count(sb,table,column='user_id',value){try{const r=await sb.from(table).select('*',{count:'exact',head:true}).eq(column,value);return r.error?0:(r.count||0)}catch{return 0}}
+  async function rank(sb,xp){try{const r=await sb.from('profiles').select('id',{count:'exact',head:true}).gt('xp_total',xp);return (r.error?0:r.count||0)+1}catch{return null}}
+  async function collect(){
+    const sb=client(), p=me(), id=p.id;if(!sb||!id)return null;
+    const [likesGiven,comments,posts,lessonCompletions,likesReceived,globalRank]=await Promise.all([
+      count(sb,'post_likes'),count(sb,'comments'),count(sb,'posts'),count(sb,'lesson_completions'),
+      (async()=>{try{const {data}=await sb.from('posts').select('post_likes(user_id)').eq('user_id',id);return (data||[]).reduce((n,x)=>n+(x.post_likes||[]).length,0)}catch{return 0}})(),
+      rank(sb,Number(p.xp_total??p.xp??0)||0)
+    ]);
+    let lessonsTotal=0;try{const r=await sb.from('lessons').select('*',{count:'exact',head:true}).eq('active',true);lessonsTotal=r.count||0}catch{}
+    let friends=Number(p.friends_count??0)||0,following=Number(p.following_count??p.following??0)||0,badges=Number(p.badges_count??p.badges??0)||0;
+    const total=likesGiven+comments+posts+lessonCompletions;
+    return {xp:Number(p.xp_total??p.xp??0)||0,globalRank,likesGiven,comments,posts,lessonCompletions,lessonsTotal,likesReceived,friends,following,badges,total};
+  }
+  function styles(){if(document.getElementById('one-report-styles'))return;const s=document.createElement('style');s.id='one-report-styles';s.textContent=`
+  .or-shell{margin:26px 0 50px}.or-hero{border-radius:28px;padding:28px;background:linear-gradient(135deg,#0f493b,#1e6a56);color:#fff;box-shadow:0 18px 55px #123c3020}.or-kicker{font-size:11px;letter-spacing:.16em;font-weight:800;opacity:.78}.or-hero h2{margin:6px 0 4px;font-size:30px}.or-hero p{margin:0;opacity:.8}.or-rank{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-top:22px}.or-rank strong{font-size:46px;line-height:1}.or-rank span{font-size:12px;opacity:.8}.or-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.or-card{background:#fff;border:1px solid #e5e1d7;border-radius:20px;padding:18px;box-shadow:0 10px 35px #123c3010}.or-card b{display:block;font-size:25px;color:#1f5b49}.or-card span{font-size:11px;color:#728078}.or-section{margin-top:28px}.or-section h3{margin:0 0 12px;color:#18362c}.or-bar{height:10px;background:#e7eee9;border-radius:99px;overflow:hidden;margin:8px 0 5px}.or-bar i{display:block;height:100%;background:linear-gradient(90deg,#1f6a55,#c89d3c);border-radius:99px}.or-row{display:flex;justify-content:space-between;font-size:13px;color:#53665b}.or-empty{padding:20px;color:#728078;text-align:center}.or-tabs{display:flex;gap:8px;margin-top:18px;overflow:auto}.or-tab{border:1px solid #e5e1d7;background:#fff;border-radius:999px;padding:9px 14px;color:#53665b}.or-tab.active{background:#1f5b49;color:#fff;border-color:#1f5b49}@media(max-width:700px){.or-grid{grid-template-columns:repeat(2,1fr)}.or-rank strong{font-size:38px}}
+  `;document.head.appendChild(s)}
+  async function render(){
+    styles();let host=document.getElementById('oneReportPanel');if(!host){host=document.createElement('div');host.id='oneReportPanel';const panel=document.getElementById('profilePanel');if(panel)panel.insertAdjacentElement('afterend',host);else return}
+    host.innerHTML='<div class="or-empty">Loading OneReport…</div>';const d=await collect();if(!d){host.innerHTML='<div class="or-empty">Sign in to view OneReport.</div>';return}
+    const lessonPct=d.lessonsTotal?Math.min(100,d.lessonCompletions/d.lessonsTotal*100):0;const engagement=d.total?Math.min(100,Math.round((d.likesGiven+d.comments*2+d.posts*3+d.lessonCompletions*4)/Math.max(d.total*2,1)*100)):0;
+    host.innerHTML=`<section class="or-shell"><div class="or-hero"><div class="or-kicker">ONE MUSLIM · ONEREPORT</div><h2>Your activity at a glance</h2><p>Participation, learning, community and XP standing.</p><div class="or-rank"><div><span>GLOBAL XP RANK</span><strong>${d.globalRank?'#'+d.globalRank:'—'}</strong></div><div style="text-align:right"><span>TOTAL XP</span><strong style="font-size:28px">${d.xp.toLocaleString()}</strong></div></div></div><div class="or-grid"><div class="or-card"><b>${d.posts}</b><span>Posts</span></div><div class="or-card"><b>${d.likesGiven}</b><span>Likes Given</span></div><div class="or-card"><b>${d.likesReceived}</b><span>Likes Received</span></div><div class="or-card"><b>${d.comments}</b><span>Comments</span></div><div class="or-card"><b>${d.lessonCompletions}</b><span>Lessons Completed</span></div><div class="or-card"><b>${d.badges}</b><span>Badges</span></div><div class="or-card"><b>${d.friends}</b><span>Friends</span></div><div class="or-card"><b>${d.following}</b><span>Following</span></div></div><div class="or-section"><h3>Engagement</h3><div class="or-card"><div class="or-row"><span>Overall engagement</span><b style="font-size:15px">${engagement}%</b></div><div class="or-bar"><i style="width:${engagement}%"></i></div><small>Based on your current participation signals.</small></div></div><div class="or-section"><h3>Lessons</h3><div class="or-card"><div class="or-row"><span>Completion</span><b style="font-size:15px">${Math.round(lessonPct)}%</b></div><div class="or-bar"><i style="width:${lessonPct}%"></i></div><small>${d.lessonCompletions} of ${d.lessonsTotal||0} active lessons completed.</small></div></div><div class="or-section"><h3>Community engagement</h3><div class="or-card"><div class="or-empty">Community-level percentages will appear here when community membership/activity tables are available to the authenticated client.</div></div></div></section>`;
+  }
+  window.OneMuslimOneReport={render,collect};
+})();
