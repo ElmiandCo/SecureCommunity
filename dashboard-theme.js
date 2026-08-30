@@ -1,46 +1,17 @@
 (function(){
-  const $ = (s, r=document) => r.querySelector(s);
-  const load = (href,id) => { if(document.getElementById(id)) return; const l=document.createElement('link'); l.id=id; l.rel='stylesheet'; l.href=href; document.head.appendChild(l); };
-  load('dashboard-theme.css','oneMuslimDashboardBase');
-  load('onemuslim-home.css','oneMuslimHomeStyles');
-  load('landing-enhancements.css','oneMuslimLandingEnhancements');
-  ['start-pack.js','guest-xp.js'].forEach(src=>{ if(!document.querySelector('script[src="'+src+'"]')){ const s=document.createElement('script'); s.src=src; s.defer=true; document.head.appendChild(s); }});
-  document.body.classList.add('dashboard-theme','onemuslim-theme');
-  const pv=$('#publicView'); if(!pv) return;
-  const A='assets/onemuslim/';
-  const context = new URLSearchParams(location.search).get('from') || location.hash.replace(/^#/,'');
-  const isShahada=/new[-_ ]?revert|shahada|revert/i.test(context);
-  function landing(){
-    pv.innerHTML=`<div class="om-parallax" id="oneMuslimLanding">
-      <div class="om-world" id="omWorld" aria-hidden="true">
-        <img class="om-layer om-earth" data-depth="0.10" src="${A}celestial-sunrise.svg" alt="">
-        <img class="om-layer om-cosmic" data-depth="0.20" src="${A}golden-blue-cosmic-particles.svg" alt="">
-        <img class="om-layer om-frame" data-depth="0.34" src="${A}islamic-gold-blue-frame.svg" alt="">
-        <img class="om-layer om-clouds" data-depth="0.48" src="${A}cinematic-golden-clouds.svg" alt="">
-        <div class="om-vignette"></div>
-      </div>
-      <nav class="om-parallax-nav"><a class="om-brand" href="#"><span>1</span><b>ONE MUSLIM</b></a><div class="om-nav-actions"><button data-auth="login">Sign In</button><button class="gold" data-auth="signup">Create Account</button></div></nav>
-      <main class="om-story"><div class="om-phase" id="omPhase"><span class="om-eyebrow">ONE MUSLIM · A JOURNEY OF FAITH</span><div class="om-copy" id="omCopy"></div><div class="om-actions" id="omActions"></div><div class="om-progress"><i></i><span>01</span><span>02</span><span>03</span><span>04</span></div></div></main>
-      <div class="om-scroll-hint"><span></span>Scroll to journey</div>
-    </div>`;
-    wireAuth(); renderPhase(isShahada?1:0); setupParallax(); setupScroll();
-  }
-  const phases=[
-    {title:`Welcome to <em>One Muslim.</em>`,body:`A place to learn, grow, connect, and walk the journey together.`,actions:[['Begin the journey','next']]},
-    {title:`Is this your <em>first time?</em>`,body:`However you arrived here, you belong in this conversation.`,actions:[['Yes — I’m new here','new'],['No — welcome back','next']]},
-    {title:`One <strong>Allah</strong>.<br>One <em>Ummah.</em>`,body:`A community built around knowledge, faith, and meaningful connection.`,actions:[['Continue','next']]},
-    {title:`What do you want to <em>learn?</em>`,body:`Choose your path. You can change it anytime.`,actions:[['Learn in a fun way','fun'],['Serious only','serious']]},
-    {title:`Your journey starts <em>here.</em>`,body:`Explore My Notes, One University, community conversations, lessons, and more.`,actions:[['Create your account','signup'],['Sign in','login']]}
-  ];
+  const $=(s,r=document)=>r.querySelector(s);
+  const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
+  load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');
+  ['start-pack.js','guest-xp.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
+  document.body.classList.add('dashboard-theme','onemuslim-theme');const pv=$('#publicView');if(!pv)return;
+  const A='assets/onemuslim/';const context=new URLSearchParams(location.search).get('from')||location.hash.replace(/^#/,'');const isShahada=/new[-_ ]?revert|shahada|revert/i.test(context);
+  function landing(){pv.innerHTML=`<div class="om-parallax" id="oneMuslimLanding"><div class="om-world" id="omWorld" aria-hidden="true"><img class="om-layer om-earth" data-depth="0.10" src="${A}celestial-sunrise.svg" alt=""><img class="om-layer om-cosmic" data-depth="0.20" src="${A}golden-blue-cosmic-particles.svg" alt=""><div class="om-clouds om-layer" data-depth="0.48" aria-hidden="true"></div><div class="om-vignette"></div></div><nav class="om-parallax-nav"><a class="om-brand" href="#"><span>1</span><b>ONE MUSLIM</b></a><div class="om-nav-actions"><button data-auth="login">Sign In</button><button class="gold" data-auth="signup">Create Account</button></div></nav><main class="om-story"><div class="om-phase" id="omPhase"><span class="om-eyebrow">ONE MUSLIM · A JOURNEY OF FAITH</span><div class="om-copy" id="omCopy"></div><div class="om-actions" id="omActions"></div><div class="om-progress"><i></i><span>01</span><span>02</span><span>03</span><span>04</span></div></div></main><div class="om-scroll-hint"><span></span>Scroll to journey</div></div>`;wireAuth();renderPhase(isShahada?1:0);setupParallax();setupScroll()}
+  const phases=[{title:`Welcome to <em>One Muslim.</em>`,body:`A place to learn, grow, connect, and walk the journey together.`,actions:[['Begin the journey','next']]},{title:`Is this your <em>first time?</em>`,body:`However you arrived here, you belong in this conversation.`,actions:[['Yes — I’m new here','new'],['No — welcome back','next']]},{title:`One <strong>Allah</strong>.<br>One <em>Ummah.</em>`,body:`A community built around knowledge, faith, and meaningful connection.`,actions:[['Continue','next']]},{title:`What do you want to <em>learn?</em>`,body:`Choose your path. You can change it anytime.`,actions:[['Learn in a fun way','fun'],['Serious only','serious']]},{title:`Your journey starts <em>here.</em>`,body:`Explore My Notes, One University, community conversations, lessons, and more.`,actions:[['Create your account','signup'],['Sign in','login']]}];
   let phase=0,busy=false;
-  function renderPhase(index){
-    phase=Math.max(0,Math.min(index,phases.length-1)); const p=phases[phase],copy=$('#omCopy'),actions=$('#omActions'); if(!copy)return;
-    busy=true; copy.classList.add('leaving'); actions.classList.add('leaving');
-    setTimeout(()=>{copy.innerHTML=`<h1>${p.title}</h1><p>${p.body}</p>`;actions.innerHTML=p.actions.map(([label,key])=>`<button class="om-cta ${key==='next'?'primary':''}" data-action="${key}">${label}</button>`).join('');copy.classList.remove('leaving');actions.classList.remove('leaving');$('#omPhase').dataset.phase=String(phase);$('#omPhase .om-progress i').style.width=`${(phase/(phases.length-1))*100}%`;actions.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>act(b.dataset.action));busy=false;},busy?340:120);
-  }
-  function act(key){if(busy)return;if(key==='next')return renderPhase(phase+1);if(key==='new')return renderPhase(2);if(key==='fun'||key==='serious')return renderPhase(4);if(key==='signup')return $('#openSignup')?.click();if(key==='login')return $('#openLogin')?.click();}
-  function wireAuth(){pv.querySelectorAll('[data-auth]').forEach(b=>b.onclick=()=>$(b.dataset.auth==='login'?'#openLogin':'#openSignup')?.click());}
-  function setupParallax(){const world=$('#omWorld'),layers=[...world.querySelectorAll('[data-depth]')];let tx=0,ty=0,x=0,y=0;const move=(cx,cy)=>{const r=world.getBoundingClientRect();tx=(cx-r.left)/r.width-.5;ty=(cy-r.top)/r.height-.5;};world.addEventListener('pointermove',e=>move(e.clientX,e.clientY),{passive:true});world.addEventListener('pointerleave',()=>{tx=ty=0},{passive:true});const tick=()=>{x+=(tx-x)*.055;y+=(ty-y)*.055;layers.forEach(el=>{const d=+el.dataset.depth;el.style.transform=`translate3d(${x*d*44}px,${y*d*30}px,0) scale(${1+d*.045})`;});requestAnimationFrame(tick)};tick();}
-  function setupScroll(){let last=0;window.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<8)return;const now=Date.now();if(now-last<700)return;last=now;if(e.deltaY>0&&phase<phases.length-1)renderPhase(phase+1);if(e.deltaY<0&&phase>0)renderPhase(phase-1)},{passive:true});let sy=0;window.addEventListener('touchstart',e=>sy=e.touches[0].clientY,{passive:true});window.addEventListener('touchend',e=>{const d=sy-e.changedTouches[0].clientY;if(Math.abs(d)>45){if(d>0&&phase<phases.length-1)renderPhase(phase+1);if(d<0&&phase>0)renderPhase(phase-1)}},{passive:true});}
+  function renderPhase(index){phase=Math.max(0,Math.min(index,phases.length-1));const p=phases[phase],copy=$('#omCopy'),actions=$('#omActions');if(!copy)return;busy=true;copy.classList.add('leaving');actions.classList.add('leaving');setTimeout(()=>{copy.innerHTML=`<h1>${p.title}</h1><p>${p.body}</p>`;actions.innerHTML=p.actions.map(([label,key])=>`<button class="om-cta ${key==='next'?'primary':''}" data-action="${key}">${label}</button>`).join('');copy.classList.remove('leaving');actions.classList.remove('leaving');$('#omPhase').dataset.phase=String(phase);$('#omPhase .om-progress i').style.width=`${(phase/(phases.length-1))*100}%`;actions.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>act(b.dataset.action));busy=false},busy?340:120)}
+  function act(key){if(busy)return;if(key==='next')return renderPhase(phase+1);if(key==='new')return renderPhase(2);if(key==='fun'||key==='serious')return renderPhase(4);if(key==='signup')return $('#openSignup')?.click();if(key==='login')return $('#openLogin')?.click()}
+  function wireAuth(){pv.querySelectorAll('[data-auth]').forEach(b=>b.onclick=()=>$(b.dataset.auth==='login'?'#openLogin':'#openSignup')?.click())}
+  function setupParallax(){const world=$('#omWorld'),layers=[...world.querySelectorAll('[data-depth]')];let tx=0,ty=0,x=0,y=0;const move=(cx,cy)=>{const r=world.getBoundingClientRect();tx=(cx-r.left)/r.width-.5;ty=(cy-r.top)/r.height-.5};world.addEventListener('pointermove',e=>move(e.clientX,e.clientY),{passive:true});world.addEventListener('pointerleave',()=>{tx=ty=0},{passive:true});const tick=()=>{x+=(tx-x)*.055;y+=(ty-y)*.055;layers.forEach(el=>{const d=+el.dataset.depth;el.style.transform=`translate3d(${x*d*44}px,${y*d*30}px,0) scale(${1+d*.045})`});requestAnimationFrame(tick)};tick()}
+  function setupScroll(){let last=0;window.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<8)return;const now=Date.now();if(now-last<700)return;last=now;if(e.deltaY>0&&phase<phases.length-1)renderPhase(phase+1);if(e.deltaY<0&&phase>0)renderPhase(phase-1)},{passive:true});let sy=0;window.addEventListener('touchstart',e=>sy=e.touches[0].clientY,{passive:true});window.addEventListener('touchend',e=>{const d=sy-e.changedTouches[0].clientY;if(Math.abs(d)>45){if(d>0&&phase<phases.length-1)renderPhase(phase+1);if(d<0&&phase>0)renderPhase(phase-1)}},{passive:true})}
   landing();
 })();
