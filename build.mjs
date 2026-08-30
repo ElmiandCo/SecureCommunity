@@ -10,13 +10,10 @@ fs.mkdirSync("dist/assets/avatars", { recursive: true });
 fs.mkdirSync("dist/assets/onemuslim", { recursive: true });
 fs.mkdirSync("dist/assets/avatar", { recursive: true });
 
-for (const f of ["index.html","styles.css","app.js","floating-profile-notes.js","home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-save-fix.js","profile-builder-v2.css","profile-avatar-fix.css","dashboard-theme.css","dashboard-theme.js","landing-enhancements.css","landing-enhancements.js","one-muslim-navigation.js","navigation.css","onemuslim-theme.css","onemuslim-home.css","homepage-navigation.css","ui-fixes.css","one-muslim-final-ui.css","ui-fixes.js","start-pack.js","guest-xp.js","auth-session-guard.js","auth-session-loader-v2.js","coming-soon.html","coming-soon.css","coming-soon.js","landing.html","landing.css","landing-earth.css","landing-nature.css","landing.js","landing-clouds.svg","supabase-client.js"])
+for (const f of ["index.html","styles.css","app.js","floating-profile-notes.js","home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-save-fix.js","profile-builder-v2.css","profile-avatar-fix.css","dashboard-theme.css","dashboard-theme.js","landing-enhancements.css","landing-enhancements.js","parallax-journey.css","parallax-journey.js","one-muslim-navigation.js","navigation.css","onemuslim-theme.css","onemuslim-home.css","homepage-navigation.css","ui-fixes.css","one-muslim-final-ui.css","ui-fixes.js","start-pack.js","guest-xp.js","auth-session-guard.js","auth-session-loader-v2.js","coming-soon.html","coming-soon.css","coming-soon.js","landing.html","landing.css","landing-earth.css","landing-nature.css","landing.js","landing-clouds.svg","supabase-client.js"])
   fs.copyFileSync(f, path.join("dist", f));
 
-// Keep the entire avatar library in the production artifact. The profile editor
-// references these files directly; previously only the Platinum subset was copied.
 fs.cpSync("assets/avatar", "dist/assets/avatar", { recursive: true });
-
 fs.copyFileSync("assets/mascot.jpeg", "dist/assets/mascot.jpeg");
 for (const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg","pearl.svg","platinum-male.PNG","platinum-female.PNG"])
   fs.copyFileSync(`assets/avatars/${f}`, path.join("dist/assets/avatars", f));
