@@ -17,7 +17,7 @@ fs.cpSync("assets/avatar", "dist/assets/avatar", { recursive: true });
 fs.copyFileSync("assets/mascot.jpeg", "dist/assets/mascot.jpeg");
 for (const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg","pearl.svg","platinum-male.PNG","platinum-female.PNG"])
   fs.copyFileSync(`assets/avatars/${f}`, path.join("dist/assets/avatars", f));
-for (const f of ["pattern-light.svg","pattern-dark.svg","mosque-light.svg","mosque-dark.svg","crescent-gold.svg","divider-gold.svg","divider-green.svg","arch-gold.svg","corner-ornament.svg","hero-ornament.svg"])
+for (const f of ["pattern-light.svg","pattern-dark.svg","mosque-light.svg","mosque-dark.svg","crescent-gold.svg","divider-gold.svg","divider-green.svg","arch-gold.svg","corner-ornament.svg","hero-ornament.svg","celestial-sunrise.svg","golden-blue-cosmic-particles.svg"])
   fs.copyFileSync(`assets/onemuslim/${f}`, path.join("dist/assets/onemuslim", f));
 
 let html = fs.readFileSync("dist/index.html", "utf8");
