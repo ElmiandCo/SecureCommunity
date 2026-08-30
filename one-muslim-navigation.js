@@ -55,7 +55,7 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
   }
   function init(){
     style();
-    let history=['feed'];
+    let history=['profile'];
     const app=document.getElementById('appView');
     if(!app)return;
     const menu=document.getElementById('appMenuToggle');const sidebar=document.getElementById('mobileAppSidebar');const back=document.getElementById('appBack');
@@ -65,8 +65,7 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
       const page=nav.dataset.page;if(history[history.length-1]!==page)history.push(page);show(page);sidebar?.classList.remove('open');
     },true);
     menu?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();sidebar?.classList.toggle('open')});
-    back?.addEventListener('click',()=>{if(history.length>1)history.pop();show(history[history.length-1]||'feed')});
-    document.addEventListener('click',e=>{if(sidebar?.classList.contains('open')&&!sidebar.contains(e.target)&&e.target!==menu)sidebar.classList.remove('open')});
+    back?.addEventListener('click',()=>{if(history.length>1)history.pop();show(history[history.length-1]||'profile')});
     function scan(){
       const publicHome=document.querySelector('#appView #publicHomePage .om-site-nav');if(publicHome)publicHome.remove();
       const card=document.querySelector('#authView .auth-card');
@@ -84,6 +83,12 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
       }
     }
     scan();setTimeout(scan,250);setTimeout(scan,800);new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
+    const activateProfile=()=>{
+      if(document.getElementById('profilePage')&&!document.getElementById('profilePage').classList.contains('hidden'))return;
+      if(document.getElementById('appView')&&!document.getElementById('appView').classList.contains('hidden'))show('profile');
+    };
+    setTimeout(activateProfile,350);
+    setTimeout(activateProfile,1000);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
