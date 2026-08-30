@@ -2,11 +2,15 @@
 (function(){
   'use strict';
   let opened=false;
+  function loadAvatarSync(){
+    if(document.querySelector('script[data-selected-avatar-sync]'))return;
+    const s=document.createElement('script');s.src='selected-avatar-sync.js';s.dataset.selectedAvatarSync='1';s.defer=true;document.body.appendChild(s);
+  }
   function tryOpen(){
     const app=document.getElementById('appView');
     if(!app||app.classList.contains('hidden')||opened)return;
-    if(typeof window.OneMuslimOpenProfileEditor!=='function')return;
-    if(!window.profile)return;
+    loadAvatarSync();
+    if(typeof window.OneMuslimOpenProfileEditor!=='function'||!window.profile)return;
     const profileButton=document.querySelector('#appView [data-page="profile"]');
     if(profileButton)profileButton.click();
     opened=true;
