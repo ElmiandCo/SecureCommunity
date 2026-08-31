@@ -9,7 +9,7 @@
     Object.freeze({id:"diamond",label:"Diamond",minXP:250000,className:"tier-diamond",accent:"#8fd3ff",text:"#17364a"})
   ]);
   const PLATINUM_XP=10000,GOLD_XP=50000,DIAMOND_XP=250000;
-  const REGULAR_AVATAR_ASSETS=Object.freeze({male:"/assets/avatar/male/male-1-original.jpg",female:"/assets/avatar/base/master.png"});
+  const REGULAR_AVATAR_ASSETS=Object.freeze({male:"/assets/avatar/base/avatar-master-male.jpeg",female:"/assets/avatar/base/avatar-master-female.jpeg"});
   const PLATINUM_AVATAR_ASSETS=Object.freeze({male:"/assets/avatars/platinum-male.PNG",female:"/assets/avatars/platinum-female.PNG"});
   const AVATAR_ASSETS=PLATINUM_AVATAR_ASSETS;
   const PROFILE_DEFAULTS=Object.freeze({avatar_gender:"male",avatar_base:"default",avatar_package:"default",avatar_accessory:"none",avatar_ring:"default",profile_banner:"default",profile_background:"default",profile_accent:"emerald",profile_title:"Muslim",custom_photo:null,unlocked_packages:["default"]});
