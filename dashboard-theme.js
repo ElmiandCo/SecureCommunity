@@ -1,9 +1,24 @@
 (function(){
   const $=(s,r=document)=>r.querySelector(s);
   const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
-  load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');
+  load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');load('global-parallax.css','oneMuslimGlobalParallax');
   ['start-pack.js','guest-xp.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
-  document.body.classList.add('dashboard-theme','onemuslim-theme');const pv=$('#publicView');if(!pv)return;
+  document.body.classList.add('dashboard-theme','onemuslim-theme');
+  function setupGlobalParallax(){
+    if(document.getElementById('omGlobalBackdrop'))return;
+    const A='assets/onemuslim/';
+    const backdrop=document.createElement('div');backdrop.id='omGlobalBackdrop';backdrop.setAttribute('aria-hidden','true');
+    backdrop.innerHTML=`<img class="om-g-layer om-g-sun" data-depth="0.08" src="${A}celestial-sunrise.svg" alt=""><img class="om-g-layer om-g-particles" data-depth="0.18" src="${A}golden-blue-cosmic-particles.svg" alt=""><img class="om-g-layer om-g-clouds" data-depth="0.30" src="${A}cinematic-golden-clouds.svg" alt=""><div class="om-g-stars"></div><div class="om-g-vignette"></div>`;
+    document.body.prepend(backdrop);
+    const layers=[...backdrop.querySelectorAll('[data-depth]')];let tx=0,ty=0,x=0,y=0;
+    const move=(cx,cy)=>{tx=(cx/window.innerWidth-.5);ty=(cy/window.innerHeight-.5)};
+    window.addEventListener('pointermove',e=>move(e.clientX,e.clientY),{passive:true});
+    window.addEventListener('pointerleave',()=>{tx=ty=0},{passive:true});
+    const tick=()=>{x+=(tx-x)*.035;y+=(ty-y)*.035;layers.forEach(el=>{const d=+el.dataset.depth;el.style.transform=`translate3d(${x*d*38}px,${y*d*28}px,0) scale(${1.02+d*.035})`});requestAnimationFrame(tick)};
+    tick();
+  }
+  setupGlobalParallax();
+  const pv=$('#publicView');if(!pv)return;
   const A='assets/onemuslim/';const context=new URLSearchParams(location.search).get('from')||location.hash.replace(/^#/,'');const isShahada=/new[-_ ]?revert|shahada|revert/i.test(context);
   function landing(){pv.innerHTML=`<div class="om-parallax" id="oneMuslimLanding"><div class="om-world" id="omWorld" aria-hidden="true"><img class="om-layer om-earth" data-depth="0.10" src="${A}celestial-sunrise.svg" alt=""><img class="om-layer om-cosmic" data-depth="0.20" src="${A}golden-blue-cosmic-particles.svg" alt=""><div class="om-clouds om-layer" data-depth="0.48" aria-hidden="true"></div><div class="om-vignette"></div></div><nav class="om-parallax-nav"><a class="om-brand" href="#"><span>1</span><b>ONE MUSLIM</b></a><div class="om-nav-actions"><button data-auth="login">Sign In</button><button class="gold" data-auth="signup">Create Account</button></div></nav><main class="om-story"><div class="om-phase" id="omPhase"><span class="om-eyebrow">ONE MUSLIM · A JOURNEY OF FAITH</span><div class="om-copy" id="omCopy"></div><div class="om-actions" id="omActions"></div><div class="om-progress"><i></i><span>01</span><span>02</span><span>03</span><span>04</span></div></div></main><div class="om-scroll-hint"><span></span>Scroll to journey</div></div>`;wireAuth();renderPhase(isShahada?1:0);setupParallax();setupScroll()}
   const phases=[{title:`Welcome to <em>One Muslim.</em>`,body:`A place to learn, grow, connect, and walk the journey together.`,actions:[['Begin the journey','next']]},{title:`Is this your <em>first time?</em>`,body:`However you arrived here, you belong in this conversation.`,actions:[['Yes — I’m new here','new'],['No — welcome back','next']]},{title:`One <strong>Allah</strong>.<br>One <em>Ummah.</em>`,body:`A community built around knowledge, faith, and meaningful connection.`,actions:[['Continue','next']]},{title:`What do you want to <em>learn?</em>`,body:`Choose your path. You can change it anytime.`,actions:[['Learn in a fun way','fun'],['Serious only','serious']]},{title:`Your journey starts <em>here.</em>`,body:`Explore My Notes, One University, community conversations, lessons, and more.`,actions:[['Create your account','signup'],['Sign in','login']]}];
