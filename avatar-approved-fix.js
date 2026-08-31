@@ -1,19 +1,22 @@
 /* OneMuslim approved avatar source-of-truth.
  * These are the two current regular identity avatars supplied by ElmiandCo.
+ * Root-relative paths are intentional so avatars work on every page/route.
  */
 (function(){
   'use strict';
   const APPROVED={
-    male:'assets/avatar/base/avatar-master-male.jpeg',
-    female:'assets/avatar/base/avatar-master-female.jpeg'
+    male:'/assets/avatar/base/avatar-master-male.jpeg',
+    female:'/assets/avatar/base/avatar-master-female.jpeg'
   };
-  const PLATINUM={male:'assets/avatars/platinum-male.PNG',female:'assets/avatars/platinum-female.PNG'};
+  const PLATINUM={male:'/assets/avatars/platinum-male.PNG',female:'/assets/avatars/platinum-female.PNG'};
   window.OneMuslimApprovedAvatars=APPROVED;
   function currentProfile(){return window.profile||{};}
   function genderFor(p){return p?.avatar_gender==='female'?'female':'male';}
   function sourceFor(p){const g=genderFor(p);const platinum=p?.avatar_package==='platinum_package'&&Number(p?.xp_total??p?.xp??p?.rank_points??0)>=10000;return platinum?PLATINUM[g]:APPROVED[g];}
   function putImage(host,src,alt){
     if(!host||!src)return;
+    const old=host.querySelector('img');
+    if(old&&old.getAttribute('src')===src)return;
     host.innerHTML='';
     const img=document.createElement('img');
     img.src=src;img.alt=alt||'Selected avatar';img.loading='eager';
