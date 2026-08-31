@@ -4,8 +4,8 @@
   const groups=['Islamic Society','Apologetics','Da’wah','Qur’an Study','Tafsir Circle','Hadith Study','Tajweed','The Belt Boys','Torah Boys'];
   const backgrounds=[['Islamic Geometry','linear-gradient(135deg,#fbf5e8,#f1e6cf)'],['Mosque Silhouette','linear-gradient(135deg,#f7ecd6,#ead8b5)'],['Islamic Arch','linear-gradient(135deg,#f8f2e5,#e9dfcc)'],['Crescent & Stars','linear-gradient(135deg,#0e2d27,#193f35)'],['Luxury Gold','linear-gradient(135deg,#fff8e8,#d8b66a)'],['Emerald','linear-gradient(135deg,#0d4b3d,#1f6b57)'],['Dark Mosque','linear-gradient(135deg,#061e1a,#173a31)'],['Minimal Cream','linear-gradient(135deg,#fffdf8,#f4f0e7)']];
   const accents=[['emerald','#1f6a55'],['gold','#c89d3c'],['navy','#243b62'],['plum','#70536f'],['ruby','#a34d52']];
-  const REGULAR={male:'assets/avatar/male/male-1-original.jpg',female:'assets/avatar/base/master.png'};
-  const PLATINUM={male:'assets/avatars/platinum-male.PNG',female:'assets/avatars/platinum-female.PNG'};
+  const REGULAR=window.OneMuslimProfileSystem?.REGULAR_AVATAR_ASSETS||{male:'/assets/avatar/base/avatar-master-male.jpeg',female:'/assets/avatar/base/avatar-master-female.jpeg'};
+  const PLATINUM=window.OneMuslimProfileSystem?.PLATINUM_AVATAR_ASSETS||{male:'/assets/avatars/platinum-male.PNG',female:'/assets/avatars/platinum-female.PNG'};
   const esc=s=>String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
   const client=()=>window.OneMuslimSupabaseClient?.getClient?.()||window.supabase?.createClient?.(window.APP_CONFIG?.SUPABASE_URL,window.APP_CONFIG?.SUPABASE_ANON_KEY);
   const profile=()=>window.profile||{};
