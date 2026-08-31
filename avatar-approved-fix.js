@@ -3,7 +3,10 @@
  */
 (function(){
   'use strict';
-  const APPROVED={male:'avatar-master-male2.jpeg',female:'avatar-master-female.jpeg'};
+  const APPROVED={
+    male:'assets/avatar/base/avatar-master-male.jpeg',
+    female:'assets/avatar/base/avatar-master-female.jpeg'
+  };
   const PLATINUM={male:'assets/avatars/platinum-male.PNG',female:'assets/avatars/platinum-female.PNG'};
   window.OneMuslimApprovedAvatars=APPROVED;
   function currentProfile(){return window.profile||{};}
