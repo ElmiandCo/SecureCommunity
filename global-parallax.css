@@ -18,7 +18,10 @@ body.dashboard-theme #appView{min-height:100vh}
 body.dashboard-theme #appView .app-nav{background:rgba(5,10,18,.72)!important;border-color:rgba(216,179,90,.24)!important;backdrop-filter:blur(18px)}
 body.dashboard-theme #appView .sidebar{background:rgba(5,10,18,.58)!important;border-color:rgba(216,179,90,.18)!important;backdrop-filter:blur(18px)}
 body.dashboard-theme #appView .content{background:transparent!important}
+/* The public landing uses the same Coming Soon world; its own old artwork is intentionally transparent. */
+body.dashboard-theme #oneMuslimLanding.om-parallax{background:transparent!important}
+body.dashboard-theme #oneMuslimLanding .om-world{display:none!important}
 @keyframes omGeometryFloat{50%{transform:scale(.94) rotate(35deg) translateY(-10px)}}
 @keyframes omDustDrift{to{background-position:180px 160px,-80px 20px}}
-@media(max-width:700px){#omGlobalBackdrop .omg-geometry{inset:10%;opacity:.12}#omGlobalBackdrop .omg-dust{background-size:131px 173px,193px 157px}#omGlobalBackdrop .omg-cosmic{opacity:.24}}
+@media(max-width:700px){#omGlobalBackdrop .omg-geometry{inset:10%;opacity:.12}#omGlobalBackdrop .omg-dust{background-size:131px 173px,193px 157px}}
 @media(prefers-reduced-motion:reduce){#omGlobalBackdrop .omg-geometry,#omGlobalBackdrop .omg-dust{animation:none}}
