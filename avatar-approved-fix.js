@@ -1,76 +1,96 @@
-/* OneMuslim approved avatar source-of-truth.
- * These are the two current regular identity avatars supplied by ElmiandCo.
- * Root-relative paths are intentional so avatars work on every page/route.
- */
+/* OneMuslim avatar hard-stop: the two approved master identity images are the only regular avatars. */
 (function(){
   'use strict';
+  const ROOT='/assets/avatar/base/';
   const APPROVED={
-    male:'/assets/avatar/base/avatar-master-male.jpeg',
-    female:'/assets/avatar/base/avatar-master-female.jpeg'
+    male:ROOT+'avatar-master-male.jpeg',
+    female:ROOT+'avatar-master-female.jpeg'
   };
+  const OLD=[
+    '/assets/avatar/male/male-1-original.jpg',
+    'assets/avatar/male/male-1-original.jpg',
+    '/assets/avatar/base/master.png',
+    'assets/avatar/base/master.png'
+  ];
   const PLATINUM={male:'/assets/avatars/platinum-male.PNG',female:'/assets/avatars/platinum-female.PNG'};
-  window.OneMuslimApprovedAvatars=APPROVED;
-  function currentProfile(){return window.profile||{};}
-  function genderFor(p){return p?.avatar_gender==='female'?'female':'male';}
-  function sourceFor(p){const g=genderFor(p);const platinum=p?.avatar_package==='platinum_package'&&Number(p?.xp_total??p?.xp??p?.rank_points??0)>=10000;return platinum?PLATINUM[g]:APPROVED[g];}
-  function putImage(host,src,alt){
-    if(!host||!src)return;
-    const old=host.querySelector('img');
-    if(old&&old.getAttribute('src')===src)return;
-    host.innerHTML='';
-    const img=document.createElement('img');
-    img.src=src;img.alt=alt||'Selected avatar';img.loading='eager';
-    host.appendChild(img);
-  }
-  function sync(){
-    const p=currentProfile(),src=sourceFor(p),g=genderFor(p);
-    document.querySelectorAll('#composerAvatar,#miniProfile .avatar,#miniProfile .mini-avatar,#miniProfile .profile-avatar,[data-profile-avatar="self"],.om-personal-avatar').forEach(el=>{
-      putImage(el,src,'Selected avatar');el.classList.add('om-avatar-synced');
-    });
-    document.querySelectorAll('.om-pb-current-avatar,.om-pb-preview-avatar').forEach(el=>putImage(el,src,g==='female'?'Female Muslim avatar':'Male Muslim avatar'));
-  }
-  function decorateEditor(){
-    const overlay=document.querySelector('.om-pb-overlay');if(!overlay)return;
-    const p=currentProfile(),g=genderFor(p),src=sourceFor(p);
+  const getProfile=()=>window.profile||{};
+  const gender=()=>getProfile().avatar_gender==='female'?'female':'male';
+  const approved=()=>APPROVED[gender()];
+  const isOld=src=>!!src&&OLD.some(x=>String(src).includes(x));
+  const setImg=(img,src,alt)=>{if(!img||!src)return;img.src=src;img.alt=alt||'Profile avatar';};
+
+  function repairEditor(){
+    const overlay=document.querySelector('.om-pb-overlay');
+    if(!overlay)return;
+    const g=gender();
+
+    /* The gender cards must ALWAYS show the two approved master images. */
     overlay.querySelectorAll('.om-pb-choice.pb-gender').forEach(btn=>{
       const bg=btn.dataset.gender==='female'?'female':'male';
-      putImage(btn.querySelector('.om-identity-avatar'),APPROVED[bg],bg==='female'?'Female Muslim avatar':'Male Muslim avatar');
-      const label=btn.querySelector('.om-identity-label');if(label)label.textContent=bg==='female'?'Female':'Male';
+      const img=btn.querySelector('.om-identity-avatar img');
+      if(img)setImg(img,APPROVED[bg],bg==='female'?'Female Muslim avatar':'Male Muslim avatar');
     });
-    overlay.querySelectorAll('.om-pb-choice.pb-package').forEach(btn=>{
-      const isPlat=btn.dataset.package==='platinum_package';
-      const avatar=btn.querySelector('.om-package-avatar');
-      if(avatar)putImage(avatar,isPlat?PLATINUM[g]:APPROVED[g],isPlat?'Platinum avatar':'Original Muslim avatar');
+
+    /* Current/preview avatar must use the selected standard master image. */
+    ['#pbCurrentAvatar','#pbPreviewAvatar'].forEach(sel=>{
+      const host=overlay.querySelector(sel);
+      if(!host)return;
+      let img=host.querySelector('img');
+      if(!img){img=document.createElement('img');host.innerHTML='';host.appendChild(img);}
+      setImg(img,approved(),g==='female'?'Female Muslim avatar':'Male Muslim avatar');
     });
-    putImage(overlay.querySelector('#pbCurrentAvatar'),src,g==='female'?'Female Muslim avatar':'Male Muslim avatar');
-    putImage(overlay.querySelector('#pbPreviewAvatar'),src,g==='female'?'Female Muslim avatar':'Male Muslim avatar');
+
+    /* Original finish is the approved master; Platinum remains separate. */
+    const original=overlay.querySelector('.om-pb-choice.pb-package[data-package="default"] .om-package-avatar img');
+    if(original)setImg(original,approved(),g==='female'?'Original female avatar':'Original male avatar');
+
+    /* Never allow the deleted legacy image to remain anywhere in the editor. */
+    overlay.querySelectorAll('img').forEach(img=>{
+      if(isOld(img.getAttribute('src')))setImg(img,approved(),g==='female'?'Female Muslim avatar':'Male Muslim avatar');
+    });
   }
+
+  function repairAll(){
+    const g=gender(),src=approved();
+    document.querySelectorAll('img').forEach(img=>{
+      if(isOld(img.getAttribute('src')))setImg(img,src,g==='female'?'Female Muslim avatar':'Male Muslim avatar');
+    });
+    repairEditor();
+  }
+
+  async function repairSavedProfile(){
+    const p=getProfile();
+    if(!p||!p.avatar_gender)return;
+    const desired=approved();
+    if(p.avatar_url!==desired)window.profile={...p,avatar_url:desired};
+    try{
+      const sb=window.OneMuslimSupabaseClient?.getClient?.();
+      const auth=await sb?.auth?.getUser?.();
+      const id=auth?.data?.user?.id;
+      if(sb&&id&&p.avatar_url!==desired){
+        await sb.from('profiles').update({avatar_url:desired}).eq('id',id);
+      }
+    }catch(_e){}
+  }
+
   function patchBuilder(){
-    const builder=window.OneMuslimProfileBuilder;
-    if(!builder||builder.__approvedAvatarPatch)return false;
-    builder.__approvedAvatarPatch=true;
-    const originalOpen=builder.open;
-    builder.open=function(){
-      const result=originalOpen.apply(this,arguments);
-      [0,50,150,400].forEach(ms=>setTimeout(()=>{decorateEditor();sync();},ms));
-      return result;
-    };
-    return true;
+    const b=window.OneMuslimProfileBuilder;
+    if(!b||b.__approvedMasterHardStop)return;
+    b.__approvedMasterHardStop=true;
+    if(typeof b.open==='function'){
+      const originalOpen=b.open;
+      b.open=function(){
+        const result=originalOpen.apply(this,arguments);
+        [0,50,150,400,1000].forEach(ms=>setTimeout(repairAll,ms));
+        return result;
+      };
+    }
   }
-  function repairSavedAvatar(){
-    const p=currentProfile();if(!p.avatar_gender)return;
-    const desired=sourceFor(p);
-    if(p.avatar_url===desired)return;
-    window.profile={...p,avatar_url:desired};
-    const sb=window.OneMuslimSupabaseClient?.getClient?.()||window.supabase?.createClient?.(window.APP_CONFIG?.SUPABASE_URL,window.APP_CONFIG?.SUPABASE_ANON_KEY);
-    const userPromise=sb?.auth?.getUser?.();
-    if(userPromise)userPromise.then(({data})=>{if(data?.user)sb.from('profiles').update({avatar_url:desired}).eq('id',data.user.id).then(()=>{});}).catch(()=>{});
-  }
-  function boot(){patchBuilder();decorateEditor();sync();repairSavedAvatar();}
+
+  function boot(){patchBuilder();repairAll();repairSavedProfile();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-  [250,750,1500,3000].forEach(ms=>setTimeout(boot,ms));
-  new MutationObserver(()=>{decorateEditor();sync();}).observe(document.body,{childList:true,subtree:true});
-  window.addEventListener('profile:updated',()=>{setTimeout(()=>{repairSavedAvatar();boot();},0);});
-  window.OneMuslimApprovedAvatarSrc=sourceFor;
-  window.OneMuslimSyncApprovedAvatar=sync;
+  [100,500,1500,3000].forEach(ms=>setTimeout(boot,ms));
+  new MutationObserver(()=>repairAll()).observe(document.body,{childList:true,subtree:true});
+  window.addEventListener('profile:updated',()=>setTimeout(boot,0));
+  window.OneMuslimApprovedAvatars=APPROVED;
 })();
