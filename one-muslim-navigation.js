@@ -32,18 +32,14 @@ body.dashboard-theme #appView #publicHomePage>.om-landing>.om-site-nav{display:n
 body.dashboard-theme #appView #publicHomePage>.om-landing{padding-top:10px!important}
 @media(max-width:1000px){
  body.dashboard-theme #appView .app-layout{display:block!important;min-height:100vh!important}
- body.dashboard-theme #appView .sidebar{position:fixed!important;left:0!important;top:0!important;width:min(300px,86vw)!important;height:100vh!important;min-height:100vh!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:20px 0 50px rgba(18,56,46,.16)!important;z-index:1400!important}
- body.dashboard-theme #appView .sidebar.open{transform:translateX(0)!important}
- body.dashboard-theme #appView .app-nav{display:flex!important;position:sticky!important;top:0!important;z-index:1200!important;height:68px!important;align-items:center!important;gap:9px!important;padding:0 12px!important;background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--om-line)!important;box-shadow:0 3px 18px rgba(27,55,45,.04)!important;backdrop-filter:blur(12px)!important}
- body.dashboard-theme #appView .app-nav-menu{display:block!important;order:1!important;border:1px solid #d6ddd7!important;background:#fff!important;color:var(--om-green)!important;border-radius:12px!important;padding:8px 11px!important;font-size:20px!important;cursor:pointer!important;position:relative!important;z-index:1500!important;touch-action:manipulation!important}
- body.dashboard-theme #appView .app-nav-brand{display:flex!important;order:2!important;align-items:center!important;gap:9px!important;min-width:0!important;font-family:Georgia,'Times New Roman',serif!important;font-size:20px!important;font-weight:700!important;color:var(--om-green)!important;white-space:nowrap!important}
- body.dashboard-theme #appView .om-nav-mark{display:grid!important;place-items:center!important;width:36px!important;height:36px!important;border:2px solid var(--om-gold)!important;border-radius:50%!important;background:#fffaf0!important;color:var(--om-green)!important;font-size:18px!important;flex:0 0 auto!important;overflow:hidden!important}
- body.dashboard-theme #appView .om-nav-mark img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border-radius:50%!important}
+ body.dashboard-theme #appView .sidebar{display:none!important}
+ body.dashboard-theme #appView .content{padding:82px 18px 70px!important}
+ body.dashboard-theme #appView .app-nav{display:flex!important;position:fixed!important;top:0;left:0;right:0;height:64px!important;z-index:1200!important;background:#fffdf8!important;border-bottom:1px solid var(--om-line)!important;align-items:center!important;padding:0 14px!important;box-sizing:border-box!important}
  body.dashboard-theme #appView .app-nav-links{display:none!important}
- body.dashboard-theme #appView .app-nav-search{order:3!important;flex:1 1 auto!important;min-width:0!important;max-width:none!important;height:40px!important;margin-left:auto!important;border:1px solid var(--om-line)!important;border-radius:999px!important;background:#f8f8f5!important;color:var(--om-text)!important;padding:0 13px!important;font-size:14px!important;outline:none!important}
- body.dashboard-theme #appView .app-nav-back{order:4!important;border:1px solid #d6ddd7!important;background:#fff!important;color:#456258!important;border-radius:999px!important;padding:9px 11px!important;font-size:0!important;cursor:pointer!important}.app-nav-back:before{content:'←';font-size:17px!important}
- body.dashboard-theme #appView .content{padding:20px 14px 45px!important}
+ body.dashboard-theme #appView .app-nav-menu{display:inline-flex!important;margin-left:8px!important}
+ body.dashboard-theme #appView .app-nav-search{display:none!important}
 }
+@media(max-width:620px){body.dashboard-theme #appView .content{padding:76px 12px 58px!important}.site-nav-actions{gap:5px}.auth-nav-actions button{font-size:13px;padding:8px 12px}}
 @media(max-width:480px){body.dashboard-theme #appView .app-nav-brand{font-size:0!important}.app-nav-brand .om-nav-mark{width:36px!important;height:36px!important}.app-nav-search{font-size:13px!important}.auth-nav-actions button{font-size:14px!important;padding:9px 15px!important}}
 body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-theme #appView{background:#0e1b17!important}body.dark-theme #appView .sidebar,body.dark-theme #appView .app-nav{background:#14231e!important;border-color:#29473c!important}body.dark-theme #appView .side{color:#b8c8c0!important}body.dark-theme #appView .side.active,body.dark-theme #appView .side:hover{background:#24483d!important;color:#e7f1ec!important}
 `;
@@ -52,12 +48,7 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
 
   function avatarSrc(){
     const p=window.profile||{};
-    if(p.avatar_url)return String(p.avatar_url);
-    if(p.avatar_config&&typeof p.avatar_config==='object'&&(p.avatar_config.asset||p.avatar_config.url))return String(p.avatar_config.asset||p.avatar_config.url);
-    if(p.avatar_package==='platinum_package')return `assets/avatars/${p.avatar_gender==='female'?'platinum-female.PNG':'platinum-male.PNG'}`;
-    if(p.avatar_gender==='female')return 'assets/avatar/base/master.png';
-    if(p.avatar_gender==='male')return 'assets/avatar/male/male-1-original.jpg';
-    return '';
+    return window.OneMuslimProfileSystem?.getAvatarAsset?.(p)||'';
   }
 
   function syncNavAvatar(){
@@ -73,36 +64,27 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
     mark.appendChild(img);
   }
 
+  function historyStack(){return window.__omPageHistory||(window.__omPageHistory=['feed']);}
+  function sidebar(){return document.getElementById('mobileAppSidebar')}
   function show(page){
-    const map={'public-home':'publicHomePage',feed:'feedPage',profiles:'profilesPage',profile:'profilePage',lessons:'lessonsPage'};
-    const target=document.getElementById(map[page]||page);
-    if(!target)return false;
-    document.querySelectorAll('#appView .content > .page').forEach(p=>p.classList.add('hidden'));
-    target.classList.remove('hidden');
-    document.querySelectorAll('#appView .app-nav-link,#appView .side').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-    document.getElementById('mobileAppSidebar')?.classList.remove('open');
-    window.scrollTo({top:0,behavior:'smooth'});
+    if(typeof window.showPage==='function')window.showPage(page);
+    else if(typeof window.navigateTo==='function')window.navigateTo(page);
+    document.querySelectorAll('#appView .app-nav-link[data-page],#appView .side[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+    const h=historyStack();if(h[h.length-1]!==page)h.push(page);
+    sidebar()?.classList.remove('open');
     syncNavAvatar();
-    return true;
   }
 
   function init(){
     style();
-    const app=document.getElementById('appView');
-    if(!app)return;
-    let history=['profile'];
-    const sidebar=()=>document.getElementById('mobileAppSidebar');
+    window.OneMuslimNavigation={show,syncNavAvatar};
 
-    // Single routing path for both the top navigation and drawer.
-    // Do not call side.click() from here: another navigation listener is already installed,
-    // and doing so can recurse indefinitely on mobile.
     document.addEventListener('click',e=>{
       const nav=e.target.closest?.('#appView .app-nav-link[data-page],#appView .side[data-page]');
       if(nav){
         e.preventDefault();
         e.stopImmediatePropagation();
         const page=nav.dataset.page||'feed';
-        if(history[history.length-1]!==page)history.push(page);
         show(page);
         return;
       }
@@ -117,8 +99,9 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
       if(back){
         e.preventDefault();
         e.stopImmediatePropagation();
-        if(history.length>1)history.pop();
-        show(history[history.length-1]||'profile');
+        const h=historyStack();
+        if(h.length>1)h.pop();
+        show(h[h.length-1]||'profile');
       }
     },true);
 
