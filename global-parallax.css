@@ -1,0 +1,34 @@
+/* OneMuslim global cinematic/parallax background.
+   Shared by public landing, auth, and authenticated pages. */
+:root{--om-bg-deep:#07142f;--om-bg-mid:#102d58;--om-bg-glow:#d5a94b}
+
+html,body{min-height:100%;}
+body.dashboard-theme{background:#07142f!important;position:relative;overflow-x:hidden;}
+
+#omGlobalBackdrop{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:
+  radial-gradient(circle at 50% 62%,rgba(225,181,91,.14),transparent 26%),
+  linear-gradient(180deg,#06132d 0%,#0b2345 54%,#07162f 100%);}
+#omGlobalBackdrop .om-g-layer{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;will-change:transform;transform:translate3d(0,0,0) scale(1.02);}
+#omGlobalBackdrop .om-g-sun{opacity:.92;}
+#omGlobalBackdrop .om-g-particles{opacity:.62;mix-blend-mode:screen;}
+#omGlobalBackdrop .om-g-clouds{opacity:.34;filter:saturate(.82) brightness(.82);}
+#omGlobalBackdrop .om-g-vignette{position:absolute;inset:0;background:
+  radial-gradient(ellipse at center,transparent 34%,rgba(2,8,23,.18) 72%,rgba(2,7,20,.62) 100%),
+  linear-gradient(180deg,rgba(3,10,27,.10),rgba(3,10,27,.20));}
+#omGlobalBackdrop .om-g-stars{position:absolute;inset:0;background-image:radial-gradient(circle at 12% 21%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),radial-gradient(circle at 78% 17%,rgba(255,235,178,.75) 0 1px,transparent 1.5px),radial-gradient(circle at 65% 73%,rgba(255,255,255,.55) 0 1px,transparent 1.5px),radial-gradient(circle at 30% 66%,rgba(255,255,255,.5) 0 1px,transparent 1.5px);opacity:.45;}
+
+body.dashboard-theme #publicView,body.dashboard-theme #authView,body.dashboard-theme #appView{position:relative;z-index:1;}
+body.dashboard-theme #authView,body.dashboard-theme #appView{background:transparent!important;}
+body.dashboard-theme #appView{min-height:100vh;}
+
+/* Keep the authenticated UI readable while allowing the cinematic world to show through. */
+body.dashboard-theme #appView .app-nav{background:rgba(6,18,43,.76)!important;border-color:rgba(255,255,255,.18)!important;backdrop-filter:blur(18px);}
+body.dashboard-theme #appView .sidebar{background:rgba(7,24,55,.64)!important;backdrop-filter:blur(18px);}
+body.dashboard-theme #appView .content{background:transparent!important;}
+
+/* Public landing owns its own parallax artwork; the shared backdrop remains underneath it. */
+body.dashboard-theme #publicView .om-parallax{position:relative;z-index:1;}
+
+@media(prefers-reduced-motion:reduce){
+  #omGlobalBackdrop .om-g-layer{transform:none!important;}
+}
