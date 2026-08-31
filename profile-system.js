@@ -1,4 +1,4 @@
-/* OneMuslim Profile System v10 — database-backed avatar source of truth. */
+/* OneMuslim Profile System v11 — avatar builder is the PFP source of truth. */
 (function () {
   "use strict";
   const RANKS = Object.freeze(["Muslim","Mu'min","Expert","Da'wah Expert","Elite Sheikh","Platinum Muhsin"]);
@@ -36,7 +36,8 @@
   function isDiamondUnlocked(p){return xpOf(p)>=DIAMOND_XP;}
   function getAvatarAsset(p){
     const n=normalize(p);
-    if(n.avatar_url)return n.avatar_url;
+    // The avatar builder controls the PFP. Ignore stale legacy avatar_url values.
+    if(n.custom_photo && isUnlocked("custom_photo",n))return n.custom_photo;
     const gender=n.avatar_gender;
     return n.avatar_package==="platinum_package"&&isPlatinumUnlocked(n)?PLATINUM_AVATAR_ASSETS[gender]:REGULAR_AVATAR_ASSETS[gender];
   }
