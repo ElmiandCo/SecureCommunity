@@ -10,7 +10,7 @@
   ]);
   const PLATINUM_XP=10000,GOLD_XP=50000,DIAMOND_XP=250000;
   const REGULAR_AVATAR_ASSETS=Object.freeze({male:"/assets/avatar/base/avatar-master-male.jpeg",female:"/assets/avatar/base/avatar-master-female.jpeg"});
-  const PLATINUM_AVATAR_ASSETS=Object.freeze({male:"/assets/avatar/platinum/platinum-male.PNG",female:"/assets/avatar/platinum/platinum-female.PNG"});
+  const PLATINUM_AVATAR_ASSETS=Object.freeze({male:"/assets/avatars/platinum-male.PNG",female:"/assets/avatars/platinum-female.PNG"});
   const AVATAR_ASSETS=REGULAR_AVATAR_ASSETS;
   const PROFILE_DEFAULTS=Object.freeze({avatar_gender:"male",avatar_base:"default",avatar_package:"default",avatar_accessory:"none",avatar_ring:"default",profile_banner:"default",profile_background:"default",profile_accent:"emerald",profile_title:"Muslim",custom_photo:null,unlocked_packages:["default"]});
   const UNLOCK_RULES=Object.freeze({default:{type:"everyone"},basic_backgrounds:{type:"everyone"},basic_customization:{type:"everyone"},platinum_package:{type:"xp",minXP:PLATINUM_XP},platinum_background:{type:"xp",minXP:PLATINUM_XP},gold_package:{type:"xp",minXP:GOLD_XP},gold_background:{type:"xp",minXP:GOLD_XP},diamond_package:{type:"xp",minXP:DIAMOND_XP},diamond_background:{type:"xp",minXP:DIAMOND_XP},elite_package:{type:"rank",minRank:"Elite Sheikh"},custom_photo:{type:"rank",minRank:"Platinum Muhsin"}});
