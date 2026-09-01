@@ -193,11 +193,6 @@
     new MutationObserver(scheduleRefresh).observe(feed, { childList: true, subtree: true });
     scheduleRefresh();
 
-    document.addEventListener('click', e => {
-      const reaction = e.target.closest?.('[data-post-reaction]');
-      if (reaction && reaction.closest('#feed')) e.stopPropagation();
-    }, true);
-
     window.addEventListener('auth-state-changed', () => {
       currentUser = null;
       scheduleRefresh();
