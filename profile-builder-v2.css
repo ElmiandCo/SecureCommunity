@@ -10,3 +10,15 @@
 .om-pb-bg{height:74px;border-radius:12px;border:2px solid transparent;cursor:pointer;background-size:cover;background-position:center}.om-pb-bg.selected{border-color:#c89d3c;box-shadow:0 0 0 3px rgba(200,157,60,.12)}.om-pb-actions{position:sticky;bottom:0;background:linear-gradient(transparent,#fbf8f1 22%);padding:18px 0 2px;display:flex;justify-content:flex-end;gap:10px}.om-pb-btn{min-height:46px;border-radius:13px;padding:0 20px;border:1px solid #bfd0c8;background:#fff;color:#1f5b49;font-weight:800;cursor:pointer}.om-pb-btn.primary{background:#1f5b49;border-color:#1f5b49;color:#fff}.om-pb-lock{background:#f5f1e7;border:1px solid #e8dfca;border-radius:15px;padding:14px;color:#6f695a;font-size:13px}.om-pb-lock strong{color:#705a24}.om-pb-note{font-size:12px;color:#7b8983;margin-top:7px}
 @media(max-width:700px){.om-pb-overlay{align-items:stretch}.om-pb-shell{height:100dvh;border-radius:0;grid-template-columns:1fr;grid-template-rows:auto auto 1fr}.om-pb-top{padding:15px 16px}.om-pb-top h2{font-size:20px}.om-pb-tabs{grid-row:2;grid-column:1;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid #e2e4de;padding:8px;gap:4px;-webkit-overflow-scrolling:touch}.om-pb-tab{flex:0 0 auto;text-align:center;padding:10px 12px;font-size:12px}.om-pb-tab small{display:none}.om-pb-main{grid-row:3;padding:18px 15px 28px}.om-pb-heading h3{font-size:24px}.om-pb-grid{grid-template-columns:1fr}.om-pb-card{padding:13px}.om-pb-preview-banner{min-height:105px}.om-pb-actions{justify-content:stretch}.om-pb-btn{flex:1}.om-pb-choice{min-width:68px}.om-pb-close{width:38px;height:38px}}
 @media(min-width:701px){.om-pb-shell{border-radius:28px}.om-pb-overlay{padding:24px}.om-pb-main{min-width:0}}
+
+/* Profile editor cleanup: remove the oversized preview card shown above Identity. */
+.om-pb-preview{display:none!important}
+
+/* Keep the sticky Save/Cancel bar from covering the last editor controls. */
+.om-pb-main{padding-bottom:120px!important}
+.om-pb-actions{z-index:20}
+
+@media(max-width:700px){
+  .om-pb-main{padding-bottom:140px!important}
+  .om-pb-actions{padding:14px 0 18px}
+}
