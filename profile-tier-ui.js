@@ -12,9 +12,9 @@
       link.href = "profile-view.css";
       document.head.appendChild(link);
     }
-    if (!document.querySelector('script[src="profile-view.js"]')) {
+    if (!document.querySelector('script[src^="profile-view.js"]')) {
       const script = document.createElement("script");
-      script.src = "profile-view.js";
+      script.src = "profile-view.js?v=20260901-02";
       script.defer = true;
       document.body.appendChild(script);
     }
