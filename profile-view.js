@@ -1,4 +1,4 @@
-/* OneMuslim Profile View v1
+/* OneMuslim Profile View v2
  * Presentation-only layer for the authenticated user's My Profile page.
  * Reads the saved profile settings and keeps the editor as the source of truth.
  */
@@ -18,7 +18,7 @@
   });
 
   const DARK = new Set(['Crescent & Stars', 'Emerald', 'Dark Mosque']);
-  const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[m]));
+  const esc = s => String(s ?? '').replace(/[&<>\"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '\"':'&quot;', "'":'&#039;' }[m]));
   const initials = name => (String(name || 'M').trim().split(/\s+/).map(x => x[0]).join('').slice(0,2) || 'M').toUpperCase();
 
   function getProfile() {
@@ -34,6 +34,7 @@
     if (!host) return;
     const p = getProfile();
     const bgName = p.profile_background || 'default';
+    const background = backgroundFor(p);
     const dark = DARK.has(bgName);
     const text = dark ? '#fff' : '#183128';
     const muted = dark ? 'rgba(255,255,255,.78)' : '#64756d';
@@ -48,8 +49,8 @@
     const location = p.location || 'Location not set';
     const group = p.group_team || 'No community selected';
 
-    host.innerHTML = `<article class="om-my-profile-card" style="--om-accent:${accent};--om-text:${text};--om-muted:${muted};--om-bg:${backgroundFor(p)}">
-      <div class="om-my-profile-banner"><span class="om-my-profile-style">${esc(bgName === 'default' ? 'YOUR PROFILE' : bgName.toUpperCase())}</span><span class="om-my-profile-tier">${esc(tier.label)} · ${xp.toLocaleString()} XP</span></div>
+    host.innerHTML = `<article class="om-my-profile-card" style="--om-accent:${accent};--om-text:${text};--om-muted:${muted};--om-bg:${background}">
+      <div class="om-my-profile-banner" style="background:${background}"><span class="om-my-profile-style">${esc(bgName === 'default' ? 'YOUR PROFILE' : bgName.toUpperCase())}</span><span class="om-my-profile-tier">${esc(tier.label)} · ${xp.toLocaleString()} XP</span></div>
       <div class="om-my-profile-body">
         <div class="om-my-profile-avatar">${avatarSrc ? `<img src="/${esc(String(avatarSrc).replace(/^\//,''))}" alt="${esc(name)} avatar">` : `<span>${esc(initials(name))}</span>`}</div>
         <div class="om-my-profile-identity"><h3>${esc(name)}</h3><p>@${esc(username)} · ${esc(title)}</p></div>
@@ -75,6 +76,7 @@
     tick();
     new MutationObserver(tick).observe(page, { attributes:true, childList:true, subtree:true });
     window.setInterval(tick, 1500);
+    window.addEventListener('profile:updated', () => { lastSignature = ''; tick(); });
     window.renderMyProfileView = render;
   }
 
