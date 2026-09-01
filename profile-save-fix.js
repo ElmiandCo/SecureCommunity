@@ -4,7 +4,7 @@
   let opening=false;
   const q=s=>document.querySelector(s);
   const p=()=>window.profile||{};
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
 
   function openBuilder(){
     if(opening)return;
@@ -14,29 +14,30 @@
     try{Promise.resolve(open()).finally(()=>{opening=false})}catch(e){opening=false;console.error(e);window.toast?.('Profile builder could not be opened.');}
   }
 
-  // Replace the legacy app.js editProfile function before the authenticated app renders.
   window.editProfile=openBuilder;
 
   function avatar(){
-    const x=p();
+    const x=window.OneMuslimProfileSystem?.normalize?.(p())||p();
     if(x.avatar_package==='platinum_package')return `assets/avatars/${x.avatar_gender==='female'?'platinum-female.PNG':'platinum-male.PNG'}`;
     if(x.avatar_url)return x.avatar_url;
     if(x.avatar_config&&typeof x.avatar_config==='object')return x.avatar_config.asset||x.avatar_config.url||'';
     return '';
   }
   function background(){
-    const x=p();
+    const x=window.OneMuslimProfileSystem?.normalize?.(p())||p();
+    const cfg=x.avatar_config&&typeof x.avatar_config==='object'?x.avatar_config:{};
+    const name=x.profile_background||cfg.background||'default';
     return ({
-      'Islamic Geometry':'linear-gradient(135deg,#0f4b3d,#1d6b58)',
-      'Mosque Silhouette':'linear-gradient(135deg,#f1dfbb,#d2b77a)',
-      'Islamic Arch':'linear-gradient(135deg,#eee2c9,#c9b58d)',
-      'Crescent & Stars':'linear-gradient(135deg,#0b2630,#173f52)',
-      'Luxury Gold':'linear-gradient(135deg,#fff5d9,#c89d3c)',
+      'Islamic Geometry':'linear-gradient(135deg,#fbf5e8,#f1e6cf)',
+      'Mosque Silhouette':'linear-gradient(135deg,#f7ecd6,#ead8b5)',
+      'Islamic Arch':'linear-gradient(135deg,#f8f2e5,#e9dfcc)',
+      'Crescent & Stars':'linear-gradient(135deg,#0e2d27,#193f35)',
+      'Luxury Gold':'linear-gradient(135deg,#fff8e8,#d8b66a)',
       'Emerald':'linear-gradient(135deg,#0d4b3d,#1f6b57)',
       'Dark Mosque':'linear-gradient(135deg,#061e1a,#173a31)',
-      'Minimal Cream':'linear-gradient(135deg,#fffdf8,#eee8dc)',
-      'default':'linear-gradient(135deg,#0e4437,#214e42)'
-    })[x.profile_background]||'linear-gradient(135deg,#0e4437,#214e42)';
+      'Minimal Cream':'linear-gradient(135deg,#fffdf8,#f4f0e7)',
+      'default':'linear-gradient(135deg,#fbf5e8,#f1e6cf)'
+    })[name]||'linear-gradient(135deg,#fbf5e8,#f1e6cf)';
   }
   function styles(){
     if(q('#om-runtime-card-style'))return;
@@ -48,9 +49,11 @@
   }
   function renderCard(){
     const panel=q('#profilePanel'), button=q('#editProfile');
-    if(!panel||!button||panel.querySelector('.om-runtime-card,.om-personal-card'))return;
+    if(!panel||!button)return;
     styles();
-    const x=p(), xp=Number(x.xp_total??x.xp??0)||0, name=x.display_name||`${x.first_name||''} ${x.last_name||''}`.trim()||'Your Name';
+    const old=panel.querySelector('.om-runtime-card,.om-personal-card');
+    if(old)old.remove();
+    const x=window.OneMuslimProfileSystem?.normalize?.(p())||p(), xp=Number(x.xp_total??x.xp??0)||0, name=x.display_name||`${x.first_name||''} ${x.last_name||''}`.trim()||'Your Name';
     const tier=window.OneMuslimProfileSystem?.getTier?.(x), label=tier?.label||x.profile_title||'Muslim';
     const idx=window.OneMuslimProfileSystem?.rankIndex?.(label); const rank=Number.isFinite(idx)?idx+1:1;
     const badges=Number(x.badges_count??x.badges??0)||0, following=Number(x.following_count??x.following??0)||0, src=avatar();
@@ -58,16 +61,23 @@
     button.insertAdjacentElement('afterend',card);
     card.querySelector('button').onclick=e=>{e.preventDefault();e.stopPropagation();openBuilder()};
   }
+  function refreshCard(){
+    const panel=q('#profilePanel');
+    if(!panel)return;
+    const old=panel.querySelector('.om-runtime-card,.om-personal-card');
+    if(old)old.remove();
+    renderCard();
+  }
   function guard(){
     const panel=q('#profilePanel');
     if(!panel)return;
-    // If the old editor has already rendered, immediately replace it with the real builder.
     if(panel.querySelector('.profile-form,#saveProfile')){panel.innerHTML='';openBuilder();return;}
     const old=q('#editProfile');
     if(old&&!old.dataset.runtimeLocked){old.dataset.runtimeLocked='1';old.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openBuilder()},true)}
-    renderCard();
+    if(!panel.querySelector('.om-runtime-card,.om-personal-card'))renderCard();
   }
   document.addEventListener('click',e=>{const b=e.target.closest?.('#editProfile');if(!b)return;e.preventDefault();e.stopImmediatePropagation();openBuilder()},true);
+  window.addEventListener('profile:updated',refreshCard);
   const start=()=>{guard();new MutationObserver(()=>guard()).observe(document.body,{childList:true,subtree:true});[100,400,900,1800,3000].forEach(ms=>setTimeout(guard,ms));};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
