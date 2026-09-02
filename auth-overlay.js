@@ -27,12 +27,18 @@
   }
   function modalState(on){document.body.classList.toggle('om-auth-modal-open',on);const v=document.getElementById('authView');v?.classList.toggle('om-auth-overlay',on);if(on)addCanvas()}
   function open(mode){window.showAuth?.(mode||'login');setTimeout(()=>modalState(true),0)}
+  function closeToPublic(){
+    sessionStorage.setItem('om-auth-welcome-dismissed','1');
+    modalState(false);
+    const v=document.getElementById('authView');v?.classList.add('hidden');
+    const pv=document.getElementById('publicView');pv?.classList.remove('hidden');
+  }
   function wire(){
     const login=document.getElementById('openLogin'),signup=document.getElementById('openSignup');
     if(login&&!login.dataset.overlayWired){login.dataset.overlayWired='1';login.onclick=()=>open('login')}
     if(signup&&!signup.dataset.overlayWired){signup.dataset.overlayWired='1';signup.onclick=()=>open('signup')}
-    const back=document.getElementById('backPublic');if(back&&!back.dataset.overlayWired){back.dataset.overlayWired='1';back.addEventListener('click',()=>modalState(false))}
-    const view=document.getElementById('authView');if(view&&!view.dataset.overlayWired){view.dataset.overlayWired='1';view.addEventListener('click',e=>{if(e.target===view)modalState(false)})}
+    const back=document.getElementById('backPublic');if(back&&!back.dataset.overlayWired){back.dataset.overlayWired='1';back.addEventListener('click',closeToPublic)}
+    const view=document.getElementById('authView');if(view&&!view.dataset.overlayWired){view.dataset.overlayWired='1';view.addEventListener('click',e=>{if(e.target===view)closeToPublic()})}
   }
   function sync(){
     wire();
@@ -41,7 +47,6 @@
     document.querySelectorAll('[data-public-auth="login"]').forEach(b=>b.style.display=logged?'none':'');
     if(logged)modalState(false);
   }
-
   function showFirstVisitAuth(){
     if(sessionStorage.getItem('om-auth-welcome-dismissed')==='1')return;
     const app=document.getElementById('appView');
@@ -52,7 +57,6 @@
       open('login');
     },250);
   }
-
   let repairRunning=false;
   async function repairSession(){
     if(repairRunning)return;
@@ -63,24 +67,14 @@
       const {data,error}=await client.auth.getSession();
       if(error||!data?.session)return;
       const app=document.getElementById('appView');
-      if(app?.classList.contains('hidden') && typeof window.enterApp==='function'){
-        await window.enterApp();
-      }
+      if(app?.classList.contains('hidden') && typeof window.enterApp==='function')await window.enterApp();
     }catch(e){console.warn('OneMuslim session restore:',e)}
     finally{repairRunning=false}
   }
-
-  function bootRepair(){
-    repairSession();
-    [250,750,1500,3000,5000].forEach(ms=>setTimeout(repairSession,ms));
-  }
-
+  function bootRepair(){repairSession();[250,750,1500,3000,5000].forEach(ms=>setTimeout(repairSession,ms))}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{sync();bootRepair();showFirstVisitAuth()});
   else {sync();bootRepair();showFirstVisitAuth()}
   new MutationObserver(sync).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
-
   const client=window.OneMuslimSupabaseClient?.getClient?.();
-  client?.auth.onAuthStateChange((event,session)=>{
-    if(session && event!=='SIGNED_OUT') setTimeout(repairSession,0);
-  });
+  client?.auth.onAuthStateChange((event,session)=>{if(session && event!=='SIGNED_OUT')setTimeout(repairSession,0)});
 })();
