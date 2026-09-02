@@ -1,234 +1,52 @@
 (() => {
   'use strict';
-
   const { createClient } = window.supabase || {};
   const cfg = window.APP_CONFIG || {};
   if (!createClient || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) return;
-
-  const db = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-  });
-
-  const EMOJIS = ['😂','😭','😅','😁','🥰','😳','😏','🥺'];
-  const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
-  }[m]));
-  const toast = msg => typeof window.toast === 'function' ? window.toast(msg) : null;
-
-  let currentUser = null;
-  let refreshTimer = null;
-
-  function addStyles() {
-    if (document.getElementById('commentReactionsStyles')) return;
-    const s = document.createElement('style');
-    s.id = 'commentReactionsStyles';
-    s.textContent = `
-      .comment-reaction-tools{display:flex;flex-direction:column;gap:5px;margin:6px 0 2px}
-      .comment-reaction-picker{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:4px 6px;border:1px solid #e3ebe5;border-radius:12px;background:#fafcfb;width:max-content;max-width:100%}
-      .comment-reaction-picker .comment-reaction-label{font-size:9px;color:#78907f;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin:0 2px 0 1px}
-      .comment-reaction-picker .comment-reaction-btn{width:28px;height:28px;border:0;background:transparent;border-radius:8px;font-size:17px;line-height:1;cursor:pointer;padding:0;transition:.15s ease}
-      .comment-reaction-picker .comment-reaction-btn:hover{background:#edf5ef;transform:scale(1.1)}
-      .comment-reaction-picker .comment-reaction-btn.selected{background:#e2f1e7;box-shadow:0 0 0 2px #9fc4ae}
-      .comment-reaction-counts{display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:0}
-      .comment-reaction-count{display:inline-flex;align-items:center;gap:3px;border:1px solid #dce8e0;background:#f7fbf8;color:#3d554b;border-radius:999px;padding:3px 7px;font-size:12px;line-height:1;cursor:pointer;transition:.15s ease}
-      .comment-reaction-count:hover{background:#edf6f0;border-color:#bfd7ca;transform:translateY(-1px)}
-      .comment-reaction-count.mine{border-color:#8eb6a3;background:#eaf5ee;box-shadow:0 0 0 2px rgba(31,91,73,.06)}
-      .comment-reaction-count .emoji{font-size:14px;line-height:1}
-      .comment-reaction-count .count{font-weight:800}
-      @media(max-width:600px){
-        .comment-reaction-picker{width:100%;justify-content:center;padding:5px 3px}
-        .comment-reaction-picker .comment-reaction-btn{width:31px;height:31px;font-size:19px}
-        .comment-reaction-count{padding:4px 7px}
-      }
-    `;
-    document.head.appendChild(s);
+  const db=createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  const EMOJIS=['😂','😭','😅','😁','🥰','😳','😏','🥺'];
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const toast=msg=>typeof window.toast==='function'?window.toast(msg):null;
+  let currentUser=null,refreshTimer=null;
+  async function user(){if(currentUser)return currentUser;const {data}=await db.auth.getUser();currentUser=data?.user||null;return currentUser;}
+  function styles(){if(document.getElementById('commentReactionsStyles'))return;const s=document.createElement('style');s.id='commentReactionsStyles';s.textContent=`
+    .comment-text{color:#000!important}
+    .comment-reaction-tools{display:flex;flex-direction:column;gap:5px;margin:7px 0 2px}
+    .comment-reaction-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .comment-like-btn,.comment-reaction-count{display:inline-flex;align-items:center;gap:4px;border:1px solid #e5e7eb;background:#fff;color:#111827;border-radius:999px;padding:4px 8px;font-size:12px;cursor:pointer}
+    .comment-like-btn.liked,.comment-reaction-count.mine{border-color:#f3b4c2;background:#fff5f7;color:#b4234d}
+    .comment-reaction-counts{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+    .comment-reaction-picker{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:5px 7px;border:1px solid #e3ebe5;border-radius:12px;background:#fafcfb;width:max-content;max-width:100%}
+    .comment-reaction-picker .comment-reaction-label{font-size:9px;color:#78907f;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
+    .comment-reaction-picker .comment-reaction-btn{width:29px;height:29px;border:0;background:transparent;border-radius:8px;font-size:18px;line-height:1;cursor:pointer;padding:0}
+    .comment-reaction-picker .comment-reaction-btn:hover,.comment-reaction-picker .comment-reaction-btn.selected{background:#e2f1e7}
+    @media(max-width:600px){.comment-reaction-picker{width:100%;justify-content:center}.comment-reaction-picker .comment-reaction-btn{width:32px;height:32px;font-size:19px}}
+  `;document.head.appendChild(s);}
+  async function tagComments(){
+    const groups=[...document.querySelectorAll('#feed .comments[data-comments]')];
+    await Promise.all(groups.map(async group=>{
+      if(group.querySelector('.comment[data-comment]'))return;
+      const postId=group.dataset.comments;if(!postId)return;
+      const nodes=[...group.querySelectorAll(':scope > .comment')];if(!nodes.length)return;
+      const {data,error}=await db.from('comments').select('id,created_at').eq('post_id',postId).order('created_at',{ascending:true});
+      if(error)return;
+      data?.slice(0,nodes.length).forEach((c,i)=>nodes[i].dataset.comment=c.id);
+    }));
   }
-
-  async function getCurrentUser() {
-    if (currentUser) return currentUser;
-    const { data } = await db.auth.getUser();
-    currentUser = data?.user || null;
-    return currentUser;
+  function comments(){return [...document.querySelectorAll('#feed .comment[data-comment]')];}
+  function ensureTools(c){let tools=c.querySelector('.comment-reaction-tools');if(tools)return tools;tools=document.createElement('div');tools.className='comment-reaction-tools';const row=document.createElement('div');row.className='comment-reaction-row';row.innerHTML=`<button type="button" class="comment-like-btn">❤️ <span data-like-count>0</span> Like</button>`;const picker=document.createElement('div');picker.className='comment-reaction-picker';picker.innerHTML=`<span class="comment-reaction-label">React</span>${EMOJIS.map(e=>`<button type="button" class="comment-reaction-btn" data-emoji="${esc(e)}">${e}</button>`).join('')}`;const counts=document.createElement('div');counts.className='comment-reaction-counts';tools.append(row,picker,counts);(c.querySelector('.comment-body')||c).appendChild(tools);row.querySelector('.comment-like-btn').onclick=()=>toggleLike(c.dataset.comment);picker.querySelectorAll('[data-emoji]').forEach(b=>b.onclick=()=>toggleReaction(c.dataset.comment,b.dataset.emoji));return tools;}
+  async function refresh(){await tagComments();const list=comments();if(!list.length)return;const u=await user();if(!u)return;const ids=list.map(c=>c.dataset.comment);const [likes,reactions]=await Promise.all([
+      db.from('comment_likes').select('comment_id,user_id').in('comment_id',ids),
+      db.from('comment_reactions').select('comment_id,user_id,emoji').in('comment_id',ids)
+    ]);if(likes.error){console.warn('Comment likes unavailable:',likes.error.message);return;}if(reactions.error){console.warn('Comment reactions unavailable:',reactions.error.message);return;}
+    const likeMap=new Map(),mineLike=new Set(),reactionMap=new Map(),mineReaction=new Map();
+    (likes.data||[]).forEach(x=>{likeMap.set(x.comment_id,(likeMap.get(x.comment_id)||0)+1);if(x.user_id===u.id)mineLike.add(x.comment_id);});
+    (reactions.data||[]).forEach(x=>{if(!reactionMap.has(x.comment_id))reactionMap.set(x.comment_id,{});const g=reactionMap.get(x.comment_id);g[x.emoji]=(g[x.emoji]||0)+1;if(x.user_id===u.id)mineReaction.set(x.comment_id,x.emoji);});
+    list.forEach(c=>{const t=ensureTools(c),like=t.querySelector('.comment-like-btn');like.classList.toggle('liked',mineLike.has(c.dataset.comment));like.querySelector('[data-like-count]').textContent=likeMap.get(c.dataset.comment)||0;const counts=t.querySelector('.comment-reaction-counts');const g=reactionMap.get(c.dataset.comment)||{};counts.innerHTML=Object.entries(g).filter(([,n])=>n>0).sort((a,b)=>EMOJIS.indexOf(a[0])-EMOJIS.indexOf(b[0])).map(([e,n])=>`<button type="button" class="comment-reaction-count ${mineReaction.get(c.dataset.comment)===e?'mine':''}" data-emoji="${esc(e)}">${e} <b>${n}</b></button>`).join('');counts.querySelectorAll('[data-emoji]').forEach(b=>b.onclick=()=>toggleReaction(c.dataset.comment,b.dataset.emoji));t.querySelectorAll('.comment-reaction-btn').forEach(b=>b.classList.toggle('selected',b.dataset.emoji===mineReaction.get(c.dataset.comment)));});
   }
-
-  function getCommentId(el) {
-    const direct = el.dataset?.comment || el.dataset?.commentId || el.getAttribute('data-comment-id');
-    if (direct) return direct;
-
-    const id = el.getAttribute('id') || '';
-    const match = id.match(/^comment[-_](.+)$/i);
-    return match ? match[1] : null;
-  }
-
-  function commentElements() {
-    const candidates = [...document.querySelectorAll(
-      '#feed [data-comment], #feed [data-comment-id], #feed .comment, #feed .comment-item, #feed .post-comment'
-    )];
-    const seen = new Set();
-    const result = [];
-
-    for (const el of candidates) {
-      if (el.closest('.comment-composer')) continue;
-      let comment = el;
-      let id = getCommentId(comment);
-
-      if (!id) {
-        const tagged = el.querySelector('[data-comment-id], [data-comment]');
-        if (tagged) {
-          id = getCommentId(tagged);
-          if (id) comment = tagged.closest('.comment, .comment-item, .post-comment') || el;
-        }
-      }
-
-      if (!id) continue;
-      if (seen.has(id)) continue;
-      seen.add(id);
-      result.push({ el: comment, id });
-    }
-
-    return result;
-  }
-
-  function ensureTools(comment) {
-    let tools = comment.el.querySelector(':scope > .comment-reaction-tools');
-    if (!tools) {
-      tools = document.createElement('div');
-      tools.className = 'comment-reaction-tools';
-
-      const picker = document.createElement('div');
-      picker.className = 'comment-reaction-picker';
-      picker.setAttribute('aria-label', 'React to this comment');
-      picker.innerHTML = `<span class="comment-reaction-label">React</span>${EMOJIS.map(emoji =>
-        `<button type="button" class="comment-reaction-btn" data-comment-reaction="${esc(comment.id)}" data-emoji="${esc(emoji)}" aria-label="React ${emoji}">${emoji}</button>`
-      ).join('')}`;
-
-      const counts = document.createElement('div');
-      counts.className = 'comment-reaction-counts';
-
-      tools.appendChild(picker);
-      tools.appendChild(counts);
-
-      const anchor = comment.el.querySelector('.comment-body, .comment-content, .comment-text') || comment.el.lastElementChild;
-      if (anchor && anchor !== tools && anchor.parentElement === comment.el) anchor.insertAdjacentElement('afterend', tools);
-      else comment.el.appendChild(tools);
-
-      picker.querySelectorAll('[data-comment-reaction]').forEach(btn => {
-        btn.addEventListener('click', () => toggleReaction(comment.id, btn.dataset.emoji));
-      });
-    }
-
-    return tools;
-  }
-
-  function renderCounts(comment, grouped, mine) {
-    const tools = ensureTools(comment);
-    const row = tools.querySelector('.comment-reaction-counts');
-    if (!row) return;
-
-    const parts = Object.entries(grouped)
-      .filter(([, count]) => Number(count) > 0)
-      .sort((a,b) => EMOJIS.indexOf(a[0]) - EMOJIS.indexOf(b[0]));
-
-    const html = parts.map(([emoji, count]) =>
-      `<button type="button" class="comment-reaction-count ${mine === emoji ? 'mine' : ''}" data-comment-reaction="${esc(comment.id)}" data-emoji="${esc(emoji)}" title="${mine === emoji ? 'Remove reaction' : 'React with ' + emoji}"><span class="emoji">${emoji}</span><span class="count">${Number(count).toLocaleString()}</span></button>`
-    ).join('');
-
-    if (row.innerHTML !== html) row.innerHTML = html;
-    row.querySelectorAll('[data-comment-reaction]').forEach(btn => {
-      if (btn.dataset.bound === '1') return;
-      btn.dataset.bound = '1';
-      btn.addEventListener('click', () => toggleReaction(comment.id, btn.dataset.emoji));
-    });
-
-    tools.querySelectorAll('.comment-reaction-btn').forEach(btn => {
-      btn.classList.toggle('selected', btn.dataset.emoji === mine);
-    });
-  }
-
-  async function refreshReactions() {
-    const comments = commentElements();
-    if (!comments.length) return;
-    const user = await getCurrentUser();
-    if (!user) return;
-
-    const ids = comments.map(c => c.id).filter(Boolean);
-    const { data, error } = await db
-      .from('comment_reactions')
-      .select('comment_id,user_id,emoji')
-      .in('comment_id', ids);
-
-    if (error) {
-      console.warn('Comment reactions unavailable:', error.message);
-      return;
-    }
-
-    const groupedByComment = new Map();
-    const mineByComment = new Map();
-    (data || []).forEach(r => {
-      if (!groupedByComment.has(r.comment_id)) groupedByComment.set(r.comment_id, {});
-      const group = groupedByComment.get(r.comment_id);
-      group[r.emoji] = (group[r.emoji] || 0) + 1;
-      if (r.user_id === user.id) mineByComment.set(r.comment_id, r.emoji);
-    });
-
-    comments.forEach(comment => {
-      ensureTools(comment);
-      renderCounts(comment, groupedByComment.get(comment.id) || {}, mineByComment.get(comment.id) || null);
-    });
-  }
-
-  async function toggleReaction(commentId, emoji) {
-    const user = await getCurrentUser();
-    if (!user || !commentId || !EMOJIS.includes(emoji)) return;
-
-    const { data: existing, error: findError } = await db
-      .from('comment_reactions')
-      .select('comment_id,user_id,emoji')
-      .eq('comment_id', commentId)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (findError) {
-      toast(findError.message || 'Unable to load comment reactions.');
-      return;
-    }
-
-    let error = null;
-    if (existing?.emoji === emoji) {
-      ({ error } = await db.from('comment_reactions').delete().eq('comment_id', commentId).eq('user_id', user.id));
-    } else if (existing) {
-      ({ error } = await db.from('comment_reactions').update({ emoji }).eq('comment_id', commentId).eq('user_id', user.id));
-    } else {
-      ({ error } = await db.from('comment_reactions').insert({ comment_id: commentId, user_id: user.id, emoji }));
-    }
-
-    if (error) {
-      toast(error.message || 'Unable to save comment reaction.');
-      return;
-    }
-
-    await refreshReactions();
-  }
-
-  function scheduleRefresh() {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(() => refreshReactions(), 100);
-  }
-
-  function init() {
-    addStyles();
-    const feed = document.getElementById('feed');
-    if (!feed) return;
-
-    new MutationObserver(scheduleRefresh).observe(feed, { childList: true, subtree: true });
-    scheduleRefresh();
-
-    window.addEventListener('auth-state-changed', () => {
-      currentUser = null;
-      scheduleRefresh();
-    });
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  async function toggleLike(commentId){const u=await user();if(!u||!commentId)return;const q=await db.from('comment_likes').select('comment_id').eq('comment_id',commentId).eq('user_id',u.id).maybeSingle();if(q.error){toast(q.error.message);return;}const r=q.data?await db.from('comment_likes').delete().eq('comment_id',commentId).eq('user_id',u.id):await db.from('comment_likes').insert({comment_id:commentId,user_id:u.id});if(r.error){toast(r.error.message);return;}refresh();}
+  async function toggleReaction(commentId,emoji){const u=await user();if(!u||!commentId||!EMOJIS.includes(emoji))return;const q=await db.from('comment_reactions').select('comment_id,user_id,emoji').eq('comment_id',commentId).eq('user_id',u.id).maybeSingle();if(q.error){toast(q.error.message);return;}let r;if(q.data?.emoji===emoji)r=await db.from('comment_reactions').delete().eq('comment_id',commentId).eq('user_id',u.id);else if(q.data)r=await db.from('comment_reactions').update({emoji}).eq('comment_id',commentId).eq('user_id',u.id);else r=await db.from('comment_reactions').insert({comment_id:commentId,user_id:u.id,emoji});if(r.error){toast(r.error.message);return;}refresh();}
+  function schedule(){clearTimeout(refreshTimer);refreshTimer=setTimeout(refresh,120);}
+  function init(){styles();const feed=document.getElementById('feed');if(!feed)return;new MutationObserver(schedule).observe(feed,{childList:true,subtree:true});schedule();window.addEventListener('auth-state-changed',()=>{currentUser=null;schedule();});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
