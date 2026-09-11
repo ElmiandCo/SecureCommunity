@@ -1,7 +1,7 @@
 (function(){
   const $=(s,r=document)=>r.querySelector(s);
   const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
-  load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');load('global-parallax.css','oneMuslimGlobalParallax');
+  load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');load('global-parallax.css','oneMuslimGlobalParallax');load('people-theme.css','oneMuslimPeopleTheme');
   ['start-pack.js','guest-xp.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
   document.body.classList.add('dashboard-theme','onemuslim-theme');
 
@@ -45,8 +45,6 @@
 
   const pv=$('#publicView');if(!pv)return;
 
-  /* Guaranteed public auth bridge. It reuses the existing app.js auth renderer
-     instead of creating a second login implementation. */
   window.__omOpenAuth=function(mode){
     try{
       let renderer=window.showAuth;
