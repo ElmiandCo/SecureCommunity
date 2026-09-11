@@ -1,4 +1,4 @@
-/* OneMuslim auth visibility + scrolling guard. Loaded last so older theme scripts cannot hide the auth surface. */
+/* One Muslim auth visibility + scrolling guard. Loaded last so older theme scripts cannot hide the auth surface. */
 (function(){
   'use strict';
   const css=document.createElement('style');
@@ -6,7 +6,7 @@
   css.textContent=`
     html,body{min-height:100%!important}
     body.om-auth-modal-open{overflow:hidden!important}
-    #authView.om-auth-overlay{position:fixed!important;inset:0!important;z-index:2147483645!important;display:flex!important;visibility:visible!important;opacity:1!important;overflow-y:auto!important;overflow-x:hidden!important;align-items:flex-start!important;justify-content:center!important;padding:clamp(70px,10vh,110px) 18px 40px!important}
+    #authView.om-auth-overlay{position:fixed!important;inset:0!important;z-index:2147483645!important;display:flex!important;visibility:visible!important;opacity:1!important;overflow-y:auto!important;overflow-x:hidden!important;align-items:flex-start!important;justify-content:center!important;padding:clamp(70px,10vh,110px) 18px 40px!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important}
     #authView.om-auth-overlay.hidden{display:flex!important;visibility:visible!important}
     #authView.om-auth-overlay .auth-card{flex:0 0 auto!important;width:min(460px,100%)!important;max-height:none!important;overflow:visible!important;margin:0 auto!important}
     #authView.om-auth-overlay .auth-card .form{padding-bottom:2px}
@@ -14,12 +14,29 @@
   `;
   document.head.appendChild(css);
 
+  // app.js intentionally keeps its auth functions private. Resolve that
+  // existing global lexical binding instead of creating a second auth system.
+  function getExistingShowAuth(){
+    try{
+      const fn=Function('return typeof showAuth === "function" ? showAuth : null')();
+      return typeof fn==='function' ? fn : null;
+    }catch(e){
+      return null;
+    }
+  }
+
   function openAuth(mode){
     const app=document.getElementById('appView');
     if(app && !app.classList.contains('hidden'))return;
     const view=document.getElementById('authView');
     if(!view)return;
-    try{ if(typeof window.showAuth==='function') window.showAuth(mode||'login'); }catch(e){console.warn('Auth open:',e)}
+    try{
+      const renderer=window.showAuth||getExistingShowAuth();
+      if(typeof renderer==='function'){
+        renderer(mode||'login');
+        if(!window.showAuth)window.showAuth=renderer;
+      }
+    }catch(e){console.warn('Auth open:',e)}
     view.classList.remove('hidden');
     view.classList.add('om-auth-overlay');
     document.body.classList.add('om-auth-modal-open');
