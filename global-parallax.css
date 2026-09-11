@@ -18,10 +18,13 @@ body.dashboard-theme #appView{min-height:100vh}
 body.dashboard-theme #appView .app-nav{background:rgba(5,10,18,.72)!important;border-color:rgba(216,179,90,.24)!important;backdrop-filter:blur(18px)}
 body.dashboard-theme #appView .sidebar{background:rgba(5,10,18,.58)!important;border-color:rgba(216,179,90,.18)!important;backdrop-filter:blur(18px)}
 body.dashboard-theme #appView .content{background:transparent!important}
-/* The public landing uses the same Coming Soon world; its own old artwork is intentionally transparent. */
-body.dashboard-theme #oneMuslimLanding.om-parallax{background:transparent!important}
+body.dashboard-theme #oneMuslimLanding.om-parallax{background:transparent!important;min-height:100svh}
 body.dashboard-theme #oneMuslimLanding .om-world{display:none!important}
+body.dashboard-theme .om-login-landing{position:relative;min-height:100svh;background:transparent!important;overflow:hidden}
+body.dashboard-theme .om-login-brand{position:absolute;top:30px;left:50%;transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:12px;color:#f6f1e5;font:700 16px/1 system-ui;letter-spacing:.22em;text-shadow:0 2px 22px rgba(0,0,0,.65);white-space:nowrap}
+body.dashboard-theme .om-login-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(216,179,90,.7);border-radius:50%;color:#e8c86d;font-size:18px;background:rgba(216,179,90,.05);box-shadow:0 0 28px rgba(216,179,90,.08)}
+body.dashboard-theme #publicView.om-public-login-ready{min-height:100svh}
 @keyframes omGeometryFloat{50%{transform:scale(.94) rotate(35deg) translateY(-10px)}}
 @keyframes omDustDrift{to{background-position:180px 160px,-80px 20px}}
-@media(max-width:700px){#omGlobalBackdrop .omg-geometry{inset:10%;opacity:.12}#omGlobalBackdrop .omg-dust{background-size:131px 173px,193px 157px}}
+@media(max-width:700px){#omGlobalBackdrop .omg-geometry{inset:10%;opacity:.12}#omGlobalBackdrop .omg-dust{background-size:131px 173px,193px 157px}body.dashboard-theme .om-login-brand{top:18px;font-size:13px;letter-spacing:.16em}}
 @media(prefers-reduced-motion:reduce){#omGlobalBackdrop .omg-geometry,#omGlobalBackdrop .omg-dust{animation:none}}
