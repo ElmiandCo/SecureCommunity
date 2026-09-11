@@ -5,8 +5,6 @@
   ['start-pack.js','guest-xp.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
   document.body.classList.add('dashboard-theme','onemuslim-theme');
 
-  /* Shared One Muslim visual world. This remains the visual source of truth for
-     the landing/login backdrop while the application functionality stays in app.js. */
   function setupGlobalParallax(){
     if(document.getElementById('omGlobalBackdrop'))return;
     const backdrop=document.createElement('div');
@@ -45,12 +43,74 @@
   }
   setupGlobalParallax();
 
-  /* The landing screen is intentionally minimal: the shared parallax world is
-     the backdrop and authentication is the first interaction. No avatars are
-     created or loaded here. Login/signup switching remains handled by app.js. */
   const pv=$('#publicView');if(!pv)return;
+
+  /* Guaranteed public auth bridge. It reuses the existing app.js auth renderer
+     instead of creating a second login implementation. */
+  window.__omOpenAuth=function(mode){
+    try{
+      let renderer=window.showAuth;
+      if(typeof renderer!=='function')renderer=Function('return typeof showAuth === "function" ? showAuth : null')();
+      const view=document.getElementById('authView');
+      if(typeof renderer==='function'){
+        renderer(mode||'login');
+        window.showAuth=renderer;
+      }
+      if(view){
+        view.classList.remove('hidden');
+        view.classList.add('om-auth-overlay');
+      }
+      document.body.classList.add('om-auth-modal-open');
+      document.getElementById('authBootGuard')?.remove();
+    }catch(e){console.warn('One Muslim auth bridge:',e)}
+  };
+
   function landing(){
-    pv.innerHTML=`<div class="om-parallax om-login-landing" id="oneMuslimLanding" aria-label="One Muslim sign in"><div class="om-login-atmosphere" aria-hidden="true"></div><div class="om-login-brand"><span class="om-login-mark">☾</span><span>ONE MUSLIM</span></div></div>`;
+    pv.innerHTML=`
+      <div class="om-parallax om-login-landing" id="oneMuslimLanding" aria-label="One Muslim landing page">
+        <nav class="om-public-nav" aria-label="Public navigation">
+          <div class="om-public-nav-brand"><span class="om-public-nav-mark">☾</span><span>ONE MUSLIM</span></div>
+          <div class="om-public-nav-actions">
+            <button type="button" class="om-nav-btn om-nav-btn-ghost" id="publicSignIn">Sign In</button>
+            <button type="button" class="om-nav-btn om-nav-btn-primary" id="publicCreateAccount">Create Account</button>
+          </div>
+        </nav>
+        <div class="om-login-atmosphere" aria-hidden="true"></div>
+        <div class="om-login-center">
+          <div class="om-login-brand"><span class="om-login-mark">☾</span><span>ONE MUSLIM</span></div>
+          <p class="om-login-tagline">A private space for your faith, growth, and community.</p>
+          <button type="button" class="om-center-signin" id="publicCenterSignIn">Sign In</button>
+        </div>
+      </div>`;
+
+    const styleId='om-public-nav-inline-css';
+    if(!document.getElementById(styleId)){
+      const style=document.createElement('style');style.id=styleId;style.textContent=`
+        #publicView{position:relative!important;z-index:100!important;min-height:100vh!important}
+        #oneMuslimLanding{position:relative!important;min-height:100vh!important;width:100%!important;box-sizing:border-box!important}
+        .om-public-nav{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483000!important;height:84px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 34px!important;box-sizing:border-box!important;background:linear-gradient(180deg,rgba(5,20,16,.92),rgba(5,20,16,.32),transparent)!important;pointer-events:auto!important}
+        .om-public-nav-brand{display:flex!important;align-items:center!important;gap:10px!important;color:#f6f1e5!important;font:700 15px/1.1 Arial,sans-serif!important;letter-spacing:.22em!important;text-shadow:0 2px 18px rgba(0,0,0,.6)!important}
+        .om-public-nav-mark{display:grid!important;place-items:center!important;width:34px!important;height:34px!important;border:1px solid rgba(216,180,90,.75)!important;border-radius:50%!important;color:#d8b45a!important;font-size:19px!important}
+        .om-public-nav-actions{display:flex!important;align-items:center!important;gap:12px!important}
+        .om-nav-btn,.om-center-signin{appearance:none!important;-webkit-appearance:none!important;border-radius:999px!important;padding:12px 22px!important;font:700 14px/1 Arial,sans-serif!important;letter-spacing:.04em!important;cursor:pointer!important;transition:transform .18s ease,box-shadow .18s ease,background .18s ease!important;pointer-events:auto!important}
+        .om-nav-btn:hover,.om-center-signin:hover{transform:translateY(-1px)!important}
+        .om-nav-btn-ghost{background:rgba(10,31,26,.7)!important;border:1px solid rgba(216,180,90,.7)!important;color:#f6f1e5!important;box-shadow:0 8px 25px rgba(0,0,0,.22)!important}
+        .om-nav-btn-primary,.om-center-signin{background:linear-gradient(135deg,#c89d3c,#e2c56f)!important;border:1px solid #efd88c!important;color:#10251d!important;box-shadow:0 10px 30px rgba(0,0,0,.28)!important}
+        .om-login-center{position:absolute!important;inset:0!important;z-index:500!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:100px 20px 40px!important;box-sizing:border-box!important;pointer-events:none!important}
+        .om-login-brand{display:flex!important;align-items:center!important;gap:14px!important;color:#f6f1e5!important;font:800 clamp(25px,4vw,42px)/1 Arial,sans-serif!important;letter-spacing:.18em!important;text-shadow:0 4px 35px rgba(0,0,0,.65)!important}
+        .om-login-mark{color:#d8b45a!important;font-size:1.05em!important}
+        .om-login-tagline{max-width:560px!important;margin:18px 0 26px!important;color:rgba(246,241,229,.78)!important;font:400 16px/1.6 Arial,sans-serif!important}
+        .om-center-signin{pointer-events:auto!important;padding:14px 30px!important;font-size:15px!important}
+        @media(max-width:620px){.om-public-nav{height:72px!important;padding:0 16px!important}.om-public-nav-brand span:last-child{display:none!important}.om-nav-btn{padding:10px 15px!important;font-size:13px!important}.om-public-nav-actions{gap:7px!important}.om-login-center{padding-top:80px!important}}
+      `;document.head.appendChild(style);
+    }
+
+    const signIn=document.getElementById('publicSignIn');
+    const create=document.getElementById('publicCreateAccount');
+    const center=document.getElementById('publicCenterSignIn');
+    signIn?.addEventListener('click',()=>window.__omOpenAuth('login'));
+    create?.addEventListener('click',()=>window.__omOpenAuth('signup'));
+    center?.addEventListener('click',()=>window.__omOpenAuth('login'));
     pv.classList.add('om-public-login-ready');
   }
   landing();
