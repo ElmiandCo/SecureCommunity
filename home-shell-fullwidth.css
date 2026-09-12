@@ -1,0 +1,16 @@
+/* OneMuslim desktop shell: full-width viewport with a fixed-width member rail and fluid home canvas. */
+@media (min-width:901px){
+  html,body{width:100%;min-width:0;margin:0;padding:0;overflow-x:hidden}
+  body.dashboard-theme #appView{width:100vw;max-width:none!important;margin:0!important;padding:0!important;box-sizing:border-box}
+  body.dashboard-theme #appView .app-layout{display:grid!important;grid-template-columns:280px minmax(0,1fr)!important;gap:0!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:0!important;align-items:stretch!important}
+  body.dashboard-theme #appView .sidebar{grid-column:1;width:280px!important;min-width:280px!important;max-width:280px!important;height:100vh!important;min-height:100vh!important;position:sticky!important;top:0!important;align-self:start!important;box-sizing:border-box!important}
+  body.dashboard-theme #appView .content{grid-column:2;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:0!important;box-sizing:border-box!important;overflow-x:hidden!important}
+  body.dashboard-theme #appView .content>.page{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;box-sizing:border-box!important;padding:30px clamp(24px,4vw,64px) 70px!important}
+  body.dashboard-theme #appView #publicHomePage{padding-left:clamp(24px,4vw,64px)!important;padding-right:clamp(24px,4vw,64px)!important}
+  body.dashboard-theme #appView #publicHomePage .om-landing{width:100%!important;max-width:none!important;margin:0!important}
+}
+
+/* Keep the mobile shell behavior untouched. */
+@media (max-width:900px){
+  body.dashboard-theme #appView .content>.page{max-width:100%!important}
+}
