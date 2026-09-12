@@ -5,6 +5,8 @@ const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 if (!url || !key) console.warn("Supabase environment variables are not configured for this Vercel build.");
 
+const GOOGLE_TAG = `<!-- Google tag (gtag.js) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y7KG65C6V"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n  gtag('config', 'G-7Y7KG65C6V');\n</script>`;
+
 fs.rmSync("dist", { recursive: true, force: true });
 fs.mkdirSync("dist/assets/avatars", { recursive: true });
 fs.mkdirSync("dist/assets/onemuslim", { recursive: true });
@@ -19,6 +21,15 @@ for (const f of ["emerald.svg","sapphire.svg","amber.svg","onyx.svg","ruby.svg",
   if (fs.existsSync(`assets/avatars/${f}`)) fs.copyFileSync(`assets/avatars/${f}`, path.join("dist/assets/avatars", f));
 for (const f of ["pattern-light.svg","pattern-dark.svg","mosque-light.svg","mosque-dark.svg","crescent-gold.svg","divider-gold.svg","divider-green.svg","arch-gold.svg","corner-ornament.svg","hero-ornament.svg","celestial-sunrise.svg","golden-blue-cosmic-particles.svg","cinematic-golden-clouds.svg"])
   if (fs.existsSync(`assets/onemuslim/${f}`)) fs.copyFileSync(`assets/onemuslim/${f}`, path.join("dist/assets/onemuslim", f));
+
+const injectGoogleTag = (filePath) => {
+  if (!fs.existsSync(filePath)) return;
+  let html = fs.readFileSync(filePath, "utf8");
+  if (!html.includes("G-7Y7KG65C6V")) html = html.replace(/<head([^>]*)>/i, `<head$1>\n${GOOGLE_TAG}`);
+  fs.writeFileSync(filePath, html);
+};
+
+for (const page of ["index.html","coming-soon.html","landing.html","doxd.html","community.html","messages.html"]) injectGoogleTag(path.join("dist", page));
 
 let html = fs.readFileSync("dist/index.html", "utf8");
 for (const f of ["home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-save-fix.js","dashboard-theme.js","one-muslim-navigation.js","ui-fixes.js","auth-session-loader-v2.js","app-version.js"])
