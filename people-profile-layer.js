@@ -81,9 +81,11 @@
       .profiles-grid .om-people-profile-card:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(22,45,36,.14)}
       .profiles-grid .om-people-banner{height:104px;width:100%;display:block;margin:0;border-radius:23px 23px 0 0;position:relative;overflow:hidden}
       .profiles-grid .om-people-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.04),rgba(0,0,0,.08));pointer-events:none}
-      .profiles-grid .om-people-profile-card>.avatar{position:relative;margin-top:-38px;margin-left:20px;border:5px solid #fff;z-index:2}
+      /* The PNG remains transparent; the saved profile color is the visible circle fill. */
+      .profiles-grid .om-people-profile-card>.avatar{position:relative;margin-top:-28px;margin-left:20px;border:5px solid #fff;z-index:2;background-color:var(--om-people-bg-color,#e9eef6)!important}
+      .profiles-grid .om-people-profile-card>.avatar img{background-color:var(--om-people-bg-color,#e9eef6)!important}
       .profiles-grid .om-people-profile-card>h3,.profiles-grid .om-people-profile-card>p,.profiles-grid .om-people-profile-card>.member-card-actions{position:relative;z-index:2}
-      @media(max-width:640px){.profiles-grid .om-people-banner{height:92px}.profiles-grid .om-people-profile-card>.avatar{margin-top:-32px;margin-left:16px}}
+      @media(max-width:640px){.profiles-grid .om-people-banner{height:92px}.profiles-grid .om-people-profile-card>.avatar{margin-top:-22px;margin-left:16px;background-color:var(--om-people-bg-color,#e9eef6)!important}.profiles-grid .om-people-profile-card>.avatar img{background-color:var(--om-people-bg-color,#e9eef6)!important}}
     `;
     document.head.appendChild(style);
   }
