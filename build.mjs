@@ -12,7 +12,7 @@ fs.mkdirSync("dist/assets/avatars", { recursive: true });
 fs.mkdirSync("dist/assets/onemuslim", { recursive: true });
 fs.mkdirSync("dist/assets/avatar", { recursive: true });
 
-for (const f of ["index.html","styles.css","app.js","floating-profile-notes.js","home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","people-theme.css","people-profile-layer.js","profile-system.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-save-fix.js","profile-builder-v2.css","profile-avatar-fix.css","dashboard-theme.css","dashboard-theme.js","global-parallax.css","landing-enhancements.css","landing-enhancements.js","parallax-journey.css","parallax-journey.js","one-muslim-navigation.js","navigation.css","onemuslim-theme.css","onemuslim-home.css","homepage-navigation.css","ui-fixes.css","one-muslim-final-ui.css","ui-fixes.js","start-pack.js","guest-xp.js","auth-session-guard.js","auth-session-loader-v2.js","people-card-navigation.js","profile-navigation-unified.js","view-profile-page.js","app-version.js","coming-soon.html","coming-soon.css","coming-soon.js","landing.html","landing.css","landing-earth.css","landing-nature.css","landing.js","landing-clouds.svg","supabase-client.js","video-master.html","doxd.html","doxd.css","doxd.js","doxd-media.js","community.html","community.css","community-page.js","messages.html","community-messages.js"])
+for (const f of ["index.html","styles.css","app.js","floating-profile-notes.js","home-dashboard.js","lesson-fix.js","profile-auth-fix.js","social-features.js","member-discovery.js","people-theme.css","people-profile-layer.js","profile-system.js","notes-post-search.js","islamic-tags-xp.js","notes-social-upgrade.js","profile-private-notes.js","profile-builder.js","profile-save-fix.js","profile-builder-v2.css","profile-avatar-fix.css","dashboard-theme.css","dashboard-theme.js","global-parallax.css","landing-enhancements.css","landing-enhancements.js","parallax-journey.css","parallax-journey.js","one-muslim-navigation.js","navigation.css","onemuslim-theme.css","onemuslim-home.css","homepage-navigation.css","ui-fixes.css","one-muslim-final-ui.css","ui-fixes.js","start-pack.js","guest-xp.js","auth-session-guard.js","auth-session-loader-v2.js","people-card-navigation.js","profile-navigation-unified.js","view-profile-page.js","app-version.js","coming-soon.html","coming-soon.css","coming-soon.js","landing.html","landing.css","landing-earth.css","landing-nature.css","landing.js","landing-clouds.svg","supabase-client.js","video-master.html","doxd.html","doxd.css","doxd.js","doxd-media.js","community.html","community.css","community-page.js","community-doxd-creator-controls.js","messages.html","community-messages.js"])
   if (fs.existsSync(f)) fs.copyFileSync(f, path.join("dist", f));
 
 if (fs.existsSync("assets/avatar")) fs.cpSync("assets/avatar", "dist/assets/avatar", { recursive: true });
@@ -40,6 +40,14 @@ if (fs.existsSync("dist/landing.html")) {
   if (!landing.includes('landing-earth.css') && fs.existsSync("dist/landing-earth.css")) landing = landing.replace('</head>', '<link rel="stylesheet" href="landing-earth.css">\n</head>');
   if (!landing.includes('landing-nature.css') && fs.existsSync("dist/landing-nature.css")) landing = landing.replace('</head>', '<link rel="stylesheet" href="landing-nature.css">\n</head>');
   fs.writeFileSync("dist/landing.html", landing);
+}
+for (const page of ["community.html","doxd.html"]) {
+  const file=path.join("dist",page);
+  if(!fs.existsSync(file)) continue;
+  let source=fs.readFileSync(file,"utf8");
+  const script="community-doxd-creator-controls.js";
+  if(!source.includes(script)) source=source.replace("</body>",`<script src="${script}"></script>\n</body>`);
+  fs.writeFileSync(file,source);
 }
 fs.writeFileSync("dist/index.html", html);
 fs.writeFileSync("dist/config.js", `window.APP_CONFIG=${JSON.stringify({ SUPABASE_URL: url, SUPABASE_ANON_KEY: key })};\n`);
