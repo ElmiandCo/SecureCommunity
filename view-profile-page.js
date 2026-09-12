@@ -1,0 +1,87 @@
+/* OneMuslim public visited-profile page.
+   Renders another member's saved profile choices without exposing edit controls. */
+(function(){
+  'use strict';
+
+  const BACKGROUNDS={
+    'default':['#eef4ef','linear-gradient(135deg,#eef4ef,#dfece5)'],
+    'Islamic Geometry':['#fbf5e8','linear-gradient(135deg,#fbf5e8,#f1e6cf)'],
+    'Mosque Silhouette':['#f7ecd6','linear-gradient(135deg,#f7ecd6,#ead8b5)'],
+    'Islamic Arch':['#f8f2e5','linear-gradient(135deg,#f8f2e5,#e9dfcc)'],
+    'Crescent & Stars':['#0e2d27','linear-gradient(135deg,#0e2d27,#193f35)'],
+    'Luxury Gold':['#fff8e8','linear-gradient(135deg,#fff8e8,#d8b66a)'],
+    'Emerald':['#0d4b3d','linear-gradient(135deg,#0d4b3d,#1f6b57)'],
+    'Dark Mosque':['#061e1a','linear-gradient(135deg,#061e1a,#173a31)'],
+    'Minimal Cream':['#fffdf8','linear-gradient(135deg,#fffdf8,#f4f0e7)']
+  };
+  const ACCENTS={emerald:'#1f6a55',gold:'#c89d3c',navy:'#243b62',plum:'#70536f',ruby:'#a34d52',silver:'#7d858c'};
+  const REGULAR={male:'/assets/avatar/base/avatar-master-male.jpeg',female:'/assets/avatar/base/avatar-master-female.jpeg'};
+  const PLATINUM={male:'/assets/avatar/platinum/platinum-male.PNG',female:'/assets/avatar/platinum/platinum-female.PNG'};
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const displayName=p=>p?.display_name||`${p?.first_name||''} ${p?.last_name||''}`.trim()||'Member';
+  const xp=p=>Number(p?.xp_total??p?.xp??p?.rank_points??0)||0;
+  const client=()=>window.OneMuslimSupabaseClient?.getClient?.()||window.supabase?.createClient?.(window.APP_CONFIG?.SUPABASE_URL,window.APP_CONFIG?.SUPABASE_ANON_KEY);
+  const bgOf=p=>{const cfg=p?.avatar_config&&typeof p.avatar_config==='object'?p.avatar_config:{};const name=p?.profile_background||cfg.background||'default';return BACKGROUNDS[name]||BACKGROUNDS.default};
+  const accentOf=p=>ACCENTS[p?.profile_accent]||p?.profile_accent||ACCENTS.emerald;
+  const avatarOf=p=>{const cfg=p?.avatar_config&&typeof p.avatar_config==='object'?p.avatar_config:{};const g=(p?.avatar_gender||cfg.gender)==='female'?'female':'male';const platinum=(p?.avatar_package||cfg.package)==='platinum_package'&&xp(p)>=10000;return platinum?PLATINUM[g]:REGULAR[g]};
+
+  function styles(){
+    if(document.getElementById('om-view-profile-styles'))return;
+    const s=document.createElement('style');s.id='om-view-profile-styles';s.textContent=`
+      body.dashboard-theme #profilePage.om-viewed-profile-page{padding:0!important}
+      .om-viewed-profile-wrap{width:min(1120px,100%);margin:0 auto;padding:30px 0 70px}
+      .om-viewed-profile-card{overflow:hidden;border-radius:28px;border:1px solid color-mix(in srgb,var(--vp-accent) 25%,#d8ddd8);background:#fff;box-shadow:0 18px 48px rgba(22,45,36,.11)}
+      .om-vp-banner{height:235px;position:relative;background:var(--vp-bg);overflow:hidden}
+      .om-vp-banner:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.04),rgba(0,0,0,.12));pointer-events:none}
+      .om-vp-back{position:absolute;top:18px;left:18px;z-index:4;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.82);color:#18392f;border-radius:12px;padding:9px 13px;font-weight:800;cursor:pointer;backdrop-filter:blur(8px)}
+      .om-vp-banner-label{position:absolute;right:22px;top:20px;z-index:3;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.78);color:#18392f;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(8px)}
+      .om-vp-body{position:relative;padding:0 34px 34px}
+      .om-vp-avatar{width:142px;height:142px;margin-top:-71px;position:relative;z-index:5;border:6px solid #fff;border-radius:50%;background:var(--vp-bg-color);box-shadow:0 12px 34px rgba(18,48,39,.18);overflow:hidden;display:grid;place-items:center}
+      .om-vp-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+      .om-vp-main{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-top:18px}
+      .om-vp-copy{min-width:0}.om-vp-kicker{font-size:11px;letter-spacing:.14em;font-weight:850;color:var(--vp-accent)}
+      .om-vp-copy h1{margin:5px 0 2px;font-family:Georgia,serif;color:#18392f;font-size:clamp(30px,5vw,44px);line-height:1.08}
+      .om-vp-handle{color:#6d7d76;font-size:14px}.om-vp-bio{max-width:700px;margin:14px 0 0;color:#52645d;line-height:1.65;font-size:15px}
+      .om-vp-actions{display:flex;gap:9px;flex:0 0 auto}.om-vp-actions button{border-radius:12px;padding:11px 17px;font-weight:850;cursor:pointer;border:1px solid #d5e0da;background:#f3f7f4;color:#185f55}.om-vp-actions .follow{background:var(--vp-accent);border-color:var(--vp-accent);color:#fff}
+      .om-vp-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.om-vp-chip{padding:8px 11px;border-radius:999px;background:#f4f7f5;border:1px solid #dfe8e2;color:#51655d;font-size:12px;font-weight:750}
+      .om-vp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.om-vp-stat{padding:17px;border-radius:17px;background:#f8faf8;border:1px solid #e1e9e3}.om-vp-stat b{display:block;font-size:23px;color:#18392f}.om-vp-stat span{font-size:11px;color:#708078;letter-spacing:.05em;text-transform:uppercase}
+      .om-vp-theme{margin-top:14px;padding:18px;border-radius:18px;background:color-mix(in srgb,var(--vp-accent) 7%,#fff);border:1px solid color-mix(in srgb,var(--vp-accent) 18%,#e3e9e4)}.om-vp-theme b{color:#18392f}.om-vp-theme p{margin:5px 0 0;color:#63746d;font-size:13px}
+      .om-vp-error{padding:40px;text-align:center;background:#fff;border:1px solid #e1e7e3;border-radius:22px;color:#52645d}.om-vp-error h2{margin:0 0 8px;color:#18392f}
+      @media(max-width:700px){.om-viewed-profile-wrap{padding:18px 0 50px}.om-vp-banner{height:190px}.om-vp-body{padding:0 18px 24px}.om-vp-avatar{width:112px;height:112px;margin-top:-56px;border-width:5px}.om-vp-main{display:block}.om-vp-actions{margin-top:16px}.om-vp-actions button{flex:1}.om-vp-stats{grid-template-columns:1fr 1fr}.om-vp-stat:last-child{grid-column:1/-1}}
+    `;document.head.appendChild(s);
+  }
+
+  async function getProfile(id){const sb=client();if(!sb)throw new Error('Profile service is unavailable.');const r=await sb.from('profiles').select('*').eq('id',id).maybeSingle();if(r.error)throw r.error;return r.data||null;}
+  async function followInfo(id){const sb=client();const me=await sb?.auth.getUser();const uid=me?.data?.user?.id;if(!uid||uid===id)return {me:uid,following:false,followers:0,followingCount:0};const [f,c1,c2]=await Promise.all([sb.from('profile_follows').select('follower_id').eq('follower_id',uid).eq('following_id',id).maybeSingle(),sb.from('profile_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',id),sb.from('profile_follows').select('following_id',{count:'exact',head:true}).eq('follower_id',id)]);return {me:uid,following:!!f.data,followers:c1.count||0,followingCount:c2.count||0};}
+  async function toggleFollow(id,currently){const sb=client();const me=await sb.auth.getUser();const uid=me?.data?.user?.id;if(!uid||uid===id)return currently;if(currently){const r=await sb.from('profile_follows').delete().eq('follower_id',uid).eq('following_id',id);if(r.error)throw r.error;return false;}const r=await sb.from('profile_follows').insert({follower_id:uid,following_id:id});if(r.error)throw r.error;return true;}
+
+  async function render(id){
+    const page=document.getElementById('profilePage');if(!page)return;
+    styles();page.classList.remove('hidden');page.classList.add('om-viewed-profile-page');
+    document.querySelectorAll('#appView .content > .page').forEach(x=>{if(x!==page)x.classList.add('hidden')});
+    const wrap=document.createElement('div');wrap.className='om-viewed-profile-wrap';wrap.innerHTML='<div class="om-vp-error">Loading profile…</div>';page.innerHTML='';page.appendChild(wrap);
+    try{
+      const p=await getProfile(id);if(!p)throw new Error('That member profile could not be found.');
+      const cfg=p.avatar_config&&typeof p.avatar_config==='object'?p.avatar_config:{};const bg=bgOf(p),accent=accentOf(p),xpv=xp(p),info=await followInfo(id);
+      const title=p.profile_title||'Muslim';const location=[p.city,p.state,p.country].filter(Boolean).join(', ');const themeName=p.profile_background||cfg.background||'default';
+      wrap.innerHTML=`<article class="om-viewed-profile-card" style="--vp-bg:${esc(bg[1])};--vp-bg-color:${esc(bg[0])};--vp-accent:${esc(accent)}">
+        <div class="om-vp-banner"><button class="om-vp-back" type="button" id="omVpBack">← People</button><span class="om-vp-banner-label">Public Profile</span></div>
+        <div class="om-vp-body"><div class="om-vp-avatar"><img src="${esc(avatarOf(p))}" alt="${esc(displayName(p))} avatar"></div>
+          <div class="om-vp-main"><div class="om-vp-copy"><span class="om-vp-kicker">ONE MUSLIM · MEMBER</span><h1>${esc(displayName(p))}</h1><div class="om-vp-handle">@${esc(p.username||'member')} · ${esc(title)}</div><p class="om-vp-bio">${esc(p.bio||'Member of the OneMuslim community.')}</p></div>
+          ${info.me&&info.me!==id?`<div class="om-vp-actions"><button class="follow ${info.following?'following':''}" id="omVpFollow" type="button">${info.following?'Following':'Follow'}</button></div>`:''}</div>
+          <div class="om-vp-meta">${location?`<span class="om-vp-chip">📍 ${esc(location)}</span>`:''}<span class="om-vp-chip">⭐ ${xpv.toLocaleString()} XP</span>${xpv>=10000?'<span class="om-vp-chip">✦ Platinum</span>':''}</div>
+          <div class="om-vp-stats"><div class="om-vp-stat"><b id="omVpFollowers">${info.followers}</b><span>Followers</span></div><div class="om-vp-stat"><b>${info.followingCount}</b><span>Following</span></div><div class="om-vp-stat"><b>${esc(title)}</b><span>Rank</span></div></div>
+          <div class="om-vp-theme"><b>Profile customization</b><p>${esc(themeName)} background · ${esc(p.profile_accent||'emerald')} accent${xpv>=10000?' · Platinum avatar':''}</p></div>
+        </div></div></article>`;
+      wrap.querySelector('#omVpBack').onclick=()=>{window.location.href='index.html#people'};
+      wrap.querySelector('#omVpFollow')?.addEventListener('click',async e=>{const b=e.currentTarget;b.disabled=true;try{const now=await toggleFollow(id,info.following);info.following=now;b.textContent=now?'Following':'Follow';b.classList.toggle('following',now);const sb=client();const r=await sb.from('profile_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',id);wrap.querySelector('#omVpFollowers').textContent=r.count||0;window.dispatchEvent(new CustomEvent('profile:follow-changed',{detail:{profileId:id,following:now}}));}catch(err){window.toast?.(err.message||'Unable to update follow.');}finally{b.disabled=false;}});
+    }catch(err){wrap.innerHTML=`<div class="om-vp-error"><h2>Profile unavailable</h2><p>${esc(err.message||'Unable to load this profile.')}</p><button class="om-vp-back" style="position:static" type="button" id="omVpErrorBack">← Back to People</button></div>`;wrap.querySelector('#omVpErrorBack').onclick=()=>{window.location.href='index.html#people'};}
+  }
+
+  function init(){
+    const id=new URLSearchParams(location.search).get('profile');
+    if(!id)return;
+    let tries=0;const run=()=>{const page=document.getElementById('profilePage');const app=document.getElementById('appView');if(page&&app&&!app.classList.contains('hidden')){if(!page.dataset.omViewedRendered){page.dataset.omViewedRendered='1';render(id)}return;}if(tries++<80)setTimeout(run,150)};run();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
