@@ -1,5 +1,15 @@
 (() => {
+  const loadVisitedProfile = () => {
+    if (!new URLSearchParams(location.search).get('profile')) return;
+    if (document.getElementById('oneMuslimVisitedProfileScript')) return;
+    const s=document.createElement('script');
+    s.id='oneMuslimVisitedProfileScript';
+    s.src='view-profile-page.js?v=20260912-01';
+    s.defer=true;
+    document.body.appendChild(s);
+  };
   const init = () => {
+    loadVisitedProfile();
     const grid = document.getElementById('profilesGrid');
     if (!grid || grid.dataset.cardNavigationReady === '1') return;
     grid.dataset.cardNavigationReady = '1';
