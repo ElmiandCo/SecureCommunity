@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>DoX'd · OneMuslim</title>
   <link rel="stylesheet" href="dashboard-theme.css">
-  <link rel="stylesheet" href="doxd.css?v=20260912-02">
+  <link rel="stylesheet" href="doxd.css?v=20260912-03">
 </head>
 <body class="doxd-page">
   <header class="doxd-header">
     <a class="doxd-brand" href="index.html">OneMuslim</a>
     <nav aria-label="Primary">
       <a href="index.html">Home</a>
-      <a href="communities.html">Communities</a>
+      <a href="index.html">Communities</a>
       <a class="active" href="doxd.html">DoX'd</a>
-      <a href="messages.html">Messages</a>
+      <a href="index.html">Messages</a>
     </nav>
-    <a class="doxd-profile" href="profile.html" aria-label="Profile">●</a>
+    <a class="doxd-profile" href="index.html" aria-label="Profile">●</a>
   </header>
 
   <main class="doxd-shell">
@@ -30,10 +30,10 @@
     </section>
 
     <section class="doxd-search-card">
-      <label for="doxdSearch">Search DoX'd</label>
+      <label for="doxdSearch">Search OneMuslim</label>
       <div class="search-row">
         <span>⌕</span>
-        <input id="doxdSearch" type="search" placeholder="Search people, communities, or posts…" autocomplete="off">
+        <input id="doxdSearch" type="search" placeholder="Search people, communities, or DoX'd posts…" autocomplete="off">
         <button id="clearSearch" type="button" class="ghost-btn" hidden>Clear</button>
       </div>
       <div class="filters" role="tablist" aria-label="Search type">
@@ -76,6 +76,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=20260831-03"></script>
-  <script src="doxd.js?v=20260912-02"></script>
+  <script src="supabase-client.js?v=20260912-01"></script>
+  <script src="doxd.js?v=20260912-03"></script>
 </body>
 </html>
