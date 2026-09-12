@@ -35,4 +35,26 @@
   };
 
   window.OneMuslimSupabaseClient = Object.freeze({getClient});
+
+  function addDoxdNavigation(){
+    const app = document.getElementById('appView');
+    if(!app) return;
+
+    const add = (container, side=false) => {
+      if(!container || container.querySelector('[data-doxd-link]')) return;
+      const link = document.createElement(side ? 'a' : 'a');
+      link.href = 'doxd.html';
+      link.className = side ? 'side doxd-nav-link' : 'app-nav-link doxd-nav-link';
+      link.dataset.doxdLink = 'true';
+      link.textContent = side ? '🕵️ DoX\'d' : "DoX'd";
+      container.appendChild(link);
+    };
+
+    add(app.querySelector('.app-nav-links'));
+    add(app.querySelector('#mobileAppSidebar nav'), true);
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addDoxdNavigation);
+  else addDoxdNavigation();
+  new MutationObserver(addDoxdNavigation).observe(document.documentElement,{childList:true,subtree:true});
 })();
