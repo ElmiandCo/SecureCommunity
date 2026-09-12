@@ -9,14 +9,15 @@
 body.dashboard-theme{background:var(--om-cream)!important;color:var(--om-text)!important;overflow-x:hidden!important}
 body.dashboard-theme #appView{background:var(--om-cream)!important;padding:0!important;max-width:none!important}
 body.dashboard-theme #appView .app-layout{display:grid!important;grid-template-columns:250px minmax(0,1fr)!important;min-height:100vh!important}
-body.dashboard-theme #appView .sidebar{display:flex!important;grid-column:1!important;grid-row:1!important;position:sticky!important;top:0!important;height:100vh!important;min-height:100vh!important;box-sizing:border-box!important;background:linear-gradient(180deg,#fffdf8,#f4f7f2)!important;border-right:1px solid var(--om-line)!important;border-radius:0!important;padding:28px 18px!important;box-shadow:8px 0 30px rgba(27,55,45,.035)!important;z-index:1100!important;flex-direction:column!important}
+body.dashboard-theme #appView .sidebar{display:flex!important;grid-column:1!important;grid-row:1!important;position:sticky!important;top:0!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;box-sizing:border-box!important;background:linear-gradient(180deg,#fffdf8,#f4f7f2)!important;border-right:1px solid var(--om-line)!important;border-radius:0!important;padding:28px 18px!important;box-shadow:8px 0 30px rgba(27,55,45,.035)!important;z-index:1100!important;flex-direction:column!important;overflow:hidden!important}
 body.dashboard-theme #appView .sidebar:before{content:'';position:absolute;inset:auto 0 0 0;height:230px;background:url('assets/onemuslim/pattern-light.svg') left bottom/250px no-repeat;opacity:.32;pointer-events:none}
 body.dashboard-theme #appView .mini-profile,body.dashboard-theme #appView .xp-card,body.dashboard-theme #appView .sidebar nav,body.dashboard-theme #appView .logout{position:relative;z-index:1}
-body.dashboard-theme #appView .mini-profile{margin-bottom:16px!important}
-body.dashboard-theme #appView .xp-card{margin:0 0 22px!important;border:1px solid #d9e5de!important;border-radius:18px!important;background:#f4f8f5!important;color:var(--om-green)!important;padding:13px!important}
-body.dashboard-theme #appView .side{width:100%!important;border:0!important;background:transparent!important;color:#4d655b!important;border-radius:14px!important;padding:13px 14px!important;font-weight:750!important;text-align:left!important;cursor:pointer!important}
+body.dashboard-theme #appView .mini-profile{margin-bottom:16px!important;flex:0 0 auto!important}
+body.dashboard-theme #appView .xp-card{margin:0 0 22px!important;border:1px solid #d9e5de!important;border-radius:18px!important;background:#f4f8f5!important;color:var(--om-green)!important;padding:13px!important;flex:0 0 auto!important}
+body.dashboard-theme #appView .sidebar nav{display:flex!important;flex-direction:column!important;gap:2px!important;min-height:0!important;overflow:hidden!important;flex:1 1 auto!important}
+body.dashboard-theme #appView .side{width:100%!important;border:0!important;background:transparent!important;color:#4d655b!important;border-radius:14px!important;padding:13px 14px!important;font-weight:750!important;text-align:left!important;cursor:pointer!important;flex:0 0 auto!important}
 body.dashboard-theme #appView .side.active,body.dashboard-theme #appView .side:hover{background:#e8f1ec!important;color:var(--om-green)!important}
-body.dashboard-theme #appView .logout{margin-top:auto!important;border:0!important;background:transparent!important;color:#9d4d58!important;padding:13px 14px!important;text-align:left!important;cursor:pointer!important}
+body.dashboard-theme #appView .logout{margin-top:auto!important;border:0!important;background:transparent!important;color:#9d4d58!important;padding:13px 14px!important;text-align:left!important;cursor:pointer!important;flex:0 0 auto!important}
 body.dashboard-theme #appView .app-nav{display:none!important}
 body.dashboard-theme #appView .content{grid-column:2!important;grid-row:1!important;max-width:none!important;width:100%!important;margin:0!important;padding:34px 48px 70px!important;box-sizing:border-box!important;min-width:0!important}
 body.dashboard-theme #appView .page{animation:omFade .18s ease-out}@keyframes omFade{from{opacity:.7;transform:translateY(4px)}to{opacity:1;transform:none}}
@@ -32,7 +33,8 @@ body.dashboard-theme #appView #publicHomePage>.om-landing>.om-site-nav{display:n
 body.dashboard-theme #appView #publicHomePage>.om-landing{padding-top:10px!important}
 @media(max-width:1000px){
  body.dashboard-theme #appView .app-layout{display:block!important;min-height:100vh!important}
- body.dashboard-theme #appView .sidebar{position:fixed!important;left:0!important;top:0!important;width:min(300px,86vw)!important;height:100vh!important;min-height:100vh!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:20px 0 50px rgba(18,56,46,.16)!important;z-index:1400!important}
+ body.dashboard-theme #appView .sidebar{position:fixed!important;left:0!important;top:0!important;width:min(300px,86vw)!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:20px 0 50px rgba(18,56,46,.16)!important;z-index:1400!important;overflow:hidden!important}
+ body.dashboard-theme #appView .sidebar nav{min-height:0!important;overflow:hidden!important}
  body.dashboard-theme #appView .sidebar.open{transform:translateX(0)!important}
  body.dashboard-theme #appView .app-nav{display:flex!important;position:sticky!important;top:0!important;z-index:1200!important;height:68px!important;align-items:center!important;gap:9px!important;padding:0 12px!important;background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--om-line)!important;box-shadow:0 3px 18px rgba(27,55,45,.04)!important;backdrop-filter:blur(12px)!important}
  body.dashboard-theme #appView .app-nav-menu{display:block!important;order:1!important;border:1px solid #d6ddd7!important;background:#fff!important;color:var(--om-green)!important;border-radius:12px!important;padding:8px 11px!important;font-size:20px!important;cursor:pointer!important;position:relative!important;z-index:1500!important;touch-action:manipulation!important}
@@ -93,9 +95,6 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
     let history=['profile'];
     const sidebar=()=>document.getElementById('mobileAppSidebar');
 
-    // Single routing path for both the top navigation and drawer.
-    // Do not call side.click() from here: another navigation listener is already installed,
-    // and doing so can recurse indefinitely on mobile.
     document.addEventListener('click',e=>{
       const nav=e.target.closest?.('#appView .app-nav-link[data-page],#appView .side[data-page]');
       if(nav){
