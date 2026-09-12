@@ -18,7 +18,10 @@
     }
     window.location.href=`index.html?profile=${encodeURIComponent(id)}`;
   };
+
+  // Public aliases used by the People cards and other existing UI.
   window.OneMuslimOpenProfile=openProfile;
+  window.openUserProfile=openProfile;
 
   const findProfileId = async username => {
     const clean=String(username||'').replace(/^@/,'').trim(); if(!clean)return null;
