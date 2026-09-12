@@ -7,3 +7,10 @@
 .om-pb-choice.pb-package .om-package-avatar{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;flex:0 0 34px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important}
 .om-pb-choice.pb-package .om-package-avatar img{display:block!important;width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;object-position:center top!important;border-radius:50%!important}
 .om-avatar-sync-img{display:block!important;width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;object-position:center top!important;border-radius:50%!important}
+
+/* My Home artifact guard: the hero glow must remain decorative and bounded. */
+body.dashboard-theme #publicHomePage .om-profile-hero{position:relative!important;overflow:hidden!important;isolation:isolate!important}
+body.dashboard-theme #publicHomePage .om-profile-hero>.om-hero-glow{display:none!important;width:0!important;height:0!important}
+body.dashboard-theme #publicHomePage .om-profile-hero:before,
+body.dashboard-theme #publicHomePage .om-profile-hero:after{content:none!important;display:none!important}
+body.dashboard-theme #publicHomePage .om-profile-hero>.om-hero-inner{position:relative!important;z-index:2!important}
