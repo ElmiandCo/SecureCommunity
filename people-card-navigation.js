@@ -12,9 +12,20 @@
       if (event.target.closest('button, a, input, select, textarea, label')) return;
 
       const profileId = card.dataset.profileId;
-      if (!profileId || typeof window.openUserProfile !== 'function') return;
+      if (!profileId) return;
 
-      window.openUserProfile(profileId);
+      // people-actions-fix owns the actual member-profile modal. Bridge the
+      // card click into its existing data-view-profile handler so we do not
+      // create a second profile implementation or change profile functionality.
+      const bridge = document.createElement('button');
+      bridge.type = 'button';
+      bridge.setAttribute('data-view-profile', profileId);
+      bridge.setAttribute('aria-hidden', 'true');
+      bridge.tabIndex = -1;
+      bridge.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+      card.appendChild(bridge);
+      bridge.click();
+      bridge.remove();
     });
 
     const style = document.createElement('style');
