@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DoX'd · OneMuslim</title>
+  <link rel="stylesheet" href="dashboard-theme.css">
+  <link rel="stylesheet" href="doxd.css?v=20260912-01">
+</head>
+<body class="doxd-page">
+  <header class="doxd-header">
+    <a class="doxd-brand" href="index.html">OneMuslim</a>
+    <nav aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="communities.html">Communities</a>
+      <a class="active" href="doxd.html">DoX'd</a>
+      <a href="messages.html">Messages</a>
+    </nav>
+    <a class="doxd-profile" href="profile.html" aria-label="Profile">●</a>
+  </header>
+
+  <main class="doxd-shell">
+    <section class="doxd-hero">
+      <div>
+        <span class="eyebrow">COMMUNITY ACCOUNTABILITY</span>
+        <h1>DoX'd</h1>
+        <p>Share public information, evidence, and sources. Keep it factual, documented, and within community guidelines.</p>
+      </div>
+      <button id="createDoxd" class="primary-btn">＋ Create DoX'd Post</button>
+    </section>
+
+    <section class="doxd-search-card">
+      <label for="doxdSearch">Search DoX'd</label>
+      <div class="search-row">
+        <span>⌕</span>
+        <input id="doxdSearch" type="search" placeholder="Search people, communities, or posts…" autocomplete="off">
+        <button id="clearSearch" type="button" class="ghost-btn" hidden>Clear</button>
+      </div>
+      <div class="filters" role="tablist" aria-label="Search type">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="people">People</button>
+        <button class="filter" data-filter="communities">Communities</button>
+        <button class="filter" data-filter="posts">Posts</button>
+        <button class="filter" data-filter="categories">Categories</button>
+      </div>
+    </section>
+
+    <section class="section-heading">
+      <div><span class="eyebrow">DISCOVER</span><h2 id="resultsTitle">Recent DoX'd Posts</h2></div>
+      <select id="sortSelect" aria-label="Sort posts"><option value="latest">Latest</option><option value="oldest">Oldest</option></select>
+    </section>
+
+    <section id="results" class="doxd-results" aria-live="polite"></section>
+  </main>
+
+  <div id="composerModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-panel">
+      <button class="modal-close" id="closeComposer" aria-label="Close">×</button>
+      <span class="eyebrow">PUBLIC RECORD</span>
+      <h2>Create DoX'd Post</h2>
+      <p class="muted">Post public, supportable information. Do not include private or sensitive personal information.</p>
+      <form id="doxdForm">
+        <label>Subject type<select id="subjectType"><option>Person</option><option>Community</option><option>Organization</option><option>Topic</option></select></label>
+        <label>Subject name / username<input id="subjectName" required maxlength="120" placeholder="Name or @username"></label>
+        <label>Title<input id="postTitle" required maxlength="140" placeholder="Short, clear title"></label>
+        <label>Category<select id="category"><option>Accountability</option><option>Community</option><option>Business</option><option>Public figure</option><option>Organization</option><option>Other</option></select></label>
+        <label>Claim / allegation<textarea id="claim" required maxlength="1200" placeholder="What is being claimed? Keep wording factual and specific."></textarea></label>
+        <label>Explanation / context<textarea id="context" maxlength="3000" placeholder="Provide background and context."></textarea></label>
+        <label>Evidence<textarea id="evidence" maxlength="3000" placeholder="Describe the public evidence supporting the claim."></textarea></label>
+        <label>Source URL <span class="optional">optional</span><input id="sourceUrl" type="url" placeholder="https://"></label>
+        <div class="guideline"><strong>Before posting</strong><span>Use public sources. No home addresses, phone numbers, passwords, financial credentials, SSNs, or other sensitive personal data.</span></div>
+        <button class="primary-btn" type="submit">Publish DoX'd Post</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="doxd.js?v=20260912-01"></script>
+</body>
+</html>
