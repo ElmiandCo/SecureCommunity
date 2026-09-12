@@ -31,21 +31,6 @@ body.dashboard-theme #appView .primary{background:var(--om-green)!important;bord
 body.dashboard-theme #appView .ghost,body.dashboard-theme #appView .outline{color:var(--om-green)!important;border-color:#9bb8ad!important;border-radius:999px!important}
 body.dashboard-theme #appView #publicHomePage>.om-landing>.om-site-nav{display:none!important}
 body.dashboard-theme #appView #publicHomePage>.om-landing{padding-top:10px!important}
-
-/* Floating account avatar: draggable, position-persistent, click-to-open / click-away-to-close. */
-.om-floating-account{position:fixed!important;right:24px;bottom:24px;width:52px;height:52px;z-index:10000!important;display:block!important;user-select:none;touch-action:none}
-.om-floating-account[aria-expanded="true"]{z-index:10001!important}
-.om-floating-account-button{width:52px!important;height:52px!important;padding:0!important;border:2px solid var(--om-gold)!important;border-radius:50%!important;background:#fffaf0!important;box-shadow:0 8px 24px rgba(18,56,46,.2)!important;display:grid!important;place-items:center!important;overflow:hidden!important;cursor:grab!important;touch-action:none!important}
-.om-floating-account-button:active{cursor:grabbing!important}
-.om-floating-account-button img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border-radius:50%!important;pointer-events:none!important}
-.om-floating-account-fallback{font-size:21px!important;font-weight:900!important;color:var(--om-green)!important;pointer-events:none!important}
-.om-floating-account-panel{position:absolute!important;right:0;bottom:62px;width:220px!important;padding:14px!important;border:1px solid var(--om-line)!important;border-radius:18px!important;background:rgba(255,253,248,.98)!important;color:var(--om-text)!important;box-shadow:0 18px 50px rgba(18,56,46,.2)!important;backdrop-filter:blur(14px)!important;display:none!important}
-.om-floating-account[aria-expanded="true"] .om-floating-account-panel{display:block!important}
-.om-floating-account-panel .om-float-name{font-weight:850!important;color:var(--om-green)!important;margin:0 0 10px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-.om-floating-account-panel button,.om-floating-account-panel a{display:block!important;width:100%!important;box-sizing:border-box!important;text-align:left!important;border:0!important;background:transparent!important;color:#456258!important;border-radius:11px!important;padding:10px!important;font-weight:750!important;text-decoration:none!important;cursor:pointer!important}
-.om-floating-account-panel button:hover,.om-floating-account-panel a:hover{background:#e8f1ec!important;color:var(--om-green)!important}
-@media(max-width:650px){.om-floating-account{right:16px;bottom:16px}.om-floating-account-panel{right:0;bottom:62px;width:min(220px,calc(100vw - 32px))!important}}
-
 @media(max-width:1000px){
  body.dashboard-theme #appView .app-layout{display:block!important;min-height:100vh!important}
  body.dashboard-theme #appView .sidebar{position:fixed!important;left:0!important;top:0!important;width:min(300px,86vw)!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:20px 0 50px rgba(18,56,46,.16)!important;z-index:1400!important;overflow:hidden!important}
@@ -88,77 +73,6 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
     const img=document.createElement('img');img.src=src;img.alt='Profile photo';img.loading='eager';
     img.onerror=()=>{mark.innerHTML='✦';};
     mark.appendChild(img);
-  }
-
-  function floatingAvatarSrc(){
-    const p=window.profile||{};
-    if(p.avatar_url)return String(p.avatar_url);
-    if(p.avatar_config&&typeof p.avatar_config==='object'&&(p.avatar_config.asset||p.avatar_config.url))return String(p.avatar_config.asset||p.avatar_config.url);
-    if(p.avatar_package==='platinum_package')return `assets/avatars/${p.avatar_gender==='female'?'platinum-female.PNG':'platinum-male.PNG'}`;
-    if(p.avatar_gender==='female')return 'assets/avatar/base/master.png';
-    if(p.avatar_gender==='male')return 'assets/avatar/male/male-1-original.jpg';
-    return '';
-  }
-
-  function clampFloatPosition(x,y,el){
-    const pad=8,w=el.offsetWidth||52,h=el.offsetHeight||52;
-    return {x:Math.max(pad,Math.min(window.innerWidth-w-pad,x)),y:Math.max(pad,Math.min(window.innerHeight-h-pad,y))};
-  }
-
-  function createFloatingAvatar(){
-    if(document.getElementById('omFloatingAccount'))return;
-    const wrap=document.createElement('div');
-    wrap.id='omFloatingAccount';wrap.className='om-floating-account';wrap.setAttribute('aria-expanded','false');
-    const button=document.createElement('button');button.type='button';button.className='om-floating-account-button';button.setAttribute('aria-label','Open account menu');button.setAttribute('aria-expanded','false');
-    const src=floatingAvatarSrc();
-    if(src){const img=document.createElement('img');img.src=src;img.alt='';img.draggable=false;img.onerror=()=>{button.innerHTML='<span class="om-floating-account-fallback">✦</span>';};button.appendChild(img);}else button.innerHTML='<span class="om-floating-account-fallback">✦</span>';
-    const name=window.profile?.display_name||window.profile?.username||'My Account';
-    const panel=document.createElement('div');panel.className='om-floating-account-panel';panel.innerHTML=`<p class="om-float-name"></p><a href="index.html?profile=me" data-float-profile>My Profile</a><button type="button" data-float-settings>Settings</button>`;
-    panel.querySelector('.om-float-name').textContent=name;
-    wrap.append(button,panel);document.body.appendChild(wrap);
-
-    try{
-      const saved=JSON.parse(localStorage.getItem('oneMuslimFloatingAvatarPosition')||'null');
-      if(saved&&Number.isFinite(saved.x)&&Number.isFinite(saved.y)){
-        const p=clampFloatPosition(saved.x,saved.y,wrap);wrap.style.left=p.x+'px';wrap.style.top=p.y+'px';wrap.style.right='auto';wrap.style.bottom='auto';
-      }
-    }catch(_){ }
-
-    let dragging=false,moved=false,startX=0,startY=0,startLeft=0,startTop=0;
-    const start=e=>{
-      const point=e.touches?.[0]||e;
-      dragging=true;moved=false;startX=point.clientX;startY=point.clientY;
-      const rect=wrap.getBoundingClientRect();startLeft=rect.left;startTop=rect.top;
-      button.setPointerCapture?.(e.pointerId);
-    };
-    const move=e=>{
-      if(!dragging)return;
-      const point=e.touches?.[0]||e;
-      const dx=point.clientX-startX,dy=point.clientY-startY;
-      if(Math.abs(dx)+Math.abs(dy)>5)moved=true;
-      if(!moved)return;
-      const p=clampFloatPosition(startLeft+dx,startTop+dy,wrap);wrap.style.left=p.x+'px';wrap.style.top=p.y+'px';wrap.style.right='auto';wrap.style.bottom='auto';
-      e.preventDefault?.();
-    };
-    const end=()=>{
-      if(!dragging)return;dragging=false;
-      if(moved){const r=wrap.getBoundingClientRect();try{localStorage.setItem('oneMuslimFloatingAvatarPosition',JSON.stringify({x:r.left,y:r.top}));}catch(_){}}
-    };
-    button.addEventListener('pointerdown',start);
-    button.addEventListener('pointermove',move);
-    button.addEventListener('pointerup',end);
-    button.addEventListener('pointercancel',end);
-    button.addEventListener('click',e=>{
-      if(moved){e.preventDefault();e.stopPropagation();moved=false;return;}
-      const open=wrap.getAttribute('aria-expanded')==='true';
-      wrap.setAttribute('aria-expanded',String(!open));button.setAttribute('aria-expanded',String(!open));
-      e.stopPropagation();
-    });
-    panel.addEventListener('click',e=>e.stopPropagation());
-    panel.querySelector('[data-float-profile]').addEventListener('click',e=>{e.preventDefault();window.location.href='index.html';});
-    panel.querySelector('[data-float-settings]').addEventListener('click',()=>document.getElementById('settings')?.click?.()||document.querySelector('[data-page="settings"]')?.click?.());
-    document.addEventListener('click',e=>{if(!wrap.contains(e.target)){wrap.setAttribute('aria-expanded','false');button.setAttribute('aria-expanded','false');}},true);
-    window.addEventListener('resize',()=>{const r=wrap.getBoundingClientRect();const p=clampFloatPosition(r.left,r.top,wrap);wrap.style.left=p.x+'px';wrap.style.top=p.y+'px';wrap.style.right='auto';wrap.style.bottom='auto';try{localStorage.setItem('oneMuslimFloatingAvatarPosition',JSON.stringify(p));}catch(_){}});
   }
 
   function show(page){
@@ -223,13 +137,12 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
         if(sw&&form&&form.previousElementSibling!==sw)form.parentNode.insertBefore(sw,form);
       }
       syncNavAvatar();
-      if(document.querySelector('#appView:not(.hidden)'))createFloatingAvatar();
     }
 
     scan();
     setTimeout(scan,250);setTimeout(scan,800);setTimeout(scan,1600);
     new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
-    setInterval(()=>{syncNavAvatar();if(document.querySelector('#appView:not(.hidden)')&&!document.getElementById('omFloatingAccount'))createFloatingAvatar();},1000);
+    setInterval(syncNavAvatar,1000);
 
     const activateProfile=()=>{
       if(document.getElementById('profilePage')&&!document.getElementById('profilePage').classList.contains('hidden')){syncNavAvatar();return;}
