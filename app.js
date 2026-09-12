@@ -310,6 +310,14 @@ async function loadPosts(){
   }));
 }
 
+function routeInitialProfile(){
+  const id=new URLSearchParams(window.location.search).get("profile");
+  if(!id)return;
+  // The profile route is only opened after the authenticated shell exists.
+  // This prevents ?profile=... from being mistaken for an unauthenticated page load.
+  window.dispatchEvent(new CustomEvent("oneMuslim:open-profile",{detail:{id}}));
+}
+
 async function enterApp(){
   setScreen("appView");
   $("sessionBadge").textContent = "SECURE SESSION";
@@ -318,6 +326,7 @@ async function enterApp(){
     await loadLessons();
     await loadPosts();
     renderApp();
+    routeInitialProfile();
   }catch(e){
     console.error(e);
     setScreen("publicView");
@@ -699,6 +708,7 @@ sb.auth.onAuthStateChange(async (event,session)=>{
       await loadLessons();
       await loadPosts();
       renderApp();
+      routeInitialProfile();
     }catch(e){
       console.error("Auth/profile load failed:",e);
       setScreen("publicView");
@@ -719,7 +729,7 @@ sb.auth.onAuthStateChange(async (event,session)=>{
       showAuth("reset");
       return;
     }
-    try{ await loadProfile(); await loadPosts(); renderApp(); }
+    try{ await loadProfile(); await loadPosts(); renderApp(); routeInitialProfile(); }
     catch(e){ console.error(e); setScreen("publicView"); }
   }else{
     setScreen("publicView");
