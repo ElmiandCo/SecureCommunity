@@ -1,6 +1,7 @@
 /* OneMuslim auth visibility guard — never show the login screen over an existing Supabase session. */
 (function(){
   'use strict';
+  if(new URLSearchParams(location.search).get('journey')==='convert'&&!document.getElementById('omJourneyConversionScript')){const s=document.createElement('script');s.id='omJourneyConversionScript';s.src='journey-conversion.js?v=20260912-01';document.head.appendChild(s)}
 
   const css=document.createElement('style');
   css.id='om-auth-force-fix-css';
@@ -18,89 +19,21 @@
   function getClient(){
     try{return window.OneMuslimSupabaseClient?.getClient?.() || null;}catch(e){return null;}
   }
-
   function getExistingShowAuth(){
-    try{
-      const fn=Function('return typeof showAuth === "function" ? showAuth : null')();
-      return typeof fn==='function' ? fn : null;
-    }catch(e){return null;}
+    try{const fn=Function('return typeof showAuth === "function" ? showAuth : null')();return typeof fn==='function' ? fn : null}catch(e){return null;}
   }
-
-  function hasApp(){
-    const app=document.getElementById('appView');
-    return !!(app && !app.classList.contains('hidden'));
-  }
-
+  function hasApp(){const app=document.getElementById('appView');return !!(app && !app.classList.contains('hidden'));}
   function openAuth(mode='login'){
-    if(hasApp()) return;
-    const view=document.getElementById('authView');
-    if(!view) return;
-    try{
-      const renderer=window.showAuth||getExistingShowAuth();
-      if(typeof renderer==='function'){
-        renderer(mode);
-        if(!window.showAuth) window.showAuth=renderer;
-      }
-    }catch(e){console.warn('Auth open:',e);}
-    view.classList.remove('hidden');
-    view.classList.add('om-auth-overlay');
-    document.body.classList.add('om-auth-modal-open');
-    const guard=document.getElementById('authBootGuard');
-    if(guard){guard.classList.add('hidden');setTimeout(()=>guard.remove(),50);}
+    if(hasApp()) return;const view=document.getElementById('authView');if(!view)return;
+    try{const renderer=window.showAuth||getExistingShowAuth();if(typeof renderer==='function'){renderer(mode);if(!window.showAuth)window.showAuth=renderer}}catch(e){console.warn('Auth open:',e)}
+    view.classList.remove('hidden');view.classList.add('om-auth-overlay');document.body.classList.add('om-auth-modal-open');const guard=document.getElementById('authBootGuard');if(guard){guard.classList.add('hidden');setTimeout(()=>guard.remove(),50)}
   }
-
-  function closeAuth(){
-    const view=document.getElementById('authView');
-    if(!view) return;
-    view.classList.add('hidden');
-    view.classList.remove('om-auth-overlay');
-    document.body.classList.remove('om-auth-modal-open');
-  }
-
+  function closeAuth(){const view=document.getElementById('authView');if(!view)return;view.classList.add('hidden');view.classList.remove('om-auth-overlay');document.body.classList.remove('om-auth-modal-open')}
   async function boot(){
-    const sb=getClient();
-    if(!sb){
-      // Supabase client is not ready yet. Give the app a moment instead of
-      // immediately assuming the visitor is signed out.
-      setTimeout(boot,250);
-      return;
-    }
-
-    let resolved=false;
-    try{
-      const {data,error}=await sb.auth.getSession();
-      resolved=true;
-      if(error) throw error;
-
-      if(data?.session){
-        // An existing session is authoritative. app.js owns the transition
-        // into the authenticated app; this guard must never cover it with login.
-        closeAuth();
-        return;
-      }
-    }catch(e){
-      console.warn('Auth session check:',e);
-    }
-
-    if(resolved && !hasApp()) openAuth('login');
+    const sb=getClient();if(!sb){setTimeout(boot,250);return}
+    let resolved=false;try{const {data,error}=await sb.auth.getSession();resolved=true;if(error)throw error;if(data?.session){if(data.session.user?.is_anonymous&&new URLSearchParams(location.search).get('journey')==='convert'){openAuth('signup');return}closeAuth();return}}catch(e){console.warn('Auth session check:',e)}
+    if(resolved&&!hasApp())openAuth('login');
   }
-
-  function wireAuthChanges(){
-    const sb=getClient();
-    if(!sb){setTimeout(wireAuthChanges,250);return;}
-    sb.auth.onAuthStateChange((event,session)=>{
-      if(session){
-        closeAuth();
-      }else if(event==='SIGNED_OUT'){
-        openAuth('login');
-      }
-    });
-  }
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',()=>{boot();wireAuthChanges();},{once:true});
-  }else{
-    boot();
-    wireAuthChanges();
-  }
+  function wireAuthChanges(){const sb=getClient();if(!sb){setTimeout(wireAuthChanges,250);return}sb.auth.onAuthStateChange((event,session)=>{if(session?.user?.is_anonymous&&new URLSearchParams(location.search).get('journey')==='convert'){openAuth('signup');return}if(session)closeAuth();else if(event==='SIGNED_OUT')openAuth('login')})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{boot();wireAuthChanges()},{once:true});else{boot();wireAuthChanges()}
 })();
