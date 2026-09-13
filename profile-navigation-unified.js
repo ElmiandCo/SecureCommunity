@@ -8,6 +8,12 @@
 
   const openProfile = id => {
     if (!id) return;
+    const peoplePage=document.getElementById('profilesPage');
+    const peopleVisible=peoplePage && !peoplePage.classList.contains('hidden');
+    if(peopleVisible && window.OneMuslimOpenProfileModal){
+      window.OneMuslimOpenProfileModal(id);
+      return;
+    }
     const app=document.getElementById('appView');
     const page=document.getElementById('profilePage');
     if(app && page && !app.classList.contains('hidden')){
@@ -19,7 +25,6 @@
     window.location.href=`index.html?profile=${encodeURIComponent(id)}`;
   };
 
-  // Public aliases used by the People cards and other existing UI.
   window.OneMuslimOpenProfile=openProfile;
   window.openUserProfile=openProfile;
 
