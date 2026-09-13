@@ -22,6 +22,7 @@
     add(app.querySelector('.app-nav-links'));add(app.querySelector('#mobileAppSidebar nav'),true);
   }
   function loadOneMuslimSearch(){if(document.getElementById('oneMuslimSearchScript'))return;const s=document.createElement('script');s.id='oneMuslimSearchScript';s.src='search-results.js?v=20260912-01';s.defer=true;document.head.appendChild(s)}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{addDoxdNavigation();loadOneMuslimSearch()});else{addDoxdNavigation();loadOneMuslimSearch()}
+  function loadProfileModal(){if(document.getElementById('oneMuslimProfileModalScript'))return;const s=document.createElement('script');s.id='oneMuslimProfileModalScript';s.src='profile-modal.js?v=20260912-01';s.defer=true;document.head.appendChild(s)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{addDoxdNavigation();loadOneMuslimSearch();loadProfileModal()});else{addDoxdNavigation();loadOneMuslimSearch();loadProfileModal()}
   new MutationObserver(addDoxdNavigation).observe(document.documentElement,{childList:true,subtree:true});
 })();
