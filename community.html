@@ -1,20 +1,11 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Communities · OneMuslim</title>
-<link rel="stylesheet" href="dashboard-theme.css"><link rel="stylesheet" href="community.css?v=20260912-01">
-</head>
-<body class="community-page">
-<header class="community-header"><a class="brand" href="index.html">OneMuslim</a><nav><a href="index.html">Home</a><a class="active" href="community.html">Communities</a><a href="doxd.html">DoX'd</a><a href="messages.html">Messages</a></nav></header>
-<main class="community-shell">
-<section id="communityHome">
-  <div class="community-hero"><div><span class="eyebrow">ONE MUSLIM</span><h1>Communities</h1><p>Create a place for a mosque, dawah project, non-profit, event, or community. The creator remains the sole manager.</p></div><button id="createCommunityBtn" class="primary">＋ Create Community</button></div>
-  <div class="community-tools"><input id="communitySearch" type="search" placeholder="Search communities…"><select id="communityCategory"><option value="">All categories</option><option>Mosque</option><option>Dawah</option><option>Community</option><option>Non-Profit</option><option>Event</option><option>Other</option></select></div>
-  <div id="communityList" class="community-grid"></div>
-</section>
-<section id="communityView" class="hidden"></section>
-</main>
-<div id="communityModal" class="modal hidden"><div class="modal-card"><button id="closeCommunityModal" class="close">×</button><span class="eyebrow">CREATE</span><h2>Create a Community</h2><p class="muted">You will be the sole manager. Members can join and follow, but cannot create, edit, or delete community posts.</p><form id="communityForm"><label>Name<input id="communityName" required maxlength="100"></label><label>Category<select id="newCommunityCategory" required><option>Mosque</option><option>Dawah</option><option>Community</option><option>Non-Profit</option><option>Event</option><option>Other</option></select></label><label>Short URL / slug<input id="communitySlug" required maxlength="80" pattern="[a-z0-9-]+" placeholder="my-community"></label><label>Description<textarea id="communityDescription" maxlength="1000"></textarea></label><label>Community image <span class="muted">optional</span><input id="communityImage" type="file" accept="image/*"></label><label>Cover image <span class="muted">optional</span><input id="communityCover" type="file" accept="image/*"></label><button class="primary" type="submit">Create Community</button></form></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js?v=20260831-03"></script><script src="supabase-client.js?v=20260912-01"></script><script src="community-page.js?v=20260912-01"></script>
-</body></html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OneMuslim · Communities</title></head>
+<body>
+<script>
+  const q=window.location.search||'';
+  window.location.replace('index.html'+q);
+</script>
+<noscript><a href="index.html">Open OneMuslim</a></noscript>
+</body>
+</html>
