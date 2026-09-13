@@ -4,10 +4,10 @@
 const cfg=window.APP_CONFIG||{};let sb=null,lessons=[],state=null;
 const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
 async function boot(){
- sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:true,detectSessionInUrl:false}});
+ sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
  let session=(await sb.auth.getSession()).data?.session;
  if(!session){const r=await sb.auth.signInAnonymously({options:{data:{journey_guest:true}}});if(r.error){showError('The learning journey needs Anonymous Sign-Ins enabled in the OneMuslim Supabase Auth settings. Your existing account flow is unchanged.');return}session=r.data.session}
- sessionStorage.setItem('onemuslim_journey_access_token',session.access_token);sessionStorage.setItem('onemuslim_journey_refresh_token',session.refresh_token);sessionStorage.setItem('onemuslim_journey_active','1');
+ sessionStorage.setItem('onemuslim_journey_active','1');
  await loadLessons();$('back').onclick=()=>location.href='index.html';
 }
 async function loadLessons(){
