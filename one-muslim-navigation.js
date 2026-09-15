@@ -76,6 +76,17 @@ body.dark-theme{background:#0e1b17!important;color:#edf4ef!important}body.dark-t
   }
 
   function show(page){
+    if(page==='shop'){
+      if(window.OneMuslimShop&&typeof window.OneMuslimShop.show==='function'){
+        window.OneMuslimShop.show();
+        document.querySelectorAll('#appView .app-nav-link,#appView .side').forEach(b=>b.classList.toggle('active',b.dataset.page==='shop'));
+        document.getElementById('mobileAppSidebar')?.classList.remove('open');
+        window.scrollTo({top:0,behavior:'smooth'});
+        syncNavAvatar();
+        return true;
+      }
+      return false;
+    }
     const map={'public-home':'publicHomePage',feed:'feedPage',profiles:'profilesPage',profile:'profilePage',lessons:'lessonsPage'};
     const target=document.getElementById(map[page]||page);
     if(!target)return false;
