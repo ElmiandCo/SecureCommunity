@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173f32">
+<meta name="description" content="The Qibla — OneMuslim community newsletter.">
+<title>The Qibla | OneMuslim Newsletter</title>
+<style>
+:root{--ink:#17251f;--green:#173f32;--green2:#285b48;--gold:#b58a2c;--cream:#f6f0df;--paper:#fffdf7;--line:#b9aa86;--muted:#66736d;--red:#8d3d35}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#d9d3c3;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:radial-gradient(#6d6048 0.55px,transparent .55px);background-size:7px 7px}
+.shell{max-width:1180px;margin:26px auto;padding:0 18px}.paper{background:var(--paper);box-shadow:0 18px 60px rgba(30,35,27,.22);border:1px solid #c8bda3;padding:18px 28px 34px;position:relative}
+.mast{border:5px double var(--gold);background:linear-gradient(180deg,#1b4a3a,#12372c);color:#f6e6b4;padding:12px 16px 10px;text-align:center;position:relative}
+.mast:before,.mast:after{content:"☘";position:absolute;top:12px;font-size:28px;color:#d1b45e}.mast:before{left:20px}.mast:after{right:20px;transform:scaleX(-1)}
+.kicker{font:700 12px/1.2 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#d9c47d}.name{font-size:clamp(38px,7vw,74px);line-height:.9;letter-spacing:.03em;margin:4px 0 7px}.datebar{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #aa914a;padding-top:7px;font:700 11px Arial,sans-serif;letter-spacing:.1em}
+.listen{border:1px solid #9e843d;background:#f5e4b0;color:#183b30;border-radius:4px;padding:6px 10px;font:800 11px Arial,sans-serif;cursor:pointer}.listen:hover{background:#fff0c6}
+.rule{height:8px;border-top:3px solid var(--green);border-bottom:1px solid var(--green);margin:14px 0 12px}
+.section-label{text-align:center;font:800 13px Arial,sans-serif;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin:2px 0 12px}
+.lead{display:grid;grid-template-columns:1.55fr .75fr;gap:18px;border-bottom:2px solid var(--green);padding-bottom:16px}
+.headline{font-size:clamp(32px,5vw,58px);line-height:.94;margin:5px 0 10px;color:#183f32}.dek{font-size:18px;line-height:1.35;margin:0 0 12px}.byline{font:700 10px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.hero-art{min-height:330px;border:8px solid #eee6d3;outline:1px solid #aa9b78;background:
+radial-gradient(circle at 68% 30%,#d8b55c 0 9%,transparent 10%),
+linear-gradient(145deg,transparent 0 43%,rgba(255,255,255,.12) 44% 46%,transparent 47%),
+linear-gradient(180deg,#315f4d 0 34%,#d7c49a 34% 36%,#e8dfc9 36% 100%);position:relative;overflow:hidden}
+.hero-art:before{content:"";position:absolute;width:180px;height:180px;border-radius:50% 50% 15% 15%;left:18%;bottom:0;background:linear-gradient(90deg,#f0e5cf 0 42%,#b9a58a 43% 47%,#f3eadb 48%);box-shadow:80px 22px 0 -25px #496b5b}
+.hero-art:after{content:"☾  ✦  ✦";position:absolute;top:20px;left:20px;color:#f6e6b4;font-size:30px;letter-spacing:12px}
+.caption{font:11px/1.35 Arial,sans-serif;color:var(--muted);margin-top:7px}
+.side-story{border-left:1px solid #cbbf9f;padding-left:16px}.side-story h2{font-size:26px;line-height:1;margin:0 0 7px}.side-story p{font-size:14px;line-height:1.4;margin:8px 0}.quote{border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);padding:11px 4px;margin:14px 0;font-size:22px;line-height:1.1;color:var(--green);font-weight:700}
+.columns{column-count:2;column-gap:26px;margin-top:18px}.story{break-inside:avoid;border-top:1px solid #c8bda3;padding:14px 0}.story h2{font-size:29px;line-height:1;margin:0 0 7px;color:#1a4638}.story p{font-size:15px;line-height:1.48;margin:7px 0}.story .tag{font:800 10px Arial,sans-serif;letter-spacing:.13em;color:var(--red);text-transform:uppercase}.story-art{height:135px;margin:9px 0 10px;border:1px solid #aa9b78;background:linear-gradient(135deg,#d6c49d,#f3ead8 52%,#476d5a 53%,#254b3d);position:relative}.story-art.wedding:before{content:"♥  ◇  ♥";position:absolute;inset:35px 0;text-align:center;font-size:38px;color:#7f5c38}.story-art.debate{background:linear-gradient(90deg,#eee4cf 0 49%,#1d4c3b 50% 100%)}.story-art.debate:before{content:"DISCUSS • LISTEN • LEARN";position:absolute;inset:52px 0;text-align:center;font:800 15px Arial;color:#fff;letter-spacing:.08em}.story-art.mosque:before{content:"☾";position:absolute;left:calc(50% - 30px);top:24px;font-size:62px;color:#b78b2e}.story-art.mosque:after{content:"⌂   ⌂   ⌂";position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:38px;color:#315f4d}
+.factbox{background:#f0e8d5;border:1px solid #c2b38f;padding:14px;margin-top:14px}.factbox h3{margin:0 0 6px;color:var(--green);font-size:18px}.factbox p{margin:0;font-size:13px;line-height:1.4}
+.footer{margin-top:22px;border-top:5px double var(--gold);padding-top:12px;text-align:center;color:#59675f;font:11px Arial,sans-serif;letter-spacing:.05em}
+@media(max-width:800px){.paper{padding:12px 16px 24px}.lead{grid-template-columns:1fr}.side-story{border-left:0;border-top:1px solid #cbbf9f;padding:14px 0 0}.columns{column-count:1}.datebar{flex-wrap:wrap}.hero-art{min-height:230px}.mast:before,.mast:after{display:none}}
+</style>
+</head>
+<body>
+<div class="shell"><main class="paper">
+<header class="mast">
+<div class="kicker">OneMuslim Community Edition</div>
+<div class="name">THE QIBLA</div>
+<div class="datebar"><span>KNOWLEDGE • FAITH • COMMUNITY</span><span>NEWSLETTER · VOL. 01</span></div>
+</header>
+
+<div class="rule"></div>
+<div class="section-label">Community • Family • Faith</div>
+
+<section class="lead">
+<article>
+<div class="byline">COMMUNITY FEATURE · THE FAMILY DESK</div>
+<h1 class="headline">A Wedding Built Around Family, Faith &amp; Joy</h1>
+<p class="dek">A Muslim wedding can be both deeply rooted in tradition and beautifully personal — from the nikah to the gathering that follows.</p>
+<div class="hero-art" aria-label="Illustrated wedding scene"></div>
+<div class="caption">Illustrated editorial artwork created for The Qibla. Stories on this page are sample newsletter content.</div>
+<p>Across generations, families often find their own rhythm for celebrating a marriage. The heart of the occasion remains simple: two people making a commitment, families coming together, and a community sharing in their happiness.</p>
+<p><button class="listen" data-listen="A wedding can be both deeply rooted in tradition and beautifully personal. The heart of the occasion is a commitment between two people, surrounded by family, faith, and community.">🔊 Listen to Article</button></p>
+</article>
+
+<aside class="side-story">
+<div class="byline">EDITOR'S NOTE</div>
+<h2>What makes a community story worth reading?</h2>
+<p>The Qibla is designed to give OneMuslim a place for thoughtful stories — celebrations, questions, projects, ideas and the everyday moments that connect people.</p>
+<div class="quote">“A community grows when people make room for one another.”</div>
+<div class="factbox"><h3>This Week</h3><p>Three perspectives. One community. Read, listen, discuss and share.</p></div>
+</aside>
+</section>
+
+<section class="columns">
+<article class="story">
+<div class="tag">The Community Table</div>
+<h2>Should Our Mosques Make More Room for Youth Voices?</h2>
+<div class="story-art debate" aria-hidden="true"></div>
+<p>A lively community debate is not necessarily a disagreement to be won. It can be a chance to listen carefully, ask better questions and discover what younger members need from the spaces they inherit.</p>
+<p>This sample feature explores a simple idea: youth councils, open forums and intergenerational conversations can give more people a meaningful seat at the table while keeping respect at the center.</p>
+<button class="listen" data-listen="A lively community debate is not necessarily a disagreement to be won. It can be a chance to listen carefully, ask better questions, and discover what younger members need from the spaces they inherit.">🔊 Listen</button>
+</article>
+
+<article class="story">
+<div class="tag">Building Community</div>
+<h2>A New Mosque Begins With a Foundation of People</h2>
+<div class="story-art mosque" aria-hidden="true"></div>
+<p>Before the first wall rises, a mosque project usually begins with conversations: What will the community need? How will children learn? Where can families gather? How can the building serve neighbors as well as worshippers?</p>
+<p>This sample story follows the human side of mosque construction — volunteers, planners, donors, architects and families imagining a place that can grow with the community.</p>
+<button class="listen" data-listen="A mosque project begins with conversations about what the community needs. Before the first wall rises, volunteers, planners, donors, architects, and families imagine a place that can grow with the community.">🔊 Listen</button>
+</article>
+
+<article class="story">
+<div class="tag">Family Life</div>
+<h2>The Nikah Table: Small Details That Become Big Memories</h2>
+<div class="story-art wedding" aria-hidden="true"></div>
+<p>From the seating plan to the meal, wedding days are full of small decisions. The best celebrations often leave room for the people who matter most — grandparents, children, friends, neighbors and the couple themselves.</p>
+<p>A simple program, clear communication and a little flexibility can turn a busy day into a gathering people remember with gratitude.</p>
+</article>
+
+<article class="story">
+<div class="tag">Around OneMuslim</div>
+<h2>Letters From the Community</h2>
+<p><strong>What should we cover next?</strong> Send ideas for community stories, family features, mosque projects, educational conversations and profiles of people doing meaningful work.</p>
+<p class="byline">COMING NEXT · COMMUNITY VOICES · LOCAL MOSQUE PROJECTS · FAMILY STORIES</p>
+</article>
+</section>
+
+<footer class="footer">
+THE QIBLA · A ONE MUSLIM NEWSLETTER · COMMUNITY EDITION<br>
+Read thoughtfully. Listen generously. Build together.
+</footer>
+</main></div>
+<script>
+document.querySelectorAll("[data-listen]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    if(!("speechSynthesis" in window)){alert("Text-to-speech is not available on this device.");return}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(button.dataset.listen);
+    u.rate=.94;
+    u.onstart=()=>button.textContent="⏹ Stop";
+    u.onend=()=>button.textContent="🔊 Listen to Article";
+    button.onclick=()=>{speechSynthesis.cancel();button.textContent="🔊 Listen to Article";button.onclick=null};
+    speechSynthesis.speak(u);
+  });
+});
+</script>
+</body>
+</html>
