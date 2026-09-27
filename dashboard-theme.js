@@ -1,7 +1,7 @@
 (function(){
   const $=(s,r=document)=>r.querySelector(s);
   const load=(href,id)=>{if(document.getElementById(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
-  load('dashboard-theme.css','oneMuslimDashboardBase');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');load('global-parallax.css','oneMuslimGlobalParallax');load('people-theme.css','oneMuslimPeopleTheme');
+  load('dashboard-theme.css','oneMuslimDashboardBase');load('won-muslim-hudhud.css','wonMuslimHudHudStyles');load('onemuslim-home.css','oneMuslimHomeStyles');load('landing-enhancements.css','oneMuslimLandingEnhancements');load('global-parallax.css','oneMuslimGlobalParallax');load('people-theme.css','oneMuslimPeopleTheme');
   ['start-pack.js','guest-xp.js'].forEach(src=>{if(!document.querySelector('script[src="'+src+'"]')){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}});
   document.body.classList.add('dashboard-theme','onemuslim-theme');
 
@@ -67,7 +67,7 @@
     pv.innerHTML=`
       <div class="om-parallax om-login-landing" id="oneMuslimLanding" aria-label="One Muslim landing page">
         <nav class="om-public-nav" aria-label="Public navigation">
-          <div class="om-public-nav-brand"><span class="om-public-nav-mark">☾</span><span>ONE MUSLIM</span></div>
+          <a class="om-public-nav-brand om-won-brand" href="index.html"><img src="assets/won-muslim-logo.svg" alt="Won Muslim"><span>WON MUSLIM</span></a><a class="om-public-hudhud-link" href="hudhud-ai.html">🐦 HUDHUD AI</a>
           <div class="om-public-nav-actions">
             <button type="button" class="om-nav-btn om-nav-btn-ghost" id="publicSignIn">Sign In</button>
             <button type="button" class="om-nav-btn om-nav-btn-primary" id="publicCreateAccount">Create Account</button>
@@ -75,9 +75,13 @@
         </nav>
         <div class="om-login-atmosphere" aria-hidden="true"></div>
         <div class="om-login-center">
-          <div class="om-login-brand"><span class="om-login-mark">☾</span><span>ONE MUSLIM</span></div>
-          <p class="om-login-tagline">A private space for your faith, growth, and community.</p>
-          <button type="button" class="om-center-signin" id="publicCenterSignIn">Sign In</button>
+          <div class="om-login-brand om-won-hero-brand"><img src="assets/won-muslim-logo.svg" alt="Won Muslim"><span>WON MUSLIM</span></div>
+          <p class="om-login-tagline">Faith. Knowledge. Community. And now — <strong>HudHud, your Muslim AI companion.</strong></p>
+          <div class="om-public-hero-actions"><button type="button" class="om-center-signin" id="publicCenterSignIn">Sign In</button><a class="om-hudhud-hero-cta" href="hudhud-ai.html">🐦 Try HudHud — No Signup</a></div>
+          <section class="om-hudhud-promo" aria-label="HudHud AI preview">
+            <div class="om-hudhud-promo-copy"><span class="om-hudhud-kicker">NEW · HUDHUD AI</span><h2>Your Muslim AI companion.</h2><p>Ask questions, explore your faith, and start a conversation with HudHud before you even create an account.</p><a href="hudhud-ai.html">Open the HudHud experience →</a></div>
+            <div class="om-hudhud-promo-chat"><div class="om-hudhud-promo-bird"><img src="assets/hudhud-logo.svg" alt="HudHud"></div><div><strong>Assalamu alaikum 👋</strong><span>I'm HudHud. Ask me something.</span></div><a href="hudhud-ai.html">Try the demo</a></div>
+          </section>
         </div>
       </div>`;
 
@@ -87,7 +91,10 @@
         #publicView{position:relative!important;z-index:100!important;min-height:100vh!important}
         #oneMuslimLanding{position:relative!important;min-height:100vh!important;width:100%!important;box-sizing:border-box!important}
         .om-public-nav{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483000!important;height:84px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 34px!important;box-sizing:border-box!important;background:linear-gradient(180deg,rgba(5,20,16,.92),rgba(5,20,16,.32),transparent)!important;pointer-events:auto!important}
-        .om-public-nav-brand{display:flex!important;align-items:center!important;gap:10px!important;color:#f6f1e5!important;font:700 15px/1.1 Arial,sans-serif!important;letter-spacing:.22em!important;text-shadow:0 2px 18px rgba(0,0,0,.6)!important}
+        .om-public-nav-brand{display:flex!important;align-items:center!important;gap:10px!important;color:#f6f1e5!important;font:700 15px/1.1 Arial,sans-serif!important;letter-spacing:.16em!important;text-shadow:0 2px 18px rgba(0,0,0,.6)!important;text-decoration:none!important}
+        .om-public-nav-brand img{width:38px!important;height:38px!important;object-fit:contain!important;border-radius:10px!important;box-shadow:0 0 24px rgba(126,63,255,.24)!important}
+        .om-public-hudhud-link{margin-left:auto!important;margin-right:18px!important;color:#d8c9ef!important;text-decoration:none!important;font:800 12px/1 Arial,sans-serif!important;letter-spacing:.08em!important}
+        .om-public-hudhud-link:hover{color:#fff!important}
         .om-public-nav-mark{display:grid!important;place-items:center!important;width:34px!important;height:34px!important;border:1px solid rgba(216,180,90,.75)!important;border-radius:50%!important;color:#d8b45a!important;font-size:19px!important}
         .om-public-nav-actions{display:flex!important;align-items:center!important;gap:12px!important}
         .om-nav-btn,.om-center-signin{appearance:none!important;-webkit-appearance:none!important;border-radius:999px!important;padding:12px 22px!important;font:700 14px/1 Arial,sans-serif!important;letter-spacing:.04em!important;cursor:pointer!important;transition:transform .18s ease,box-shadow .18s ease,background .18s ease!important;pointer-events:auto!important}
@@ -99,7 +106,7 @@
         .om-login-mark{color:#d8b45a!important;font-size:1.05em!important}
         .om-login-tagline{max-width:560px!important;margin:18px 0 26px!important;color:rgba(246,241,229,.78)!important;font:400 16px/1.6 Arial,sans-serif!important}
         .om-center-signin{pointer-events:auto!important;padding:14px 30px!important;font-size:15px!important}
-        @media(max-width:620px){.om-public-nav{height:72px!important;padding:0 16px!important}.om-public-nav-brand span:last-child{display:none!important}.om-nav-btn{padding:10px 15px!important;font-size:13px!important}.om-public-nav-actions{gap:7px!important}.om-login-center{padding-top:80px!important}}
+        @media(max-width:620px){.om-public-nav{height:72px!important;padding:0 12px!important}.om-public-nav-brand span:last-child{display:none!important}.om-public-hudhud-link{margin-right:8px!important;font-size:10px!important}.om-nav-btn{padding:10px 12px!important;font-size:12px!important}.om-public-nav-actions{gap:6px!important}.om-login-center{padding-top:70px!important}.om-won-hero-brand img{width:92px!important;height:92px!important}.om-hudhud-promo{grid-template-columns:1fr!important;margin:20px 12px 0!important}.om-login-tagline{font-size:14px!important}}
       `;document.head.appendChild(style);
     }
 
