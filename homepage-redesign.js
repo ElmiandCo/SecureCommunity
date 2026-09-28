@@ -1,73 +1,171 @@
-(function(){
+(() => {
+  'use strict';
+
   function boot(){
     const pv=document.getElementById('publicView');
     if(!pv) return;
-    const render=()=>{
-      const landing=document.getElementById('oneMuslimLanding');
-      if(!landing) return;
-      landing.classList.add('om-redesigned-home');
-      landing.innerHTML=`
-        <div class="omr-bg" aria-hidden="true">
-          <div class="omr-moon">☾</div><div class="omr-arch"></div><div class="omr-city"></div>
-          <div class="omr-stars"></div><div class="omr-grid"></div>
+    const landing=document.getElementById('oneMuslimLanding');
+    if(!landing) return;
+
+    landing.classList.add('won-modern-landing');
+    landing.innerHTML = `
+      <div class="won-bg" aria-hidden="true">
+        <div class="won-orb won-orb-a"></div>
+        <div class="won-orb won-orb-b"></div>
+        <div class="won-grid"></div>
+        <div class="won-stars"></div>
+      </div>
+
+      <header class="won-nav">
+        <a class="won-brand" href="#won-top" aria-label="Won Muslim home">
+          <img src="assets/won-muslim-logo.svg" alt="Won Muslim">
+          <span><b>Won Muslim</b><small>Faith · Community · Growth</small></span>
+        </a>
+        <nav aria-label="Landing page navigation">
+          <a href="#won-features">Features</a>
+          <a href="#won-community">Community</a>
+          <a href="#won-learn">Learn</a>
+          <a href="#won-hudhud">HudHud AI</a>
+        </nav>
+        <div class="won-nav-actions">
+          <button type="button" class="won-login" data-won-auth="login">Sign in</button>
+          <button type="button" class="won-signup" data-won-auth="signup">Get Started</button>
         </div>
-        <header class="omr-nav">
-          <div class="omr-brand"><span class="omr-brand-mark">✦</span><span>OneMuslim</span><small>One Ummah. A Better Tomorrow.</small></div>
-          <nav><a href="#omr-features">Features</a><a href="#omr-app">Platform</a><a href="#omr-vision">Vision</a></nav>
-          <div class="omr-nav-actions"><button class="omr-ghost" data-auth="login">Sign In</button><button class="omr-gold" data-auth="signup">Get Started</button></div>
-        </header>
-        <main>
-          <section class="omr-hero">
-            <div class="omr-hero-copy">
-              <div class="omr-kicker">FAITH <i>•</i> COMMUNITY <i>•</i> KNOWLEDGE <i>•</i> IMPACT</div>
-              <h1>Real People.<br><em>Higher Purpose.</em></h1>
-              <p>A modern social platform for Muslims to connect, learn, share, and grow — with faith at the center.</p>
-              <div class="omr-quran"><strong>وَاعْتَصِمُوا بِحَبْلِ اللَّهِ جَمِيعًا</strong><span>“And hold firmly to the rope of Allah all together.” — Qur’an 3:103</span></div>
-              <div class="omr-ctas"><button class="omr-gold omr-large" data-auth="signup">Create an Account <b>→</b></button><button class="omr-ghost omr-large" data-auth="login">Sign In</button></div>
-              <button class="omr-stay" type="button">Continue exploring <span>→</span></button>
+      </header>
+
+      <main id="won-top">
+        <section class="won-hero">
+          <div class="won-hero-copy">
+            <div class="won-eyebrow"><span></span> A MODERN HOME FOR MUSLIMS <span></span></div>
+            <h1>One place to<br><em>connect, learn & grow.</em></h1>
+            <p>Won Muslim brings community, Islamic learning, profiles, progress, and meaningful connection into one beautiful space — built around the Muslim experience.</p>
+            <div class="won-hero-actions">
+              <button type="button" class="won-primary won-big" data-won-auth="signup">Create your account <b>→</b></button>
+              <a class="won-secondary won-big" href="#won-features">Explore Won Muslim <b>↓</b></a>
             </div>
-            <div class="omr-hero-art" aria-hidden="true"><div class="omr-halo"></div><div class="omr-mosque"></div></div>
-          </section>
-          <section id="omr-app" class="omr-showcase">
-            <div class="omr-section-head"><span>INSIDE ONE MUSLIM</span><h2>The platform is the product.</h2><p>Everything you need to build your faith, your circle, and your presence.</p></div>
-            <div class="omr-phones">
-              <article class="omr-phone"><div class="omr-phone-screen"><div class="omr-phone-top">OneMuslim <span>◔</span></div><div class="mock-avatar">✦</div><h3>My Profile</h3><p class="mock-handle">@member</p><div class="mock-bio">Faith in action. Building a stronger Ummah.</div><div class="mock-stats"><b>128<small>Posts</small></b><b>2.4K<small>Followers</small></b><b>420<small>Following</small></b></div><button>Edit Profile</button><div class="mock-tabs">Posts　 Media　 Badges</div></div><h4>My Profile</h4><p>Show your journey. Build your circle.</p></article>
-              <article class="omr-phone"><div class="omr-phone-screen"><div class="omr-phone-top">Dox’d <span>⌕</span></div><div class="mock-pills">All　 People　 Content　 Reports</div><div class="mock-report"><b>◉ Destroyer Of Sunni</b><span>Blasphemy · Hate Speech</span><small>342 reports · Verified</small></div><div class="mock-report"><b>◉ Anti-Islam Page</b><span>Misinformation · Harassment</span><small>198 reports · Under Review</small></div><div class="mock-report"><b>◉ Zionist Propaganda</b><span>Political Agitator</span><small>276 reports · Verified</small></div><div class="mock-report"><b>◉ Ex-Muslim Troll</b><span>Islamophobia · Spam</span><small>421 reports · Verified</small></div></div><h4>Dox’d Page</h4><p>Expose harm. Protect the Ummah.</p></article>
-              <article class="omr-phone"><div class="omr-phone-screen"><div class="omr-phone-top">Lessons <span>★</span></div><div class="mock-pills">Qur’an　 Aqidah　 Seerah</div><div class="mock-lesson"><b>The Meaning of Taqwa</b><span>12 min · Video</span></div><div class="mock-lesson"><b>Surah Al-Fatiha</b><span>8 lessons · Playlist</span></div><div class="mock-lesson"><b>Life of the Prophets</b><span>15 lessons · Series</span></div><div class="mock-lesson"><b>Daily Du’a</b><span>6 min · Audio</span></div><div class="mock-lesson"><b>The 99 Names of Allah</b><span>29 lessons · Series</span></div></div><h4>Lessons</h4><p>Learn. Reflect. Apply.</p></article>
-              <article class="omr-phone"><div class="omr-phone-screen"><div class="omr-phone-top">Membership Tiers <span>♛</span></div><div class="mock-tier free"><b>Free</b><span>Join the community</span><strong>$0</strong></div><div class="mock-tier gold"><b>Gold</b><span>Unlock more features</span><strong>$4.99/mo</strong></div><div class="mock-tier diamond"><b>Diamond</b><span>Priority & rewards</span><strong>$9.99/mo</strong></div><div class="mock-tier platinum"><b>Platinum</b><span>Exclusive perks & creator access</span><strong>$19.99/mo</strong></div></div><h4>Tiers</h4><p>More ways to grow. More impact to make.</p></article>
-              <article class="omr-phone"><div class="omr-phone-screen"><div class="omr-phone-top">Avatar Editor <span>✧</span></div><div class="mock-platinum"><div class="platinum-label">PLATINUM</div><div class="platinum-avatar">◉</div></div><div class="mock-pills">Masks　 Clothing　 Backgrounds　 Effects</div><div class="mock-colors">●　●　●　●　●　●</div><button>Save Avatar</button></div><h4>Platinum Avatars</h4><p>Customize. Stand out. Earn through engagement.</p></article>
-            </div>
-          </section>
-          <section id="omr-features" class="omr-features"><div><span>01</span><b>Voice & Video</b><p>Call your people. Send audio when text isn't enough.</p></div><div><span>02</span><b>Communities</b><p>Find people who share your interests and purpose.</p></div><div><span>03</span><b>Islamic Knowledge</b><p>Learn Qur’an, Seerah, Aqidah, and more.</p></div><div><span>04</span><b>Gamification</b><p>Earn XP, unlock tiers, and make progress visible.</p></div><div><span>05</span><b>Safe by Purpose</b><p>Tools designed to protect the Ummah and keep it meaningful.</p></div></section>
-          <section id="omr-vision" class="omr-vision"><div><span>OUR VISION</span><h2>Same Deen.<br><em>Brighter Futures.</em></h2></div><p>OneMuslim is being built to give Muslims a modern place to connect without losing what makes the community worth protecting.</p><button class="omr-gold" data-auth="signup">Join the Journey →</button></section>
-        </main>
-        <footer class="omr-footer"><div class="omr-brand"><span class="omr-brand-mark">✦</span><span>OneMuslim</span><small>One Ummah. A Better Tomorrow.</small></div><div>About　 Privacy　 Terms　 Contact</div><small>© 2026 OneMuslim. Built by Muslims.</small></footer>`;
-      const styleId='omr-home-css';
-      if(!document.getElementById(styleId)){
-        const s=document.createElement('style');s.id=styleId;s.textContent=`
-          #oneMuslimLanding.om-redesigned-home{min-height:100svh;background:#040b13;color:#f7f5ef;overflow:hidden;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-          .omr-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 72% 18%,rgba(31,83,120,.5),transparent 30%),radial-gradient(circle at 20% 70%,rgba(20,73,60,.22),transparent 35%),linear-gradient(180deg,#06111d 0%,#04101a 48%,#02070c 100%);z-index:0}
-          .omr-bg:before{content:"";position:absolute;inset:0;opacity:.16;background-image:linear-gradient(30deg,transparent 46%,rgba(215,177,83,.32) 47%,transparent 48%),linear-gradient(150deg,transparent 46%,rgba(215,177,83,.22) 47%,transparent 48%);background-size:90px 90px;mask-image:linear-gradient(to bottom,black,transparent 80%)}
-          .omr-stars{position:absolute;inset:0;opacity:.65;background-image:radial-gradient(circle,rgba(255,231,160,.9) 0 1px,transparent 1.6px);background-size:137px 173px}
-          .omr-moon{position:absolute;right:12%;top:13%;font-size:clamp(90px,14vw,190px);color:rgba(247,214,132,.14);transform:rotate(-18deg)}
-          .omr-arch{position:absolute;right:-7%;top:-15%;width:55%;height:92%;border:1px solid rgba(215,177,83,.18);border-radius:50% 0 0 50%;box-shadow:inset 0 0 100px rgba(215,177,83,.04)}
-          .omr-city{position:absolute;left:35%;right:0;bottom:-4%;height:33%;opacity:.3;background:linear-gradient(to top,rgba(4,10,15,.98),transparent),repeating-linear-gradient(90deg,transparent 0 4%,rgba(226,190,100,.45) 4.1% 4.5%,transparent 4.6% 7%);clip-path:polygon(0 100%,0 72%,5% 68%,8% 73%,12% 55%,15% 68%,20% 44%,23% 67%,28% 52%,32% 70%,38% 38%,41% 67%,46% 49%,51% 65%,56% 30%,59% 68%,64% 43%,69% 68%,75% 36%,78% 66%,84% 48%,88% 67%,94% 38%,100% 65%,100% 100%)}
-          .omr-nav{position:relative;z-index:5;height:84px;padding:0 clamp(22px,5vw,70px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(216,179,90,.12);background:linear-gradient(180deg,rgba(2,8,14,.78),transparent)}
-          .omr-brand{display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;color:#fff;font-weight:800;font-size:19px}.omr-brand-mark{grid-row:span 2;width:38px;height:38px;border:1px solid rgba(226,191,105,.72);border-radius:12px;display:grid;place-items:center;color:#e6c36f;box-shadow:0 0 24px rgba(226,191,105,.1)}.omr-brand small{grid-column:2;color:#9eaaa9;font-size:10px;font-weight:500;margin-top:-5px}.omr-nav nav{display:flex;gap:30px}.omr-nav nav a{color:#cbd2d1;text-decoration:none;font-size:13px}.omr-nav-actions{display:flex;gap:10px}
-          .omr-ghost,.omr-gold{border-radius:999px;padding:12px 20px;font-weight:750;cursor:pointer;border:1px solid rgba(226,191,105,.55);transition:.2s}.omr-ghost{background:rgba(5,15,24,.55);color:#fff}.omr-gold{background:linear-gradient(135deg,#c99b38,#f0d487);color:#111a18;border-color:#f3db99;box-shadow:0 10px 35px rgba(220,177,72,.2)}.omr-ghost:hover,.omr-gold:hover{transform:translateY(-2px)}
-          .omr-hero{position:relative;z-index:2;min-height:620px;padding:90px clamp(22px,6vw,84px) 65px;display:grid;grid-template-columns:minmax(360px,.95fr) minmax(360px,1.05fr);align-items:center;box-sizing:border-box}.omr-hero-copy{max-width:650px}.omr-kicker{font-size:11px;letter-spacing:.27em;color:#dfc77f;margin-bottom:24px}.omr-kicker i{font-style:normal;color:#70807d;margin:0 7px}.omr-hero h1{font-size:clamp(52px,6.3vw,92px);line-height:.94;letter-spacing:-.055em;margin:0;font-weight:850}.omr-hero h1 em{font-style:normal;color:#55baf7}.omr-hero-copy>p{font-size:18px;line-height:1.6;color:#c5cecd;max-width:570px;margin:25px 0}.omr-quran{max-width:560px;padding:16px 20px;border:1px solid rgba(216,179,90,.28);background:rgba(5,16,25,.48);border-radius:16px;backdrop-filter:blur(10px)}.omr-quran strong{display:block;text-align:center;font-family:Georgia,serif;font-size:19px;color:#efd58e}.omr-quran span{display:block;text-align:center;margin-top:7px;font-size:12px;color:#aeb9b7}.omr-ctas{display:flex;gap:12px;margin-top:25px}.omr-large{padding:15px 25px;font-size:15px}.omr-large b{margin-left:8px}.omr-stay{margin-top:17px;border:0;background:none;color:#65c4fa;font-weight:650;cursor:pointer;padding:0}.omr-stay span{margin-left:6px}.omr-hero-art{height:500px;position:relative}.omr-halo{position:absolute;width:90%;height:90%;right:-4%;top:3%;border-radius:50%;background:radial-gradient(circle,rgba(66,156,221,.2),rgba(222,181,79,.07) 36%,transparent 68%);filter:blur(5px)}.omr-mosque{position:absolute;right:-8%;bottom:4%;width:105%;height:65%;opacity:.75;background:linear-gradient(to top,rgba(0,0,0,.95),transparent),radial-gradient(ellipse at 55% 68%,rgba(227,192,105,.8) 0 2%,transparent 2.4%),repeating-linear-gradient(90deg,transparent 0 7%,rgba(218,182,91,.48) 7.2% 7.8%,transparent 8% 13%);clip-path:polygon(0 100%,0 62%,8% 57%,10% 63%,18% 46%,22% 63%,28% 35%,32% 63%,38% 51%,42% 63%,48% 20%,52% 63%,58% 43%,62% 63%,70% 31%,74% 63%,80% 50%,84% 63%,91% 40%,95% 63%,100% 54%,100% 100%)}
-          .omr-showcase{position:relative;z-index:3;padding:55px clamp(18px,4vw,50px) 75px;background:linear-gradient(180deg,transparent,rgba(2,7,11,.8) 8%,rgba(2,7,11,.96))}.omr-section-head{text-align:center;margin-bottom:40px}.omr-section-head>span,.omr-vision>div>span{font-size:10px;letter-spacing:.28em;color:#e1c878}.omr-section-head h2{font-size:clamp(32px,4vw,54px);margin:10px 0 8px;letter-spacing:-.04em}.omr-section-head p{color:#99a6a5;margin:0}.omr-phones{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:16px;max-width:1500px;margin:auto;align-items:end}.omr-phone{text-align:center}.omr-phone-screen{height:405px;border:1px solid rgba(104,194,245,.3);border-radius:28px;padding:14px 10px;background:linear-gradient(180deg,#071a2b,#06111c);box-shadow:0 22px 55px rgba(0,0,0,.45),inset 0 0 25px rgba(75,166,225,.05);overflow:hidden;text-align:left;position:relative}.omr-phone-screen:before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:64px;height:7px;border-radius:8px;background:#02060a}.omr-phone-top{font-size:10px;font-weight:800;color:#76c9f6;padding:10px 4px 16px;display:flex;justify-content:space-between}.omr-phone-screen h3{font-size:20px;margin:5px 0}.mock-avatar{width:76px;height:76px;border-radius:50%;margin:12px auto 8px;display:grid;place-items:center;border:2px solid #d6ae55;background:radial-gradient(circle,#183f56,#050b10);color:#e9ca76;font-size:30px}.mock-handle{text-align:center;color:#65baf0;font-size:10px;margin:0}.mock-bio{text-align:center;color:#aab7b6;font-size:9px;margin:12px 8px}.mock-stats{display:flex;justify-content:space-around;border-top:1px solid #173247;border-bottom:1px solid #173247;padding:10px 0;margin:12px 0}.mock-stats b{font-size:11px;text-align:center}.mock-stats small{display:block;color:#6e7d7d;font-size:7px;font-weight:500;margin-top:3px}.omr-phone-screen button{width:100%;border:1px solid #328ec3;background:#0a2c43;color:#d9f2ff;border-radius:10px;padding:8px;font-size:9px}.mock-tabs{font-size:8px;color:#9bb0b0;text-align:center;margin-top:15px}.mock-pills{font-size:7px;color:#6fc2f3;border-bottom:1px solid #173247;padding:6px 0 10px;white-space:nowrap}.mock-report,.mock-lesson{padding:10px 4px;border-bottom:1px solid #173247}.mock-report b{display:block;color:#e8eeee;font-size:9px}.mock-report span{display:block;color:#d36b65;font-size:7px;margin-top:4px}.mock-report small,.mock-lesson span{display:block;color:#687c7e;font-size:7px;margin-top:3px}.mock-lesson b{font-size:9px;color:#e5eded}.mock-tier{position:relative;border:1px solid #1b3546;border-radius:10px;padding:12px 8px;margin:8px 0;background:rgba(255,255,255,.02)}.mock-tier b{display:block;font-size:11px}.mock-tier span{display:block;font-size:7px;color:#809090;margin-top:4px}.mock-tier strong{position:absolute;right:7px;top:13px;font-size:7px;color:#d9e1df}.mock-tier.gold{border-color:#9a7430}.mock-tier.diamond{border-color:#5b91bd}.mock-tier.platinum{border-color:#a87be4;box-shadow:0 0 18px rgba(168,123,228,.15)}.mock-platinum{height:180px;margin:-4px -10px 10px;background:radial-gradient(circle at 50% 55%,rgba(213,169,255,.28),transparent 34%),linear-gradient(160deg,#10131e,#251c38);position:relative;display:grid;place-items:center}.platinum-avatar{width:105px;height:105px;border-radius:50%;display:grid;place-items:center;border:2px solid #d9b3ff;background:radial-gradient(circle,#161a26,#05070c);font-size:45px;color:#d9b3ff;box-shadow:0 0 30px rgba(186,126,255,.3)}.platinum-label{position:absolute;right:8px;top:8px;color:#f1d56f;font-size:7px;border:1px solid #d7ad52;padding:4px 6px;border-radius:8px}.mock-colors{color:#d8b35a;font-size:13px;text-align:center;letter-spacing:4px;padding:11px}.omr-phone h4{margin:15px 0 5px;font-size:15px}.omr-phone>p{margin:0;color:#849391;font-size:11px;line-height:1.45}
-          .omr-features{position:relative;z-index:3;display:grid;grid-template-columns:repeat(5,1fr);border:1px solid rgba(86,165,208,.2);border-radius:18px;margin:0 clamp(18px,4vw,50px) 80px;background:rgba(5,17,26,.65);backdrop-filter:blur(14px)}.omr-features div{padding:25px 20px;border-right:1px solid rgba(86,165,208,.15)}.omr-features div:last-child{border:0}.omr-features span{display:block;color:#62c1f7;font-size:10px;margin-bottom:12px}.omr-features b{font-size:13px}.omr-features p{font-size:10px;line-height:1.5;color:#839291;margin:7px 0 0}.omr-vision{position:relative;z-index:3;max-width:1100px;margin:0 auto 80px;padding:65px 35px;border-top:1px solid rgba(216,179,90,.16);border-bottom:1px solid rgba(216,179,90,.16);display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.omr-vision h2{font-size:clamp(38px,5vw,68px);line-height:.95;margin:12px 0}.omr-vision h2 em{font-style:normal;color:#d8b35a}.omr-vision p{color:#9aa6a5;line-height:1.7}.omr-vision button{justify-self:start}.omr-footer{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:35px clamp(20px,5vw,70px);border-top:1px solid rgba(216,179,90,.12);color:#81908f;font-size:11px}.omr-footer .omr-brand{font-size:16px}.omr-footer .omr-brand-mark{width:30px;height:30px}.omr-footer .omr-brand small{font-size:8px}
-          @media(max-width:1050px){.omr-phones{grid-template-columns:repeat(3,1fr)}.omr-features{grid-template-columns:repeat(2,1fr)}.omr-features div:nth-child(2){border-right:0}.omr-hero{grid-template-columns:1fr}.omr-hero-art{position:absolute;right:0;top:150px;width:55%;opacity:.45;z-index:-1}.omr-hero-copy{max-width:700px}.omr-nav nav{display:none}}
-          @media(max-width:700px){.omr-nav{height:70px;padding:0 15px}.omr-brand{font-size:15px}.omr-brand small{display:none}.omr-nav-actions .omr-ghost{display:none}.omr-hero{min-height:620px;padding:70px 20px 45px}.omr-hero h1{font-size:52px}.omr-hero-copy>p{font-size:15px}.omr-quran strong{font-size:16px}.omr-phones{grid-template-columns:repeat(2,1fr);gap:20px 10px}.omr-phone-screen{height:350px}.omr-features{grid-template-columns:1fr;margin-left:15px;margin-right:15px}.omr-features div{border-right:0;border-bottom:1px solid rgba(86,165,208,.15)}.omr-vision{grid-template-columns:1fr;margin:0 20px 60px;padding:45px 0}.omr-footer{flex-direction:column;gap:20px;text-align:center}.omr-stay{font-size:12px}}
-          @media(max-width:440px){.omr-phones{grid-template-columns:1fr}.omr-phone-screen{height:390px}.omr-phone{max-width:230px;margin:auto}.omr-hero h1{font-size:45px}}
-        `;document.head.appendChild(s);
-      }
-      landing.querySelectorAll('[data-auth]').forEach(btn=>btn.addEventListener('click',()=>window.__omOpenAuth?.(btn.dataset.auth)));
-      landing.querySelector('.omr-stay')?.addEventListener('click',()=>document.getElementById('omr-app')?.scrollIntoView({behavior:'smooth'}));
-    };
-    if(document.getElementById('oneMuslimLanding')) render();
-    else {const mo=new MutationObserver(()=>{if(document.getElementById('oneMuslimLanding')){mo.disconnect();render()}});mo.observe(pv,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),5000)}
+            <div class="won-trust"><span>FREE TO GET STARTED</span><i></i><span>BUILT FOR COMMUNITY</span><i></i><span>YOUR JOURNEY, YOUR SPACE</span></div>
+          </div>
+          <div class="won-hero-visual" aria-hidden="true">
+            <div class="won-logo-ring"><div class="won-logo-glow"></div><img src="assets/won-muslim-logo.svg" alt=""></div>
+            <div class="won-floating-card won-card-community"><span>◉</span><b>Community</b><small>Find your people.</small></div>
+            <div class="won-floating-card won-card-learn"><span>★</span><b>Learn</b><small>Build your knowledge.</small></div>
+            <div class="won-floating-card won-card-xp"><span>✦</span><b>1,240 XP</b><small>Your progress matters.</small></div>
+          </div>
+        </section>
+
+        <section class="won-intro">
+          <div class="won-section-label">WHY WON MUSLIM</div>
+          <h2>A digital home that feels like <em>yours.</em></h2>
+          <p>No noise for the sake of noise. Just the people, knowledge, tools and experiences that help you stay connected to your Deen and your community.</p>
+        </section>
+
+        <section id="won-features" class="won-feature-section">
+          <div class="won-feature-grid">
+            <article class="won-feature-card won-feature-large">
+              <div class="won-feature-number">01</div>
+              <div class="won-feature-icon">◉</div>
+              <h3>Community Feed</h3>
+              <p>Share thoughts, photos and moments with a community designed for meaningful interaction.</p>
+              <div class="won-mini-feed"><div><span>✦</span><b>People you follow</b><small>New conversations & posts</small></div><div><span>♡</span><b>React & respond</b><small>Keep the conversation moving</small></div></div>
+            </article>
+            <article class="won-feature-card">
+              <div class="won-feature-number">02</div><div class="won-feature-icon">◇</div>
+              <h3>Communities</h3><p>Find focused spaces around shared interests, learning and connection.</p><div class="won-feature-line">Discover your circle <b>→</b></div>
+            </article>
+            <article class="won-feature-card">
+              <div class="won-feature-number">03</div><div class="won-feature-icon">◎</div>
+              <h3>Your Profile</h3><p>Build a profile that reflects who you are, your interests and your journey.</p><div class="won-feature-line">Make it yours <b>→</b></div>
+            </article>
+            <article class="won-feature-card">
+              <div class="won-feature-number">04</div><div class="won-feature-icon">★</div>
+              <h3>XP & Progress</h3><p>Learn, participate and build momentum with visible progress and achievements.</p><div class="won-progress-demo"><span><i style="width:68%"></i></span><b>1,240 XP</b></div>
+            </article>
+            <article id="won-learn" class="won-feature-card won-feature-wide">
+              <div class="won-feature-number">05</div>
+              <div class="won-learn-copy"><div class="won-feature-icon">▣</div><h3>Lessons & Islamic Knowledge</h3><p>Explore lessons and learning experiences across Qur'an, Seerah, Aqidah and more. Learn at your pace and keep your progress with you.</p><button type="button" class="won-text-cta" data-won-auth="signup">Start learning <b>→</b></button></div>
+              <div class="won-learning-stack"><div><span>01</span><b>The Meaning of Taqwa</b><small>Continue lesson</small></div><div><span>02</span><b>Surah Al-Fatiha</b><small>8 lessons</small></div><div><span>03</span><b>Names of Allah</b><small>Build your knowledge</small></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="won-community" class="won-split-section">
+          <div class="won-split-art">
+            <div class="won-art-window"><div class="won-art-top"><span>WON MUSLIM</span><i>•••</i></div><div class="won-art-post"><div class="won-art-avatar">M</div><div><b>Your community</b><small>Share something meaningful.</small></div></div><div class="won-art-bars"><i></i><i></i><i></i></div><div class="won-art-pill">Community · Connection · Growth</div></div>
+          </div>
+          <div class="won-split-copy"><div class="won-section-label">COMMUNITY, WITHOUT THE CHAOS</div><h2>Bring your people<br><em>closer together.</em></h2><p>Follow people, discover communities, share posts, react, comment and build relationships — all from one consistent experience.</p><ul><li><span>✓</span> People & profiles</li><li><span>✓</span> Community spaces</li><li><span>✓</span> Posts, reactions & comments</li><li><span>✓</span> Messaging and social features</li></ul><button type="button" class="won-primary" data-won-auth="signup">Join the community <b>→</b></button></div>
+        </section>
+
+        <section id="won-hudhud" class="won-ai-section">
+          <div class="won-ai-glow"></div>
+          <div class="won-ai-badge">INTELLIGENT COMPANION</div>
+          <div class="won-ai-content">
+            <div><img class="won-hudhud-logo" src="assets/won-muslim-logo.svg" alt="Won Muslim"><div class="won-ai-feather">✦</div></div>
+            <div class="won-ai-copy"><div class="won-section-label">MEET HUDHUD AI</div><h2>Your journey can have<br><em>an intelligent companion.</em></h2><p>HudHud AI is designed to sit alongside your Won Muslim experience — helping you explore, organize, learn and make more of the platform.</p><div class="won-ai-chips"><span>Learn</span><span>Explore</span><span>Organize</span><span>Grow</span></div></div>
+          </div>
+        </section>
+
+        <section class="won-journey">
+          <div class="won-section-label">YOUR NEXT STEP</div>
+          <h2>Start with one account.<br><em>Build from there.</em></h2>
+          <p>Join Won Muslim and discover a home for your community, your learning and your journey.</p>
+          <button type="button" class="won-primary won-big" data-won-auth="signup">Get Started — It's Free <b>→</b></button>
+          <span class="won-login-note">Already a member? <button type="button" data-won-auth="login">Sign in</button></span>
+        </section>
+      </main>
+
+      <footer class="won-footer">
+        <div class="won-brand won-footer-brand"><img src="assets/won-muslim-logo.svg" alt="Won Muslim"><span><b>Won Muslim</b><small>Faith · Community · Growth</small></span></div>
+        <div><a href="#won-features">Features</a><a href="#won-community">Community</a><a href="#won-learn">Learn</a><a href="#won-hudhud">HudHud AI</a></div>
+        <small>© 2026 Won Muslim</small>
+      </footer>
+    `;
+
+    const styleId='won-modern-landing-css';
+    if(!document.getElementById(styleId)){
+      const s=document.createElement('style');
+      s.id=styleId;
+      s.textContent=`
+        #oneMuslimLanding.won-modern-landing{position:relative;min-height:100svh;overflow:hidden;background:#05060a;color:#f7f7fb;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+        #oneMuslimLanding.won-modern-landing *{box-sizing:border-box}
+        #oneMuslimLanding.won-modern-landing .won-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 76% 10%,rgba(94,38,178,.24),transparent 30%),radial-gradient(circle at 16% 45%,rgba(31,101,255,.13),transparent 34%),linear-gradient(180deg,#07070c 0%,#06060b 48%,#030408 100%)}
+        .won-orb{position:absolute;border-radius:50%;filter:blur(50px);opacity:.5}.won-orb-a{width:420px;height:420px;right:5%;top:8%;background:#6125cf}.won-orb-b{width:380px;height:380px;left:-10%;top:46%;background:#164fbd}
+        .won-grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(rgba(157,112,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(74,131,255,.22) 1px,transparent 1px);background-size:80px 80px;mask-image:linear-gradient(to bottom,black,transparent 70%)}
+        .won-stars{position:absolute;inset:0;opacity:.38;background-image:radial-gradient(circle,#fff 0 1px,transparent 1.5px);background-size:149px 181px}
+        .won-nav{position:sticky;top:0;z-index:30;height:78px;padding:0 clamp(18px,5vw,72px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,117,220,.15);background:rgba(5,6,10,.72);backdrop-filter:blur(18px)}
+        .won-brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}.won-brand img{width:43px;height:43px;border-radius:11px;object-fit:cover;box-shadow:0 0 22px rgba(119,65,255,.24)}.won-brand span{display:flex;flex-direction:column}.won-brand b{font-size:14px;letter-spacing:.06em}.won-brand small{font-size:8px;color:#77758a;margin-top:4px;letter-spacing:.12em;text-transform:uppercase}
+        .won-nav nav{display:flex;gap:30px}.won-nav nav a,.won-footer a{color:#9c9aaa;text-decoration:none;font-size:12px}.won-nav nav a:hover,.won-footer a:hover{color:#fff}
+        .won-nav-actions{display:flex;gap:9px}.won-nav button,.won-primary,.won-secondary{font:inherit}.won-login,.won-signup,.won-primary,.won-secondary{border-radius:999px;padding:11px 18px;cursor:pointer}.won-login{border:1px solid #302b3e;background:rgba(15,13,22,.65);color:#c8c1d3}.won-signup,.won-primary{border:1px solid #8255db;background:linear-gradient(135deg,#7444c7,#5b8cff);color:#fff;box-shadow:0 10px 30px rgba(89,70,190,.24)}.won-login:hover,.won-signup:hover,.won-primary:hover{transform:translateY(-2px)}
+        .won-hero{position:relative;z-index:2;min-height:calc(100svh - 78px);padding:80px clamp(20px,6vw,90px) 70px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:40px;max-width:1500px;margin:auto}.won-hero-copy{max-width:760px}.won-eyebrow,.won-section-label{font-size:9px;font-weight:800;letter-spacing:.25em;color:#9f8bd2}.won-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:22px}.won-eyebrow span{width:28px;height:1px;background:linear-gradient(90deg,#7a4bdf,#51a4ff)}.won-hero h1{font-size:clamp(54px,7vw,104px);line-height:.93;letter-spacing:-.065em;margin:0;font-weight:850}.won-hero h1 em,.won-intro em,.won-split-copy em,.won-ai-copy em,.won-journey em{font-style:normal;background:linear-gradient(90deg,#9b64ff,#5d9bff,#e85bff);-webkit-background-clip:text;background-clip:text;color:transparent}.won-hero-copy>p{max-width:650px;color:#aaa8b7;font-size:17px;line-height:1.7;margin:25px 0}.won-hero-actions{display:flex;gap:11px;flex-wrap:wrap}.won-big{padding:15px 24px;font-size:14px}.won-primary b,.won-secondary b{margin-left:8px}.won-secondary{border:1px solid #2e2a3c;background:rgba(15,14,22,.55);color:#c9c5d0;text-decoration:none;display:inline-flex;align-items:center}.won-trust{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px;color:#696777;font-size:7px;letter-spacing:.16em}.won-trust i{width:3px;height:3px;border-radius:50%;background:#6e56a5}
+        .won-hero-visual{height:550px;position:relative;display:grid;place-items:center}.won-logo-ring{width:min(430px,70vw);aspect-ratio:1;border-radius:50%;position:relative;display:grid;place-items:center;background:radial-gradient(circle,rgba(107,64,202,.2),rgba(22,70,145,.06) 50%,transparent 69%);border:1px solid rgba(124,85,211,.3);box-shadow:0 0 100px rgba(78,54,166,.22)}.won-logo-ring:before,.won-logo-ring:after{content:"";position:absolute;border:1px solid rgba(92,137,255,.22);border-radius:50%}.won-logo-ring:before{inset:9%;transform:rotate(28deg) scaleX(1.18)}.won-logo-ring:after{inset:17%;transform:rotate(-25deg) scaleY(.72)}.won-logo-ring img{width:54%;border-radius:28px;box-shadow:0 0 50px rgba(130,68,255,.28)}.won-logo-glow{position:absolute;inset:28%;border-radius:50%;background:radial-gradient(circle,rgba(111,57,232,.28),transparent 70%);filter:blur(25px)}
+        .won-floating-card{position:absolute;padding:12px 15px;border:1px solid rgba(142,105,212,.28);background:rgba(10,9,16,.72);backdrop-filter:blur(15px);border-radius:14px;box-shadow:0 18px 45px rgba(0,0,0,.28);min-width:150px}.won-floating-card span{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:8px;background:#171128;color:#a875ff;margin-right:8px}.won-floating-card b{font-size:11px}.won-floating-card small{display:block;color:#716d7e;font-size:8px;margin:5px 0 0 36px}.won-card-community{left:0;top:20%}.won-card-learn{right:0;top:35%}.won-card-xp{left:12%;bottom:11%}
+        .won-intro{position:relative;z-index:2;text-align:center;max-width:820px;margin:0 auto;padding:100px 20px 75px}.won-intro h2,.won-split-copy h2,.won-ai-copy h2,.won-journey h2{font-size:clamp(38px,5vw,68px);line-height:.98;letter-spacing:-.05em;margin:12px 0}.won-intro p{max-width:650px;margin:auto;color:#858392;line-height:1.75;font-size:15px}
+        .won-feature-section{position:relative;z-index:2;padding:20px clamp(16px,5vw,70px) 100px}.won-feature-grid{max-width:1320px;margin:auto;display:grid;grid-template-columns:1.25fr .75fr .75fr;gap:14px}.won-feature-card{position:relative;min-height:270px;padding:25px;border:1px solid #211d2c;border-radius:22px;background:linear-gradient(145deg,rgba(16,13,25,.9),rgba(7,8,13,.88));overflow:hidden}.won-feature-card:after{content:"";position:absolute;width:180px;height:180px;right:-90px;top:-90px;border-radius:50%;background:radial-gradient(circle,rgba(123,74,214,.18),transparent 70%)}.won-feature-large{grid-row:span 2;min-height:554px}.won-feature-wide{grid-column:span 2;display:grid;grid-template-columns:1fr 1fr;gap:30px;min-height:290px}.won-feature-number{color:#605a6d;font-size:9px;letter-spacing:.15em}.won-feature-icon{width:40px;height:40px;margin:24px 0 17px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(117,64,210,.25),rgba(66,130,255,.12));border:1px solid #3a2b58;color:#a879ff;font-size:17px}.won-feature-card h3{font-size:23px;margin:0 0 9px}.won-feature-card p{color:#858292;line-height:1.65;font-size:12px;max-width:450px}.won-mini-feed{position:absolute;left:25px;right:25px;bottom:25px;border:1px solid #262132;border-radius:15px;background:#0b0a11;padding:9px}.won-mini-feed div{display:grid;grid-template-columns:30px 1fr;column-gap:8px;padding:10px 5px;border-bottom:1px solid #211d29}.won-mini-feed div:last-child{border:0}.won-mini-feed span{grid-row:span 2;width:28px;height:28px;border-radius:9px;background:#171127;display:grid;place-items:center;color:#9f73ff}.won-mini-feed b{font-size:9px}.won-mini-feed small{font-size:8px;color:#696576}.won-feature-line{position:absolute;bottom:25px;left:25px;right:25px;color:#9b94a5;font-size:9px;border-top:1px solid #25202e;padding-top:12px}.won-feature-line b{float:right;color:#9d6fff}.won-progress-demo{position:absolute;left:25px;right:25px;bottom:25px}.won-progress-demo span{display:block;height:7px;border-radius:10px;background:#181522;overflow:hidden}.won-progress-demo i{display:block;height:100%;background:linear-gradient(90deg,#7548cf,#5b9bff);border-radius:10px}.won-progress-demo b{display:block;font-size:9px;color:#918b9c;margin-top:8px}.won-learn-copy .won-feature-icon{margin-top:10px}.won-text-cta{border:0;background:none;color:#a876ff;font-weight:700;padding:0;cursor:pointer}.won-learning-stack{display:grid;gap:8px;align-content:center}.won-learning-stack div{padding:12px;border:1px solid #282231;border-radius:12px;background:#0b0a11}.won-learning-stack span{color:#7054a2;font-size:8px;margin-right:10px}.won-learning-stack b{font-size:9px}.won-learning-stack small{display:block;color:#6d6877;font-size:7px;margin:5px 0 0 26px}
+        .won-split-section{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:80px clamp(20px,5vw,60px);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.won-split-art{display:grid;place-items:center}.won-art-window{width:min(500px,100%);aspect-ratio:1/1.05;border:1px solid #2b2637;border-radius:28px;background:linear-gradient(145deg,#100d19,#07080d);padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.35);transform:rotate(-2deg)}.won-art-top{display:flex;justify-content:space-between;color:#797384;font-size:8px;letter-spacing:.15em;padding-bottom:17px;border-bottom:1px solid #24202c}.won-art-post{display:flex;gap:12px;align-items:center;margin-top:35px;padding:18px;border:1px solid #282231;border-radius:16px;background:#0c0b12}.won-art-avatar{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#5b31a8,#2378d9);font-weight:800}.won-art-post b,.won-art-post small{display:block}.won-art-post b{font-size:12px}.won-art-post small{font-size:8px;color:#777281;margin-top:4px}.won-art-bars{display:grid;gap:12px;margin-top:25px}.won-art-bars i{height:9px;border-radius:8px;background:#171521;display:block}.won-art-bars i:nth-child(1){width:88%}.won-art-bars i:nth-child(2){width:72%}.won-art-bars i:nth-child(3){width:54%}.won-art-pill{display:inline-block;margin-top:30px;padding:8px 12px;border:1px solid #3a2a55;border-radius:999px;color:#9c76dc;font-size:8px}.won-split-copy p{color:#888594;line-height:1.75;max-width:540px}.won-split-copy ul{list-style:none;padding:0;display:grid;gap:10px;margin:25px 0}.won-split-copy li{font-size:11px;color:#aaa5b1}.won-split-copy li span{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:8px;border-radius:50%;background:#161126;color:#9d70ff}
+        .won-ai-section{position:relative;z-index:2;margin:40px clamp(16px,5vw,70px);padding:75px clamp(25px,5vw,80px);border:1px solid #30244a;border-radius:30px;background:radial-gradient(circle at 85% 50%,rgba(104,51,203,.22),transparent 35%),linear-gradient(145deg,#0e0a18,#080910);overflow:hidden}.won-ai-glow{position:absolute;width:420px;height:420px;right:-80px;top:-110px;border-radius:50%;background:radial-gradient(circle,rgba(95,64,222,.3),transparent 70%);filter:blur(20px)}.won-ai-badge{position:absolute;right:25px;top:25px;color:#8c75b3;font-size:7px;letter-spacing:.2em}.won-ai-content{position:relative;z-index:2;display:grid;grid-template-columns:220px 1fr;gap:55px;align-items:center;max-width:1050px;margin:auto}.won-hudhud-logo{width:170px;border-radius:28px;box-shadow:0 0 45px rgba(104,61,210,.24)}.won-ai-feather{color:#a574ff;font-size:28px;margin-top:10px;text-align:center}.won-ai-copy p{color:#8e8998;line-height:1.7;max-width:600px}.won-ai-chips{display:flex;gap:8px;flex-wrap:wrap}.won-ai-chips span{border:1px solid #33274a;border-radius:999px;padding:7px 11px;color:#a98bd3;font-size:8px;background:#0e0b17}
+        .won-journey{position:relative;z-index:2;text-align:center;padding:130px 20px 120px;max-width:900px;margin:auto}.won-journey p{color:#878291;max-width:580px;margin:0 auto 28px;line-height:1.7}.won-login-note{display:block;color:#666273;font-size:10px;margin-top:16px}.won-login-note button{border:0;background:none;color:#9e70ff;cursor:pointer}.won-footer{position:relative;z-index:2;border-top:1px solid #191721;padding:35px clamp(18px,5vw,70px);display:flex;justify-content:space-between;align-items:center;gap:20px;color:#5f5b68}.won-footer>div:not(.won-brand){display:flex;gap:22px}.won-footer small{font-size:8px}.won-footer-brand img{width:34px;height:34px}
+        @media(max-width:1000px){.won-nav nav{display:none}.won-hero{grid-template-columns:1fr}.won-hero-visual{position:absolute;right:0;top:120px;width:52%;opacity:.42;z-index:-1}.won-feature-grid{grid-template-columns:1fr 1fr}.won-feature-large{grid-row:span 1;min-height:420px}.won-feature-wide{grid-column:span 2}}
+        @media(max-width:700px){.won-nav{height:68px;padding:0 13px}.won-brand img{width:38px;height:38px}.won-brand small{display:none}.won-nav-actions{gap:5px}.won-login{display:none}.won-signup{padding:9px 13px;font-size:11px}.won-hero{min-height:calc(100svh - 68px);padding:70px 18px 55px}.won-hero h1{font-size:52px}.won-hero-copy>p{font-size:14px}.won-hero-visual{width:95%;right:-24%;top:120px;opacity:.22}.won-trust{font-size:6px}.won-feature-section{padding-left:13px;padding-right:13px}.won-feature-grid{grid-template-columns:1fr}.won-feature-large,.won-feature-wide{grid-column:auto;grid-row:auto;min-height:330px}.won-feature-wide{display:block}.won-learning-stack{margin-top:25px}.won-split-section{grid-template-columns:1fr;gap:45px;padding-left:20px;padding-right:20px}.won-art-window{transform:none}.won-ai-content{grid-template-columns:1fr;gap:25px;text-align:center}.won-ai-section{padding:55px 22px}.won-hudhud-logo{width:130px}.won-ai-chips{justify-content:center}.won-footer{flex-direction:column;align-items:flex-start}.won-footer>div:not(.won-brand){flex-wrap:wrap;gap:14px}.won-intro{padding-top:80px}}
+        @media(prefers-reduced-motion:reduce){.won-login,.won-signup,.won-primary{transition:none}}
+      `;
+      document.head.appendChild(s);
+    }
+
+    function auth(mode){
+      const id=mode==='signup'?'openSignup':'openLogin';
+      const button=document.getElementById(id);
+      if(button){button.click();return;}
+      const authView=document.getElementById('authView');
+      const authTitle=document.getElementById('authTitle');
+      if(authView){authView.classList.remove('hidden');}
+      if(authTitle)authTitle.textContent=mode==='signup'?'Create your Won Muslim account':'Welcome back';
+    }
+
+    landing.querySelectorAll('[data-won-auth]').forEach(b=>b.addEventListener('click',()=>auth(b.dataset.wonAuth)));
+    landing.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+      const target=document.querySelector(a.getAttribute('href'));
+      if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+    }));
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 })();
