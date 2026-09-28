@@ -1,0 +1,53 @@
+/* OneMuslim LIVE Studio — visual foundation for native streaming */
+#omPage-live{color:#17213b}
+#omPage-live .om-live-shell{max-width:1240px;margin:0 auto;padding:24px 18px 50px}
+#omPage-live .om-live-hero{position:relative;overflow:hidden;border-radius:30px;padding:30px;background:linear-gradient(135deg,#101a48 0%,#38207f 52%,#2169c9 100%);color:#fff;box-shadow:0 24px 70px rgba(26,35,95,.22)}
+#omPage-live .om-live-hero:before,#omPage-live .om-live-hero:after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+#omPage-live .om-live-hero:before{width:340px;height:340px;right:-100px;top:-170px;background:rgba(113,206,255,.22);filter:blur(8px)}
+#omPage-live .om-live-hero:after{width:300px;height:300px;left:35%;bottom:-220px;background:rgba(190,105,255,.25);filter:blur(10px)}
+#omPage-live .om-live-kicker{font-size:11px;letter-spacing:.18em;font-weight:900;text-transform:uppercase;color:#cfdcff}
+#omPage-live .om-live-hero h1{margin:9px 0 8px;font-size:clamp(32px,5vw,58px);letter-spacing:-.045em;line-height:.98}
+#omPage-live .om-live-hero p{margin:0;max-width:650px;color:rgba(255,255,255,.78);line-height:1.6}
+#omPage-live .om-live-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;position:relative;z-index:2}
+#omPage-live .om-live-btn{border:0;border-radius:999px;padding:12px 19px;font-weight:900;cursor:pointer}
+#omPage-live .om-live-btn.primary{background:#fff;color:#171b43}
+#omPage-live .om-live-btn.ghost{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff}
+#omPage-live .om-live-status{position:absolute;right:28px;top:28px;display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(0,0,0,.15);font-size:12px;font-weight:800}
+#omPage-live .om-live-dot{width:8px;height:8px;border-radius:50%;background:#7c8499;box-shadow:0 0 0 5px rgba(124,132,153,.12)}
+#omPage-live .om-live-dot.ready{background:#65e7b0;box-shadow:0 0 0 5px rgba(101,231,176,.12)}
+#omPage-live .om-live-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(290px,.75fr);gap:18px;margin-top:18px}
+#omPage-live .om-live-card{background:rgba(255,255,255,.88);border:1px solid rgba(225,231,242,.95);border-radius:24px;box-shadow:0 12px 36px rgba(20,35,75,.07);overflow:hidden}
+#omPage-live .om-live-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid #edf0f6}
+#omPage-live .om-live-card-head h3{margin:0;font-size:16px}
+#omPage-live .om-live-card-head span{font-size:12px;color:#7a87a0}
+#omPage-live .om-preview{position:relative;aspect-ratio:16/9;min-height:360px;background:radial-gradient(circle at 50% 35%,rgba(87,105,190,.2),transparent 35%),linear-gradient(145deg,#080c1c,#151d39);display:grid;place-items:center;overflow:hidden}
+#omPage-live .om-preview video{width:100%;height:100%;object-fit:cover;display:none}
+#omPage-live .om-preview.ready video{display:block}
+#omPage-live .om-preview-placeholder{text-align:center;color:#b7c1da;padding:25px}
+#omPage-live .om-preview.ready .om-preview-placeholder{display:none}
+#omPage-live .om-camera-orbit{width:110px;height:110px;border-radius:34px;display:grid;place-items:center;margin:0 auto 17px;background:linear-gradient(145deg,#28386e,#513a9e);border:1px solid rgba(255,255,255,.2);box-shadow:0 0 70px rgba(117,102,255,.25);font-size:42px}
+#omPage-live .om-preview-placeholder strong{display:block;color:#fff;font-size:17px;margin-bottom:6px}
+#omPage-live .om-preview-placeholder p{margin:0;color:#8490ac;font-size:13px}
+#omPage-live .om-preview-bar{position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+#omPage-live .om-preview-pill{padding:8px 11px;border-radius:999px;background:rgba(5,8,20,.7);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:800}
+#omPage-live .om-live-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px}
+#omPage-live .om-control-group{display:flex;gap:8px}
+#omPage-live .om-control{width:42px;height:42px;border:1px solid #e3e8f1;background:#f8faff;border-radius:13px;cursor:pointer}
+#omPage-live .om-go-live{border:0;border-radius:13px;padding:12px 19px;background:linear-gradient(135deg,#6950ef,#2f76dd);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 9px 24px rgba(73,72,211,.2)}
+#omPage-live .om-go-live:disabled{opacity:.5;cursor:not-allowed}
+#omPage-live .om-chat{height:100%;min-height:470px;display:flex;flex-direction:column}
+#omPage-live .om-chat-list{padding:15px 16px;display:grid;gap:13px;overflow:auto;min-height:330px;max-height:430px}
+#omPage-live .om-chat-msg{display:grid;grid-template-columns:34px 1fr;gap:9px}
+#omPage-live .om-chat-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#d5c5ff,#73b8ff);color:#182048;font-size:11px;font-weight:900}
+#omPage-live .om-chat-msg b{font-size:12px}
+#omPage-live .om-chat-msg p{margin:3px 0 0;color:#66738d;font-size:13px;line-height:1.45}
+#omPage-live .om-chat-composer{margin-top:auto;padding:13px;border-top:1px solid #edf0f6;display:flex;gap:8px}
+#omPage-live .om-chat-composer input{min-width:0;flex:1;border:1px solid #e2e7f0;border-radius:12px;padding:11px 12px;outline:0}
+#omPage-live .om-chat-composer button{border:0;border-radius:12px;background:#1e2b60;color:#fff;padding:0 14px;font-weight:800}
+#omPage-live .om-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+#omPage-live .om-tool{padding:16px 17px;border-radius:19px;background:#fff;border:1px solid #e7ebf3}
+#omPage-live .om-tool small{display:block;color:#7b879c;font-size:11px;margin-bottom:5px}
+#omPage-live .om-tool strong{font-size:14px}
+#omPage-live .om-note{margin-top:12px;padding:12px 14px;border-radius:15px;background:#f4f7ff;color:#66738d;font-size:12px;line-height:1.5}
+@media(max-width:850px){#omPage-live .om-live-grid{grid-template-columns:1fr}#omPage-live .om-chat{min-height:390px}#omPage-live .om-live-status{position:static;width:max-content;margin-top:18px}#omPage-live .om-live-hero{padding:25px}.om-live-grid{gap:14px}}
+@media(max-width:520px){#omPage-live .om-live-shell{padding:12px}.om-preview{min-height:250px}.om-live-controls{align-items:stretch;flex-direction:column}.om-go-live{width:100%}.om-tools{grid-template-columns:1fr}}
