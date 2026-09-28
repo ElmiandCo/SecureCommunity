@@ -29,13 +29,48 @@
     document.body.classList.toggle('om-auth-modal-open',on);
     document.getElementById('authView')?.classList.toggle('om-auth-overlay',on);
   }
-  function open(mode){window.showAuth?.(mode||'login');setTimeout(()=>modalState(true),0)}
+  function open(mode){
+    window.showAuth?.(mode||'login');
+    setTimeout(()=>modalState(true),0);
+  }
+  function showVerificationMessage(email){
+    const box=document.getElementById('authMessage');
+    if(!box)return;
+    box.innerHTML=`<b>Check your email.</b><br>We sent a verification link to <strong>${String(email||'').replace(/[&<>"']/g,'')}</strong>.<br><br><button type="button" id="resendVerification" class="forgot">Resend verification email</button>`;
+    box.classList.remove('hidden');
+    document.getElementById('resendVerification')?.addEventListener('click',async()=>{
+      const client=window.OneMuslimSupabaseClient?.getClient?.();
+      if(!client||!email)return;
+      const {error}=await client.auth.resend({type:'signup',email,options:{emailRedirectTo:`${window.location.origin}/`}});
+      if(error) box.innerHTML=`We couldn't resend the verification email. ${String(error.message||'Please try again.')}`;
+      else box.innerHTML=`<b>Verification email sent.</b><br>Check your inbox (and spam folder) for the confirmation link.`;
+    });
+  }
+  function isPasswordIdentity(user){
+    const provider=user?.app_metadata?.provider;
+    const providers=user?.app_metadata?.providers||[];
+    return provider==='email'||providers.includes('email')||(user?.identities||[]).some(i=>i.provider==='email');
+  }
+  async function enforceVerifiedEmail(session){
+    const user=session?.user;
+    if(!user||!isPasswordIdentity(user))return true;
+    if(user.email_confirmed_at||user.confirmed_at)return true;
+    const email=user.email||'';
+    const client=window.OneMuslimSupabaseClient?.getClient?.();
+    if(client)await client.auth.signOut();
+    open('login');
+    showVerificationMessage(email);
+    return false;
+  }
   function wire(){
     const login=document.getElementById('openLogin'),signup=document.getElementById('openSignup');
     if(login&&!login.dataset.overlayWired){login.dataset.overlayWired='1';login.onclick=()=>open('login')}
     if(signup&&!signup.dataset.overlayWired){signup.dataset.overlayWired='1';signup.onclick=()=>open('signup')}
     const back=document.getElementById('backPublic');
     if(back)back.onclick=()=>modalState(false);
+    const google=document.querySelector('.social[data-provider="google"]');
+    if(google)google.textContent='Continue with Google';
+    document.querySelectorAll('.social[data-provider="apple"],.social[data-provider="facebook"]').forEach(b=>b.style.display='none');
   }
   function sync(){
     wire();
@@ -44,7 +79,6 @@
     document.querySelectorAll('[data-public-auth="login"]').forEach(b=>b.style.display=logged?'none':'');
     if(logged)modalState(false);
   }
-  // Deliberately no showFirstVisitAuth(): public visitors stay on the public site.
   let repairRunning=false;
   async function repairSession(){
     if(repairRunning)return;
@@ -54,6 +88,7 @@
       if(!client)return;
       const {data,error}=await client.auth.getSession();
       if(error||!data?.session)return;
+      if(!(await enforceVerifiedEmail(data.session)))return;
       const app=document.getElementById('appView');
       if(app?.classList.contains('hidden')&&typeof window.enterApp==='function')await window.enterApp();
     }catch(e){console.warn('OneMuslim session restore:',e)}
@@ -64,5 +99,9 @@
   else{sync();bootRepair()}
   new MutationObserver(sync).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
   const client=window.OneMuslimSupabaseClient?.getClient?.();
-  client?.auth.onAuthStateChange((event,session)=>{if(session&&event!=='SIGNED_OUT')setTimeout(repairSession,0)});
+  client?.auth.onAuthStateChange(async(event,session)=>{
+    if(session&&event!=='SIGNED_OUT'){
+      if(await enforceVerifiedEmail(session))setTimeout(repairSession,0);
+    }
+  });
 })();
