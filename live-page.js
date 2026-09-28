@@ -6,8 +6,18 @@ function wireNav(){
  const content=app.querySelector('.content'); if(!content)return;
  if(!document.getElementById('omPage-live')){const p=document.createElement('div');p.id='omPage-live';p.className='page hidden';p.dataset.omPage='live';content.appendChild(p)}
  const navs=[app.querySelector('.app-nav-links'),app.querySelector('.sidebar nav')].filter(Boolean);
- navs.forEach(nav=>{if(nav.querySelector('[data-page="live"]'))return;const b=document.createElement('button');b.type='button';b.className=nav.classList.contains('app-nav-links')?'app-nav-link':'side';b.dataset.page='live';b.innerHTML=nav.classList.contains('app-nav-links')?'🔴 LIVE':'🔴 Live';nav.appendChild(b)});
+ navs.forEach(nav=>{
+   if(nav.querySelector('[data-page="live"]'))return;
+   const b=document.createElement('button');
+   b.type='button';
+   b.className=nav.classList.contains('app-nav-links')?'app-nav-link':'side';
+   b.dataset.page='live';
+   b.innerHTML=nav.classList.contains('app-nav-links')?'🔴 LIVE':'🔴 Live';
+   const before=nav.querySelector('.om-coming-soon-nav');
+   if(before) nav.insertBefore(b,before); else nav.appendChild(b);
+ });
 }
+
 function render(){
  styles();wireNav();const page=document.getElementById('omPage-live');if(!page)return;
  page.innerHTML=`<div class="om-live-shell">
@@ -46,6 +56,6 @@ function show(){
  document.querySelectorAll('#appView .content > .page').forEach(p=>p.classList.add('hidden'));page.classList.remove('hidden');
  document.querySelectorAll('#appView .app-nav-link,#appView .side').forEach(b=>b.classList.toggle('active',b.dataset.page==='live'));window.scrollTo({top:0,behavior:'smooth'});render();return true;
 }
-function init(){styles();wireNav();render();document.addEventListener('click',e=>{const t=e.target.closest?.('#appView [data-page="live"]');if(t){e.preventDefault();e.stopImmediatePropagation();show()}},true);window.OneMuslimLive={show,render}}
+function init(){styles();wireNav();render();document.addEventListener('click',e=>{const t=e.target.closest?.('#appView [data-page="live"]');if(t){e.preventDefault();e.stopImmediatePropagation();show()}},true);new MutationObserver(wireNav).observe(document.body,{childList:true,subtree:true});window.OneMuslimLive={show,render}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
