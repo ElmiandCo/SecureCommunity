@@ -3,120 +3,141 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173f32">
-<meta name="description" content="The Qibla — OneMuslim community newsletter.">
-<title>The Qibla | OneMuslim Newsletter</title>
+<meta name="theme-color" content="#090b0a">
+<meta name="description" content="The Qibla — OneMuslim community newsletter and discussion room.">
+<title>The Qibla | OneMuslim</title>
 <style>
-:root{--ink:#17251f;--green:#173f32;--green2:#285b48;--gold:#b58a2c;--cream:#f6f0df;--paper:#fffdf7;--line:#b9aa86;--muted:#66736d;--red:#8d3d35}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#d9d3c3;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:radial-gradient(#6d6048 0.55px,transparent .55px);background-size:7px 7px}
-.shell{max-width:1180px;margin:26px auto;padding:0 18px}.paper{background:var(--paper);box-shadow:0 18px 60px rgba(30,35,27,.22);border:1px solid #c8bda3;padding:18px 28px 34px;position:relative}
-.mast{border:5px double var(--gold);background:linear-gradient(180deg,#1b4a3a,#12372c);color:#f6e6b4;padding:12px 16px 10px;text-align:center;position:relative}
-.mast:before,.mast:after{content:"☘";position:absolute;top:12px;font-size:28px;color:#d1b45e}.mast:before{left:20px}.mast:after{right:20px;transform:scaleX(-1)}
-.kicker{font:700 12px/1.2 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#d9c47d}.name{font-size:clamp(38px,7vw,74px);line-height:.9;letter-spacing:.03em;margin:4px 0 7px}.datebar{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #aa914a;padding-top:7px;font:700 11px Arial,sans-serif;letter-spacing:.1em}
-.listen{border:1px solid #9e843d;background:#f5e4b0;color:#183b30;border-radius:4px;padding:6px 10px;font:800 11px Arial,sans-serif;cursor:pointer}.listen:hover{background:#fff0c6}
-.rule{height:8px;border-top:3px solid var(--green);border-bottom:1px solid var(--green);margin:14px 0 12px}
-.section-label{text-align:center;font:800 13px Arial,sans-serif;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin:2px 0 12px}
-.lead{display:grid;grid-template-columns:1.55fr .75fr;gap:18px;border-bottom:2px solid var(--green);padding-bottom:16px}
-.headline{font-size:clamp(32px,5vw,58px);line-height:.94;margin:5px 0 10px;color:#183f32}.dek{font-size:18px;line-height:1.35;margin:0 0 12px}.byline{font:700 10px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
-.hero-art{min-height:330px;border:8px solid #eee6d3;outline:1px solid #aa9b78;background:
-radial-gradient(circle at 68% 30%,#d8b55c 0 9%,transparent 10%),
-linear-gradient(145deg,transparent 0 43%,rgba(255,255,255,.12) 44% 46%,transparent 47%),
-linear-gradient(180deg,#315f4d 0 34%,#d7c49a 34% 36%,#e8dfc9 36% 100%);position:relative;overflow:hidden}
-.hero-art:before{content:"";position:absolute;width:180px;height:180px;border-radius:50% 50% 15% 15%;left:18%;bottom:0;background:linear-gradient(90deg,#f0e5cf 0 42%,#b9a58a 43% 47%,#f3eadb 48%);box-shadow:80px 22px 0 -25px #496b5b}
-.hero-art:after{content:"☾  ✦  ✦";position:absolute;top:20px;left:20px;color:#f6e6b4;font-size:30px;letter-spacing:12px}
-.caption{font:11px/1.35 Arial,sans-serif;color:var(--muted);margin-top:7px}
-.side-story{border-left:1px solid #cbbf9f;padding-left:16px}.side-story h2{font-size:26px;line-height:1;margin:0 0 7px}.side-story p{font-size:14px;line-height:1.4;margin:8px 0}.quote{border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);padding:11px 4px;margin:14px 0;font-size:22px;line-height:1.1;color:var(--green);font-weight:700}
-.columns{column-count:2;column-gap:26px;margin-top:18px}.story{break-inside:avoid;border-top:1px solid #c8bda3;padding:14px 0}.story h2{font-size:29px;line-height:1;margin:0 0 7px;color:#1a4638}.story p{font-size:15px;line-height:1.48;margin:7px 0}.story .tag{font:800 10px Arial,sans-serif;letter-spacing:.13em;color:var(--red);text-transform:uppercase}.story-art{height:135px;margin:9px 0 10px;border:1px solid #aa9b78;background:linear-gradient(135deg,#d6c49d,#f3ead8 52%,#476d5a 53%,#254b3d);position:relative}.story-art.wedding:before{content:"♥  ◇  ♥";position:absolute;inset:35px 0;text-align:center;font-size:38px;color:#7f5c38}.story-art.debate{background:linear-gradient(90deg,#eee4cf 0 49%,#1d4c3b 50% 100%)}.story-art.debate:before{content:"DISCUSS • LISTEN • LEARN";position:absolute;inset:52px 0;text-align:center;font:800 15px Arial;color:#fff;letter-spacing:.08em}.story-art.mosque:before{content:"☾";position:absolute;left:calc(50% - 30px);top:24px;font-size:62px;color:#b78b2e}.story-art.mosque:after{content:"⌂   ⌂   ⌂";position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:38px;color:#315f4d}
-.factbox{background:#f0e8d5;border:1px solid #c2b38f;padding:14px;margin-top:14px}.factbox h3{margin:0 0 6px;color:var(--green);font-size:18px}.factbox p{margin:0;font-size:13px;line-height:1.4}
-.footer{margin-top:22px;border-top:5px double var(--gold);padding-top:12px;text-align:center;color:#59675f;font:11px Arial,sans-serif;letter-spacing:.05em}
-@media(max-width:800px){.paper{padding:12px 16px 24px}.lead{grid-template-columns:1fr}.side-story{border-left:0;border-top:1px solid #cbbf9f;padding:14px 0 0}.columns{column-count:1}.datebar{flex-wrap:wrap}.hero-art{min-height:230px}.mast:before,.mast:after{display:none}}
+:root{--bg:#07100d;--panel:#0d1713;--panel2:#111d18;--ink:#f4f1e7;--muted:#9baaa3;--line:#26372f;--gold:#d5ae56;--gold2:#f0d48b;--green:#2f8a6b;--danger:#d96b60;--shadow:0 24px 80px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 0%,rgba(49,116,91,.18),transparent 32%),radial-gradient(circle at 90% 10%,rgba(213,174,86,.11),transparent 26%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}.shell{max-width:1240px;margin:auto;padding:24px}.topbar{position:sticky;top:12px;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 16px;border:1px solid rgba(255,255,255,.08);background:rgba(7,16,13,.82);backdrop-filter:blur(18px);border-radius:18px;box-shadow:var(--shadow)}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:900;letter-spacing:.12em}.brand-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#193e31,#0b1d17);border:1px solid rgba(213,174,86,.5);font-size:19px}.topbar-spacer{flex:1}.back{color:#b8c3be;text-decoration:none;font-size:13px}.back:hover{color:#fff}.new-article{display:none;border:1px solid #d9b861;background:linear-gradient(135deg,#c59b43,#e7cb78);color:#14231d;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer}.new-article.show{display:block}.hero{padding:64px 4px 28px;display:grid;grid-template-columns:1.3fr .7fr;gap:24px}.eyebrow{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.hero h1{font-family:Georgia,serif;font-size:clamp(46px,7vw,86px);line-height:.9;margin:8px 0 18px;letter-spacing:-.04em}.hero h1 em{color:var(--gold2);font-style:normal}.hero p{max-width:690px;color:#b4c0ba;font-size:17px;line-height:1.65;margin:0}.hero-card{align-self:end;border:1px solid var(--line);background:linear-gradient(145deg,rgba(18,35,28,.9),rgba(9,17,14,.9));border-radius:24px;padding:22px}.hero-card b{display:block;font-size:14px}.hero-card span{display:block;color:var(--muted);font-size:12px;line-height:1.6;margin-top:7px}.toolbar{display:flex;gap:10px;align-items:center;margin:18px 0 22px;flex-wrap:wrap}.search{flex:1 1 300px;min-width:220px;border:1px solid var(--line);background:#0b1511;color:#fff;border-radius:13px;padding:12px 14px;outline:none}.search:focus{border-color:#5d8d79}.filter{border:1px solid var(--line);background:#0b1511;color:#e9eee9;border-radius:13px;padding:12px 14px;min-width:170px;outline:none}.count{color:#81918a;font-size:12px;margin-left:auto}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.article{border:1px solid var(--line);background:linear-gradient(145deg,#0e1915,#0b1310);border-radius:22px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s}.article:hover{transform:translateY(-2px);border-color:#3a5147;box-shadow:0 20px 55px rgba(0,0,0,.2)}.article.featured{grid-column:1/-1;display:grid;grid-template-columns:250px 1fr}.cover{min-height:180px;display:grid;place-items:center;font-size:66px;background:radial-gradient(circle at 50% 35%,rgba(213,174,86,.22),transparent 35%),linear-gradient(135deg,#163d30,#09110e);border-bottom:1px solid var(--line)}.featured .cover{height:100%;border-bottom:0;border-right:1px solid var(--line)}.article-body{padding:20px}.meta{display:flex;align-items:center;gap:9px;color:#8e9e96;font-size:11px;margin-bottom:9px}.pill{color:var(--gold2);border:1px solid rgba(213,174,86,.28);background:rgba(213,174,86,.07);padding:4px 7px;border-radius:999px;font-weight:800}.article h2{font-family:Georgia,serif;font-size:27px;line-height:1.05;margin:0 0 9px}.article.featured h2{font-size:40px}.excerpt{color:#aebbb5;font-size:14px;line-height:1.6;margin:0 0 17px}.article-actions{display:flex;gap:9px;align-items:center}.action{border:1px solid #2c4037;background:#101c17;color:#dce5df;border-radius:10px;padding:9px 11px;cursor:pointer;font-size:12px;font-weight:800}.action:hover{border-color:#50705f}.action.gold{border-color:#8d7237;color:#f1d68e}.comments{display:none;border-top:1px solid var(--line);background:#09110e;padding:16px}.comments.open{display:block}.comment-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.comment-head strong{font-size:13px}.comment-head span{color:#7e8c86;font-size:11px}.comment-list{display:grid;gap:10px}.comment{border:1px solid #1f3029;background:#0d1713;border-radius:13px;padding:11px}.comment-top{display:flex;gap:8px;align-items:center}.avatar{width:28px;height:28px;border-radius:50%;overflow:hidden;background:#173a2d;display:grid;place-items:center;color:#e6cf8a;font-size:11px;font-weight:900;flex:none}.avatar img{width:100%;height:100%;object-fit:cover}.comment-top b{font-size:12px}.comment-top time{margin-left:auto;color:#6f7d77;font-size:10px}.comment p{color:#b9c4bf;font-size:13px;line-height:1.55;margin:8px 0 0;white-space:pre-wrap}.comment-delete{float:right;border:0;background:transparent;color:#a45c54;font-size:10px;cursor:pointer}.comment-form{display:flex;gap:8px;margin-top:12px}.comment-form textarea{flex:1;resize:vertical;min-height:42px;max-height:120px;border:1px solid #263a31;background:#0c1511;color:#fff;border-radius:12px;padding:10px;outline:none}.comment-form button{border:0;border-radius:11px;background:#2b735a;color:#fff;padding:0 14px;font-weight:900;cursor:pointer}.empty{grid-column:1/-1;border:1px dashed #30443a;border-radius:20px;padding:45px;text-align:center;color:#87958f}.modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal{width:min(760px,100%);max-height:90vh;overflow:auto;border:1px solid #35483e;background:#0c1511;border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.5);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.modal h2{margin:0;font-family:Georgia,serif;font-size:30px}.close{border:1px solid #304238;background:#131e19;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;font-weight:900;color:#9eaaa5;text-transform:uppercase;letter-spacing:.1em}.field input,.field select,.field textarea{width:100%;border:1px solid #2a3d34;background:#09120e;color:#fff;border-radius:11px;padding:11px 12px;outline:none}.field textarea{min-height:190px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}.primary{border:1px solid #d8b65f;background:linear-gradient(135deg,#c49a42,#e4c978);color:#13241c;border-radius:11px;padding:11px 15px;font-weight:900;cursor:pointer}.secondary{border:1px solid #304238;background:#121d18;color:#dbe3de;border-radius:11px;padding:11px 15px;font-weight:800;cursor:pointer}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;background:#e9f2ec;color:#10241b;padding:11px 15px;border-radius:12px;font-weight:800;box-shadow:var(--shadow);display:none}.toast.show{display:block}.loading{text-align:center;padding:45px;color:#89968f}
+@media(max-width:820px){.hero{grid-template-columns:1fr;padding-top:42px}.grid{grid-template-columns:1fr}.article.featured{display:block}.featured .cover{height:180px;border-right:0;border-bottom:1px solid var(--line)}.article.featured h2{font-size:30px}.count{margin-left:0}.topbar{top:6px}.shell{padding:12px}.hero-card{display:none}}
 </style>
 </head>
 <body>
-<div class="shell"><main class="paper">
-<header class="mast">
-<div class="kicker">OneMuslim Community Edition</div>
-<div class="name">THE QIBLA</div>
-<div class="datebar"><span>KNOWLEDGE • FAITH • COMMUNITY</span><span>NEWSLETTER · VOL. 01</span></div>
+<div class="shell">
+<header class="topbar">
+<a class="brand" href="index.html"><span class="brand-mark">☾</span><span>ONE MUSLIM</span></a>
+<div class="topbar-spacer"></div>
+<a class="back" href="index.html">← Back to OneMuslim</a>
+<button id="newArticle" class="new-article">＋ New Article</button>
 </header>
 
-<div class="rule"></div>
-<div class="section-label">Community • Family • Faith</div>
-
-<section class="lead">
-<article>
-<div class="byline">COMMUNITY FEATURE · THE FAMILY DESK</div>
-<h1 class="headline">A Wedding Built Around Family, Faith &amp; Joy</h1>
-<p class="dek">A Muslim wedding can be both deeply rooted in tradition and beautifully personal — from the nikah to the gathering that follows.</p>
-<div class="hero-art" aria-label="Illustrated wedding scene"></div>
-<div class="caption">Illustrated editorial artwork created for The Qibla. Stories on this page are sample newsletter content.</div>
-<p>Across generations, families often find their own rhythm for celebrating a marriage. The heart of the occasion remains simple: two people making a commitment, families coming together, and a community sharing in their happiness.</p>
-<p><button class="listen" data-listen="A wedding can be both deeply rooted in tradition and beautifully personal. The heart of the occasion is a commitment between two people, surrounded by family, faith, and community.">🔊 Listen to Article</button></p>
-</article>
-
-<aside class="side-story">
-<div class="byline">EDITOR'S NOTE</div>
-<h2>What makes a community story worth reading?</h2>
-<p>The Qibla is designed to give OneMuslim a place for thoughtful stories — celebrations, questions, projects, ideas and the everyday moments that connect people.</p>
-<div class="quote">“A community grows when people make room for one another.”</div>
-<div class="factbox"><h3>This Week</h3><p>Three perspectives. One community. Read, listen, discuss and share.</p></div>
-</aside>
+<section class="hero">
+<div><span class="eyebrow">THE QIBLA · COMMUNITY EDITION</span><h1>Read. <em>Discuss.</em><br>Build together.</h1><p>The OneMuslim newsletter is now a living discussion room — browse topics, open a story, and join the conversation underneath it.</p></div>
+<div class="hero-card"><b>🗣️ Every article has a conversation.</b><span>Comments stay attached to the topic, collapse when you want a clean reading experience, and remain tied to your OneMuslim account.</span></div>
 </section>
 
-<section class="columns">
-<article class="story">
-<div class="tag">The Community Table</div>
-<h2>Should Our Mosques Make More Room for Youth Voices?</h2>
-<div class="story-art debate" aria-hidden="true"></div>
-<p>A lively community debate is not necessarily a disagreement to be won. It can be a chance to listen carefully, ask better questions and discover what younger members need from the spaces they inherit.</p>
-<p>This sample feature explores a simple idea: youth councils, open forums and intergenerational conversations can give more people a meaningful seat at the table while keeping respect at the center.</p>
-<button class="listen" data-listen="A lively community debate is not necessarily a disagreement to be won. It can be a chance to listen carefully, ask better questions, and discover what younger members need from the spaces they inherit.">🔊 Listen</button>
-</article>
+<div class="toolbar">
+<input id="search" class="search" placeholder="Search articles, topics, or ideas…" aria-label="Search newsletter">
+<select id="filter" class="filter" aria-label="Filter newsletter topics"><option value="all">All topics</option><option>Community</option><option>Faith</option><option>Family</option><option>Knowledge</option><option>Discussion</option><option>Announcements</option></select>
+<span id="count" class="count"></span>
+</div>
 
-<article class="story">
-<div class="tag">Building Community</div>
-<h2>A New Mosque Begins With a Foundation of People</h2>
-<div class="story-art mosque" aria-hidden="true"></div>
-<p>Before the first wall rises, a mosque project usually begins with conversations: What will the community need? How will children learn? Where can families gather? How can the building serve neighbors as well as worshippers?</p>
-<p>This sample story follows the human side of mosque construction — volunteers, planners, donors, architects and families imagining a place that can grow with the community.</p>
-<button class="listen" data-listen="A mosque project begins with conversations about what the community needs. Before the first wall rises, volunteers, planners, donors, architects, and families imagine a place that can grow with the community.">🔊 Listen</button>
-</article>
+<main id="articles" class="grid"><div class="loading">Loading The Qibla…</div></main>
+</div>
 
-<article class="story">
-<div class="tag">Family Life</div>
-<h2>The Nikah Table: Small Details That Become Big Memories</h2>
-<div class="story-art wedding" aria-hidden="true"></div>
-<p>From the seating plan to the meal, wedding days are full of small decisions. The best celebrations often leave room for the people who matter most — grandparents, children, friends, neighbors and the couple themselves.</p>
-<p>A simple program, clear communication and a little flexibility can turn a busy day into a gathering people remember with gratitude.</p>
-</article>
+<div id="articleModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Article">
+<div class="modal"><div class="modal-head"><div><span class="eyebrow">NEW ARTICLE</span><h2>Publish to The Qibla</h2></div><button class="close" id="closeArticle" aria-label="Close">×</button></div>
+<form id="articleForm">
+<div class="field"><label>Title</label><input id="articleTitle" maxlength="180" required placeholder="Give the community something worth discussing"></div>
+<div class="field"><label>Topic</label><select id="articleCategory"><option>Community</option><option>Faith</option><option>Family</option><option>Knowledge</option><option>Discussion</option><option>Announcements</option></select></div>
+<div class="field"><label>Short description</label><input id="articleExcerpt" maxlength="500" placeholder="What is this article about?"></div>
+<div class="field"><label>Article</label><textarea id="articleContent" required placeholder="Write the article here…"></textarea></div>
+<div class="field"><label>Cover symbol</label><input id="articleEmoji" maxlength="4" value="📰" placeholder="🕌"></div>
+<div class="modal-actions"><button type="button" class="secondary" id="cancelArticle">Cancel</button><button class="primary" type="submit">Publish Article</button></div>
+</form></div></div>
 
-<article class="story">
-<div class="tag">Around OneMuslim</div>
-<h2>Letters From the Community</h2>
-<p><strong>What should we cover next?</strong> Send ideas for community stories, family features, mosque projects, educational conversations and profiles of people doing meaningful work.</p>
-<p class="byline">COMING NEXT · COMMUNITY VOICES · LOCAL MOSQUE PROJECTS · FAMILY STORIES</p>
-</article>
-</section>
+<div id="toast" class="toast"></div>
 
-<footer class="footer">
-THE QIBLA · A ONE MUSLIM NEWSLETTER · COMMUNITY EDITION<br>
-Read thoughtfully. Listen generously. Build together.
-</footer>
-</main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script>
-document.querySelectorAll("[data-listen]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    if(!("speechSynthesis" in window)){alert("Text-to-speech is not available on this device.");return}
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(button.dataset.listen);
-    u.rate=.94;
-    u.onstart=()=>button.textContent="⏹ Stop";
-    u.onend=()=>button.textContent="🔊 Listen to Article";
-    button.onclick=()=>{speechSynthesis.cancel();button.textContent="🔊 Listen to Article";button.onclick=null};
-    speechSynthesis.speak(u);
-  });
-});
+(() => {
+'use strict';
+const cfg=window.APP_CONFIG||{};
+const sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const fmt=t=>new Date(t).toLocaleString([],{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+const initials=n=>(n||'M').split(/\s+/).filter(Boolean).map(x=>x[0]).join('').slice(0,2).toUpperCase();
+const toast=m=>{const x=$('toast');x.textContent=m;x.classList.add('show');clearTimeout(window.__qToast);window.__qToast=setTimeout(()=>x.classList.remove('show'),2600)};
+let me=null,articles=[],profiles=new Map(),commentCache=new Map();
+
+function slugify(v){return v.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80)||('article-'+Date.now())}
+function visibleArticles(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value;return articles.filter(a=>(f==='all'||a.category===f)&&(!q||[a.title,a.excerpt,a.content,a.category].join(' ').toLowerCase().includes(q)))}
+function render(){
+ const host=$('articles'),list=visibleArticles();$('count').textContent=list.length+' article'+(list.length===1?'':'s');
+ if(!list.length){host.innerHTML='<div class="empty">No articles match that filter yet. Try another topic or search term.</div>';return}
+ host.innerHTML=list.map((a,i)=>articleHtml(a,i===0)).join('');
+ host.querySelectorAll('[data-comments]').forEach(b=>b.onclick=()=>toggleComments(b.dataset.comments));
+ host.querySelectorAll('[data-delete-comment]').forEach(b=>b.onclick=()=>deleteComment(b.dataset.deleteComment));
+ host.querySelectorAll('[data-post-comment]').forEach(f=>f.onsubmit=e=>{e.preventDefault();postComment(f.dataset.postComment,f.querySelector('textarea'))});
+ host.querySelectorAll('[data-load-comments]').forEach(b=>b.onclick=()=>loadComments(b.dataset.loadComments));
+}
+function articleHtml(a,featured){
+ const body=esc(a.content).replace(/\n\s*\n/g,'</p><p>').replace(/\n/g,'<br>');
+ return '<article class="article '+(featured?'featured':'')+'"><div class="cover">'+esc(a.cover_emoji||'📰')+'</div><div><div class="article-body"><div class="meta"><span class="pill">'+esc(a.category)+'</span><span>'+fmt(a.created_at)+'</span></div><h2>'+esc(a.title)+'</h2><p class="excerpt">'+esc(a.excerpt||a.content.slice(0,220))+'</p><div class="article-actions"><button class="action" data-comments="'+a.id+'">💬 <span data-comment-count="'+a.id+'">Comments</span> · Discuss</button><button class="action gold" data-load-comments="'+a.id+'">Open topic →</button></div></div><div class="comments" id="comments-'+a.id+'"><div class="comment-head"><strong>Discussion</strong><span>Keep it thoughtful.</span></div><div class="comment-list" id="comment-list-'+a.id+'"><div class="loading">Open the topic to load comments.</div></div><form class="comment-form" data-post-comment="'+a.id+'"><textarea maxlength="1000" required placeholder="'+(me?'Add to the conversation…':'Sign in on OneMuslim to comment')+'" '+(me?'':'disabled')+'></textarea><button type="submit" '+(me?'':'disabled')+'>Post</button></form></div></div></article>'
+}
+async function loadProfiles(ids){
+ const missing=[...new Set(ids)].filter(id=>id&&!profiles.has(id));if(!missing.length)return;
+ const {data,error}=await sb.from('profiles').select('id,display_name,username,avatar_url').in('id',missing);
+ if(!error)(data||[]).forEach(p=>profiles.set(p.id,p));
+}
+async function loadComments(articleId){
+ const box=$('comments-'+articleId);if(!box)return;
+ box.classList.add('open');const list=$('comment-list-'+articleId);list.innerHTML='<div class="loading">Loading discussion…</div>';
+ const {data,error}=await sb.from('newsletter_comments').select('id,article_id,user_id,body,created_at').eq('article_id',articleId).order('created_at',{ascending:true});
+ if(error){list.innerHTML='<div class="empty">Could not load this discussion.</div>';return}
+ commentCache.set(articleId,data||[]);await loadProfiles((data||[]).map(x=>x.user_id));renderComments(articleId);
+}
+function renderComments(articleId){
+ const list=$('comment-list-'+articleId),items=commentCache.get(articleId)||[];
+ document.querySelectorAll('[data-comment-count="'+articleId+'"]').forEach(x=>x.textContent=(items.length||0)+' comment'+(items.length===1?'':'s'));
+ list.innerHTML=items.length?items.map(c=>{const p=profiles.get(c.user_id)||{};return '<div class="comment"><button class="comment-delete" data-delete-comment="'+c.id+'" '+(me?.id===c.user_id?'':'style="display:none"')+'>Delete</button><div class="comment-top"><div class="avatar">'+(p.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="">':esc(initials(p.display_name||p.username)))+'</div><b>'+esc(p.display_name||p.username||'Member')+'</b><time>'+fmt(c.created_at)+'</time></div><p>'+esc(c.body)+'</p></div>'}).join(''):'<div class="empty" style="padding:22px">No comments yet. Start the conversation.</div>';
+ list.querySelectorAll('[data-delete-comment]').forEach(b=>b.onclick=()=>deleteComment(b.dataset.deleteComment,articleId));
+}
+async function toggleComments(id){const box=$('comments-'+id);if(box?.classList.contains('open'))box.classList.remove('open');else await loadComments(id)}
+async function postComment(articleId,textarea){
+ if(!me){toast('Sign in to join the discussion.');return}
+ const body=textarea.value.trim();if(!body)return;
+ const {data,error}=await sb.from('newsletter_comments').insert({article_id:articleId,user_id:me.id,body}).select().single();
+ if(error){toast(error.message||'Could not post comment.');return}
+ textarea.value='';const items=commentCache.get(articleId)||[];items.push(data);commentCache.set(articleId,items);await loadProfiles([me.id]);renderComments(articleId);toast('Comment posted.');
+}
+async function deleteComment(commentId,articleId){
+ if(!me||!confirm('Delete this comment permanently?'))return;
+ const {error}=await sb.from('newsletter_comments').delete().eq('id',commentId).eq('user_id',me.id);
+ if(error){toast(error.message||'Could not delete comment.');return}
+ if(articleId){commentCache.set(articleId,(commentCache.get(articleId)||[]).filter(c=>c.id!==commentId));renderComments(articleId)}
+ toast('Comment deleted.');
+}
+async function loadArticles(){
+ $('articles').innerHTML='<div class="loading">Loading The Qibla…</div>';
+ const {data,error}=await sb.from('newsletter_articles').select('id,author_id,title,slug,category,excerpt,content,cover_emoji,published,created_at,updated_at').order('created_at',{ascending:false});
+ if(error){$('articles').innerHTML='<div class="empty">The newsletter is temporarily unavailable. Please refresh in a moment.</div>';return}
+ articles=data||[];await loadProfiles(articles.map(a=>a.author_id));render();
+}
+function openArticleModal(){ $('articleModal').classList.add('open');$('articleTitle').focus() }
+function closeArticleModal(){ $('articleModal').classList.remove('open') }
+$('search').oninput=render;$('filter').onchange=render;
+$('closeArticle').onclick=closeArticleModal;$('cancelArticle').onclick=closeArticleModal;
+$('articleModal').onclick=e=>{if(e.target===$('articleModal'))closeArticleModal()};
+$('newArticle').onclick=openArticleModal;
+$('articleForm').onsubmit=async e=>{
+ e.preventDefault();if(!me||me.email?.toLowerCase()!=='elmi@elmi.com'){toast('Only Elmi@Elmi.com can publish articles.');return}
+ const title=$('articleTitle').value.trim(),slug=slugify(title)+'-'+Date.now().toString(36),category=$('articleCategory').value,excerpt=$('articleExcerpt').value.trim(),content=$('articleContent').value.trim(),emoji=$('articleEmoji').value.trim()||'📰';
+ const {error}=await sb.from('newsletter_articles').insert({author_id:me.id,title,slug,category,excerpt,content,cover_emoji:emoji,published:true});
+ if(error){toast(error.message||'Could not publish article.');return}
+ e.target.reset();$('articleEmoji').value='📰';closeArticleModal();await loadArticles();toast('Article published to The Qibla.');
+};
+async function boot(){
+ const {data}=await sb.auth.getSession();me=data?.session?.user||null;
+ if(me?.email?.toLowerCase()==='elmi@elmi.com')$('newArticle').classList.add('show');
+ await loadArticles();
+ sb.auth.onAuthStateChange((_event,session)=>{me=session?.user||null;$('newArticle').classList.toggle('show',me?.email?.toLowerCase()==='elmi@elmi.com');render()});
+}
+boot();
+})();
 </script>
 </body>
 </html>
