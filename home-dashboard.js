@@ -172,7 +172,21 @@
     document.querySelectorAll('[data-go-notes]').forEach(b=>b.addEventListener('click',()=>document.querySelector('[data-page="notes"]')?.click()));
     document.querySelectorAll('[data-remove-home]').forEach(b=>b.addEventListener('click',()=>removeComponent(b.dataset.removeHome)));
     document.querySelectorAll('[data-edit-component]').forEach(b=>b.addEventListener('click',()=>openBuilder(b.dataset.editComponent)));
-    const claim=$('homeDailyClaim'); if(claim) claim.addEventListener('click',async()=>{claim.disabled=true;claim.textContent='Claiming…';const r=await sb.rpc('claim_daily_home_xp');if(r.error){claim.disabled=false;claim.textContent='Try again';}else{claim.textContent='Claimed ✓';await load();}});
+    const claim=$('homeDailyClaim');
+    if(claim) claim.addEventListener('click',async()=>{
+      if(dailyClaimed || claim.disabled)return;
+      claim.disabled=true;
+      claim.classList.add('om-xp-pop');
+      const r=await sb.rpc('claim_daily_home_xp');
+      if(r.error || r.data?.awarded===false){
+        claim.disabled=false;
+        claim.classList.remove('om-xp-pop');
+        if(!r.error && r.data?.awarded===false){dailyClaimed=true;render();}
+        return;
+      }
+      dailyClaimed=true;
+      setTimeout(()=>load(),420);
+    });
     document.querySelectorAll('[data-home-widget]').forEach(el=>{
       el.addEventListener('dragstart',e=>{dragged=Number(el.dataset.homeIndex);el.classList.add('om-dragging');e.dataTransfer.effectAllowed='move';});
       el.addEventListener('dragend',()=>{el.classList.remove('om-dragging');dragged=null;});
