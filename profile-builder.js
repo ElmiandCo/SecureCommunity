@@ -128,5 +128,4 @@
   window.renderProfileBuilder=open;
   window.OneMuslimAvatarStudio={regular:REGULAR,platinum:PLATINUM,avatarSrc,syncGlobalAvatars};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{styles();syncGlobalAvatars()});else{styles();syncGlobalAvatars()}
-  setInterval(syncGlobalAvatars,1500);
 })();
