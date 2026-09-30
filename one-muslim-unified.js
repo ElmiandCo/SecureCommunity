@@ -51,7 +51,10 @@ function renderHome(){
  const go=p=>document.querySelector('[data-page="'+p+'"]')?.click();
  $$('[data-home]',host).forEach(e=>e.addEventListener('click',()=>go(e.dataset.home)));
  const customize=()=>document.getElementById('omCustomizeHome')?.click();
- $('#om2Customize',host)?.addEventListener('click',customize);$('#om2CustomizeBottom',host)?.addEventListener('click',customize);$('#om2EditProfile',host)?.addEventListener('click',()=>go('profile'));
+ $('#om2Customize',host)?.addEventListener('click',customize);$('#om2CustomizeBottom',host)?.addEventListener('click',customize);$('#om2EditProfile',host)?.addEventListener('click',()=>{
+    const open=window.OneMuslimProfileBuilder?.open||window.OneMuslimOpenProfileEditor||window.openProfileBuilder||window.openProfileEditor;
+    if(typeof open==='function') open(); else go('profile');
+  });
 }
 function boot(){
  document.body.classList.add('om2-active');publicHome();
