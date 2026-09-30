@@ -166,7 +166,11 @@
     $('omCustomizeHome')?.addEventListener('click',openBuilder);
     $('omAddComponent')?.addEventListener('click',openBuilder);
     $('omBottomAdd')?.addEventListener('click',openBuilder);
-    $('omHomeEditProfile')?.addEventListener('click',()=>document.querySelector('[data-page="profile"]')?.click());
+    $('omHomeEditProfile')?.addEventListener('click',()=>{
+      const open=window.OneMuslimProfileBuilder?.open||window.OneMuslimOpenProfileEditor||window.openProfileBuilder||window.openProfileEditor;
+      if(typeof open==='function') open();
+      else document.querySelector('[data-page="profile"]')?.click();
+    });
     document.querySelectorAll('[data-go-community]').forEach(b=>b.addEventListener('click',()=>document.querySelector('[data-page="feed"]')?.click()));
     document.querySelectorAll('[data-go-lessons]').forEach(b=>b.addEventListener('click',()=>document.querySelector('[data-page="lessons"]')?.click()));
     document.querySelectorAll('[data-go-notes]').forEach(b=>b.addEventListener('click',()=>document.querySelector('[data-page="notes"]')?.click()));
