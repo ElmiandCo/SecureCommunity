@@ -318,6 +318,8 @@ function routeInitialProfile(){
   window.dispatchEvent(new CustomEvent("oneMuslim:open-profile",{detail:{id}}));
 }
 
+window.OneMuslimEnterApp = enterApp;
+
 async function enterApp(){
   setScreen("appView");
   $("sessionBadge").textContent = "SECURE SESSION";
