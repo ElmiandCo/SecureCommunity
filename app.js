@@ -319,6 +319,7 @@ function routeInitialProfile(){
 }
 
 window.OneMuslimEnterApp = enterApp;
+window.OneMuslimLogout = logout;
 
 async function enterApp(){
   try{ localStorage.setItem("oneMuslimHadSession","1"); }catch{}
@@ -332,8 +333,8 @@ async function enterApp(){
     routeInitialProfile();
   }catch(e){
     console.error(e);
-    setScreen("publicView");
-    toast(errText(e));
+    setScreen("appView");
+    toast("Your session is still secure. We could not load your OneMuslim data right now.");
   }
 }
 
@@ -350,7 +351,7 @@ async function logout(){
 function renderApp(){
   if(!me || !profile){ setScreen("publicView"); return; }
   const display = displayName(profile);
-  $("miniProfile").innerHTML = `<div class="avatar">${initials(display)}</div><b>${esc(display)}</b><small>@${esc(profile.username||"")} · ${esc(me.email||"")}</small>`;
+  if($("miniProfile")) $("miniProfile").innerHTML = `<div class="avatar">${initials(display)}</div><b>${esc(display)}</b><small>@${esc(profile.username||"")} · ${esc(me.email||"")}</small>`;
   $("composerAvatar").textContent = initials(display);
   updateXpUi();
   const completedFields=[profile.city,profile.state,profile.country,profile.gender].filter(v=>String(v||"").trim()).length;
@@ -683,7 +684,7 @@ async function saveProfile(){
 $("openLogin").onclick=()=>showAuth("login");
 $("openSignup").onclick=()=>showAuth("signup");
 $("backPublic").onclick=()=>setScreen("publicView");
-$("signOut").onclick=logout;
+$("signOut")?.addEventListener("click",logout);
 $("publish").onclick=()=>editingPostId?saveEditedPost():publish();
 $("postText").oninput=e=>$("charCount").textContent=`${e.target.value.length}/500`;
 $("postMedia").onchange=()=>{
