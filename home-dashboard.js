@@ -118,7 +118,7 @@
     return componentShell(item,`<div class="om-rank-widget"><div class="om-rank-avatar"><img src="${esc(avatarSrc(profile))}" alt="Your avatar"></div><div class="om-rank-main"><div><span>Rank ${rank}</span><b>${esc(rankTitle(profile))}</b></div><strong>${xp.toLocaleString()} <small>XP</small></strong><div class="om-progress"><i style="width:${pct}%"></i></div><small>${Math.max(0,1000-(xp%1000)).toLocaleString()} XP to next rank</small></div><div class="om-rank-stat"><b>${following}</b><small>Following</small></div></div>`);
   }
   function renderDaily(item){
-    return componentShell(item,`<div class="om-daily"><span class="om-daily-fire">🔥</span><div><b>Daily check-in</b><p>Keep showing up and build your XP streak.</p></div><button type="button" class="om-action" id="homeDailyClaim">Claim XP</button></div>`);
+    return componentShell(item,`<div class="om-daily"><span class="om-daily-fire">🔥</span><div><b>Daily check-in</b><p>${dailyClaimed?'Already claimed today. Come back tomorrow.':'Claim your daily +1,000 XP from the button under Total XP above.'}</p></div></div>`);
   }
   function renderNotes(item){
     return componentShell(item,`<div class="om-notes-widget"><b>Your private study space</b><p>Open My Notes to continue your personal AI study threads and notes.</p><button type="button" class="om-action" data-go-notes="1">Open Notes</button></div>`);
@@ -154,7 +154,7 @@
           <button type="button" class="om-edit-profile" id="omHomeEditProfile">Edit profile</button>
         </div>
       </section>
-      <section class="om-home-profile-card"><div class="om-profile-card-top"><div><span class="om-home-kicker">YOUR PROFILE</span><h3>${esc(name)}</h3><p>${esc(profile.bio||'Build your profile, learn, and grow with the community.')}</p></div><div class="om-profile-card-rank"><b>Rank ${rank}</b><span>${esc(rankTitle(profile))}</span></div></div><div class="om-profile-xp"><div><strong>${xp.toLocaleString()}</strong><span>Total XP</span></div><div class="om-profile-progress"><i style="width:${Math.min(100,xp%1000/10)}%"></i></div><div><strong>${window.__omHomeFollowingCount||0}</strong><span>Following</span></div></div></section>
+      <section class="om-home-profile-card"><div class="om-profile-card-top"><div><span class="om-home-kicker">YOUR PROFILE</span><h3>${esc(name)}</h3><p>${esc(profile.bio||'Build your profile, learn, and grow with the community.')}</p></div><div class="om-profile-card-rank"><b>Rank ${rank}</b><span>${esc(rankTitle(profile))}</span></div></div><div class="om-profile-xp"><div><strong>${xp.toLocaleString()}</strong><span>Total XP</span><button type="button" class="om-daily-xp-claim" id="homeDailyClaim" ${dailyClaimed?'hidden':''}><span>🔥 Claim Daily XP</span><small>+1,000 XP</small></button></div><div class="om-profile-progress"><i style="width:${Math.min(100,xp%1000/10)}%"></i></div><div><strong>${window.__omHomeFollowingCount||0}</strong><span>Following</span></div></div></section>
       <div class="om-home-builder-bar"><div><span class="om-home-kicker">YOUR HOME CANVAS</span><h3>Build your space</h3><p>Add, remove and arrange components below.</p></div><button type="button" class="om-add-component" id="omAddComponent">＋ Add Component</button></div>
       <section class="om-home-grid" id="omHomeGrid">${layout.map(renderWidget).join('')}</section>
       <button type="button" class="om-bottom-add" id="omBottomAdd">＋ Add a Component</button>
