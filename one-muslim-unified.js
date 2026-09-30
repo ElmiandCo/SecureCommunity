@@ -1,50 +1,65 @@
-/* One Muslim unified redesign — intentionally loaded last. */
+/* One Muslim V2 — authoritative renderer. Existing auth/data behavior stays intact. */
 (()=>{'use strict';
-const $=(s,r=document)=>r.querySelector(s);
-function auth(mode){if(typeof window.__omOpenAuth==='function')window.__omOpenAuth(mode);else document.getElementById(mode==='signup'?'openSignup':'openLogin')?.click();}
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const auth=mode=>typeof window.__omOpenAuth==='function'?window.__omOpenAuth(mode):document.getElementById(mode==='signup'?'openSignup':'openLogin')?.click();
 function publicHome(){
- const pv=$('#publicView'); if(!pv)return;
- if($('#appView')&&!$('#appView').classList.contains('hidden'))return;
+ const pv=$('#publicView');if(!pv||!$('#appView')?.classList.contains('hidden')||pv.dataset.om2==='1')return;
+ pv.dataset.om2='1';
  pv.innerHTML=`
- <div class="om-unified-landing" id="omUnifiedHome">
-  <nav class="om-unified-nav">
-   <a class="om-unified-brand" href="index.html"><img src="assets/won-muslim-logo.svg" alt="One Muslim"><span>ONE MUSLIM</span></a>
-   <div class="om-unified-navlinks"><a href="#om-platform">Platform</a><a href="#om-community">Community</a><a href="#om-learn">Knowledge</a><a href="#om-live">LIVE</a><a href="hudhud-ai.html">HudHud AI</a></div>
-   <div class="om-unified-actions"><button class="om-btn" data-auth="login">Sign in</button><button class="om-btn primary" data-auth="signup">Get started</button></div>
-  </nav>
-  <section class="om-unified-hero">
-   <div class="om-unified-hero-copy">
-    <span class="om-kicker">THE MUSLIM DIGITAL HOME</span>
-    <h1>Faith.<br><em>Knowledge.</em><br>Community.</h1>
-    <p>One Muslim brings your community, Islamic learning, personal growth, profiles, conversations and LIVE experiences into one calm, beautiful space.</p>
-    <div class="om-hero-actions"><button class="om-btn primary" data-auth="signup">Enter One Muslim →</button><button class="om-btn" data-auth="login">I already have an account</button></div>
-    <div class="om-hero-proof"><span><i></i>Community</span><span><i></i>Learning</span><span><i></i>LIVE</span><span><i></i>Personal growth</span></div>
-   </div>
-   <div class="om-hero-art"><div class="om-arch"><div class="om-arch-moon"></div><div class="om-arch-mosque"></div><div class="om-arch-word">ONE MUSLIM</div><div class="om-arch-sub">FAITH · KNOWLEDGE · COMMUNITY</div></div><div class="om-float a"><b>✦ Learning</b><small>Continue your journey</small></div><div class="om-float b"><b>🔴 LIVE</b><small>Join the community</small></div><div class="om-float c"><b>1,240 XP</b><small>Your progress matters</small></div></div>
+ <div class="om2-landing">
+  <header class="om2-nav"><a class="om2-brand" href="index.html"><span class="om2-brand-mark"><img src="assets/won-muslim-logo.svg" alt="One Muslim"></span><span>ONE MUSLIM</span></a>
+   <nav class="om2-nav-links"><a href="#om2-platform">Platform</a><a href="#om2-community">Community</a><a href="#om2-learn">Knowledge</a><a href="hudhud-ai.html">HudHud AI</a></nav>
+   <div class="om2-nav-actions"><button class="om2-btn" data-auth="login">Sign in</button><button class="om2-btn primary" data-auth="signup">Join One Muslim</button></div>
+  </header>
+  <section class="om2-hero"><div class="om2-hero-copy"><span class="om2-kicker">THE MUSLIM DIGITAL HOME</span><h1>Faith.<br><em>Knowledge.</em><br>Community.</h1><p>A modern space for Muslims to connect with people, grow in knowledge, follow their journey, and experience community without the noise of a generic social network.</p><div class="om2-hero-actions"><button class="om2-btn primary" data-auth="signup">Enter One Muslim →</button><button class="om2-btn" data-auth="login">I already have an account</button></div><div class="om2-proof"><span><i></i>COMMUNITY</span><span><i></i>LEARNING</span><span><i></i>LIVE</span><span><i></i>PERSONAL GROWTH</span></div></div>
+   <div class="om2-hero-stage"><div class="om2-halo"></div><div class="om2-arch"><div class="om2-moon"></div><div class="om2-minaret left"></div><div class="om2-minaret right"></div><div class="om2-mosque"></div><div class="om2-arch-copy"><strong>ONE MUSLIM</strong><small>FAITH · KNOWLEDGE · COMMUNITY</small></div></div><div class="om2-float a"><b>✦ Continue learning</b><small>Keep your journey moving.</small></div><div class="om2-float b"><b>🔴 LIVE</b><small>Join the community.</small></div><div class="om2-float c"><b>1,240 XP</b><small>Your progress matters.</small></div></div>
   </section>
-  <section class="om-unified-section" id="om-platform"><div class="om-section-center"><span class="om-kicker">ONE PLATFORM</span><h2>Everything you need.<br><em>Nothing you don't.</em></h2><p>A focused digital home designed around the Muslim experience instead of a generic social network with Islamic content added afterward.</p></div>
-   <div class="om-feature-grid">
-    <article class="om-feature featured"><div class="om-feature-icon">◉</div><h3>Community that feels intentional.</h3><p>Follow people, discover communities, share posts, react, comment and build real connections without losing the purpose of the space.</p><div class="om-feature-meta">PEOPLE · COMMUNITIES · FEED</div></article>
-    <article class="om-feature"><div class="om-feature-icon">▣</div><h3>Learn</h3><p>Lessons, learning paths, Qur'an-focused content and visible progress.</p><div class="om-feature-meta">KNOWLEDGE</div></article>
-    <article class="om-feature"><div class="om-feature-icon">♛</div><h3>Grow</h3><p>XP, achievements and a personal home that shows your journey.</p><div class="om-feature-meta">PROGRESS</div></article>
-    <article class="om-feature"><div class="om-feature-icon">◎</div><h3>Your profile</h3><p>Build your identity, interests, avatar, posts and social connections.</p><div class="om-feature-meta">IDENTITY</div></article>
-    <article class="om-feature"><div class="om-feature-icon">✦</div><h3>HudHud AI</h3><p>An intelligent companion alongside the One Muslim experience.</p><div class="om-feature-meta">AI COMPANION</div></article>
-   </div>
-  </section>
-  <section class="om-unified-split" id="om-community"><div class="om-split-card"><div class="om-mini-window"><span class="pill">YOUR COMMUNITY</span><div class="line"></div><div class="line short"></div><div class="line"></div><div class="line short"></div><div class="line"></div></div></div><div><span class="om-kicker">COMMUNITY</span><h2>Your people.<br><em>Your space.</em></h2><p>One Muslim is built so your social experience and your faith-centered experience don't have to live in separate places.</p><ul><li><span>✓</span> People and profiles</li><li><span>✓</span> Communities and discovery</li><li><span>✓</span> Posts, reactions and comments</li><li><span>✓</span> Messaging and social features</li></ul><button class="om-btn primary" data-auth="signup">Join the community →</button></div></section>
-  <section class="om-unified-section" id="om-learn"><div class="om-section-center"><span class="om-kicker">KNOWLEDGE</span><h2>Learn something.<br><em>Carry it with you.</em></h2><p>Your lessons, progress and study experience belong in the same place as your community.</p></div></section>
-  <section class="om-live-banner" id="om-live"><div class="om-live-banner-inner"><div><span class="om-kicker" style="color:#d8b96b">NEW EXPERIENCE</span><h3>One Muslim LIVE.</h3><p>Watch live conversations and eventually broadcast your own room directly inside the community.</p></div><button class="om-btn gold" data-auth="signup">Get ready for LIVE →</button></div></section>
-  <footer class="om-unified-footer"><strong>ONE MUSLIM</strong><span>Faith · Knowledge · Community</span><span>© 2026 One Muslim</span></footer>
+  <section class="om2-strip"><div><b>01 · CONNECT</b><span>People, profiles & communities</span></div><div><b>02 · LEARN</b><span>Lessons & Islamic knowledge</span></div><div><b>03 · GROW</b><span>XP, progress & your journey</span></div><div><b>04 · EXPERIENCE</b><span>LIVE, AI & social tools</span></div></section>
+  <section class="om2-section" id="om2-platform"><div class="om2-section-head"><span class="om2-kicker">ONE PLATFORM</span><h2>Built around the Muslim experience — <em>not around the algorithm.</em></h2><p>One Muslim brings the pieces together so your social life, learning, progress and community can live in the same place.</p></div><div class="om2-feature-grid">
+   <article class="om2-feature big"><div class="om2-feature-icon">◉</div><h3>A community that actually feels intentional.</h3><p>Discover people, communities, conversations and posts in a space designed to feel purposeful instead of endlessly noisy.</p><div class="om2-feature-meta">PEOPLE · COMMUNITIES · FEED · MESSAGING</div></article>
+   <article class="om2-feature"><div class="om2-feature-icon">▣</div><h3>Knowledge</h3><p>Lessons and learning experiences that make it easier to keep studying.</p><div class="om2-feature-meta">LEARN</div></article>
+   <article class="om2-feature"><div class="om2-feature-icon">✦</div><h3>Progress</h3><p>XP and visible momentum that turns participation into a journey.</p><div class="om2-feature-meta">GROW</div></article>
+   <article class="om2-feature"><div class="om2-feature-icon">◎</div><h3>Your identity</h3><p>A profile, avatar, interests and social presence that are actually yours.</p><div class="om2-feature-meta">PROFILE</div></article>
+   <article class="om2-feature"><div class="om2-feature-icon">🐦</div><h3>HudHud AI</h3><p>An intelligent companion alongside the One Muslim experience.</p><div class="om2-feature-meta">INTELLIGENT TOOLS</div></article>
+  </div></section>
+  <section class="om2-community" id="om2-community"><div class="om2-community-inner"><div class="om2-ui-window"><div class="om2-ui-bar"><span>ONE MUSLIM · COMMUNITY</span><span>● LIVE</span></div><div class="om2-ui-card"><strong>Your people. Your space.</strong><div class="om2-ui-row"><div class="om2-ui-avatar"></div><div class="om2-ui-line"></div></div><div class="om2-ui-row"><div class="om2-ui-avatar"></div><div class="om2-ui-line"></div></div><div class="om2-ui-row"><div class="om2-ui-avatar"></div><div class="om2-ui-line"></div></div></div></div><div><span class="om2-kicker" style="color:#d8b45b">COMMUNITY</span><h2>Bring your people <em>closer together.</em></h2><p>Follow people, discover communities, share posts, react, comment, message and build relationships from one consistent home.</p><ul class="om2-list"><li><span>✓</span> People & profiles</li><li><span>✓</span> Community spaces</li><li><span>✓</span> Posts, reactions & comments</li><li><span>✓</span> Messaging and social features</li></ul><button class="om2-btn gold" data-auth="signup">Join the community →</button></div></div></section>
+  <section class="om2-section" id="om2-learn"><div class="om2-section-head"><span class="om2-kicker">KNOWLEDGE</span><h2>Learn something. <em>Carry it with you.</em></h2><p>Your lessons, progress and study experience belong in the same place as your community.</p></div><div class="om2-feature-grid"><article class="om2-feature big"><div class="om2-feature-icon">01</div><h3>Build a learning habit.</h3><p>Explore lessons, return to unfinished material and make your knowledge part of your everyday journey.</p><div class="om2-feature-meta">QUR'AN · SEERAH · AQIDAH · MORE</div></article><article class="om2-feature"><div class="om2-feature-icon">★</div><h3>Daily progress</h3><p>Keep your momentum visible with XP and achievements.</p></article><article class="om2-feature"><div class="om2-feature-icon">☾</div><h3>Personal space</h3><p>Make Home reflect the parts of One Muslim you use most.</p></article></div></section>
+  <section class="om2-cta"><div class="om2-cta-card"><h2>One space. One community. One journey.</h2><p>Come build your place inside One Muslim — and make the platform better as the community grows.</p><button class="om2-btn primary" data-auth="signup">Create your account →</button></div></section>
+  <footer class="om2-footer"><strong>ONE MUSLIM</strong><span>Faith · Knowledge · Community</span><span>© 2026 One Muslim</span></footer>
  </div>`;
- pv.querySelectorAll('[data-auth]').forEach(b=>b.addEventListener('click',()=>auth(b.dataset.auth)));
+ $$('[data-auth]',pv).forEach(b=>b.addEventListener('click',()=>auth(b.dataset.auth)));
 }
-function appEnhance(){
- document.body.classList.add('onemuslim-theme');
- let bg=$('#omUnifiedBackdrop');if(!bg){bg=document.createElement('div');bg.id='omUnifiedBackdrop';document.body.prepend(bg)}
- const app=$('#appView');if(!app)return;
- app.querySelectorAll('[data-page="live"]').forEach(x=>x.textContent=x.classList.contains('app-nav-link')?'🔴 LIVE':'🔴 Live');
+const txt=(r,ss,f='')=>{for(const s of ss){const e=$(s,r);if(e?.textContent.trim())return e.textContent.trim()}return f};
+function renderHome(){
+ const host=$('#publicHomePage'),app=$('#appView');if(!host||app?.classList.contains('hidden')||host.querySelector('.om2-home'))return;
+ const old=document.createElement('div');old.innerHTML=host.innerHTML;
+ const avatar=$('.om-hero-avatar img',old)?.src||$('.om-rank-avatar img',old)?.src||'';
+ const name=txt(old,['.om-hero-identity h1','.om-profile-card-top h3'],'Member'),bio=txt(old,['.om-hero-identity p','.om-profile-card-top p'],'Your One Muslim journey starts here.');
+ const xp=txt(old,['.om-profile-xp>div:first-child strong','.om-rank-main>strong'],'0'),following=txt(old,['.om-profile-xp>div:last-child strong','.om-rank-stat b'],'0'),rank=txt(old,['.om-profile-card-rank b','.om-rank-main>div:first-child span'],'Rank'),rankTitle=txt(old,['.om-profile-card-rank span','.om-rank-main>small'],'Growing member');
+ const posts=$$('.om-post-row',old).slice(0,4).map(r=>({t:txt(r,['b'],'Community post'),p:txt(r,['small'],'A new conversation in your community.'),time:txt(r,['time'],''),a:$('.om-row-avatar img',r)?.src||''}));
+ const lessons=$$('.om-lesson-row',old).slice(0,4).map(r=>({t:txt(r,['b'],'Continue learning'),m:txt(r,['small'],'Lesson'),n:txt(r,['.om-lesson-num'],'→')}));
+ host.classList.add('om2-home-mounted');
+ host.innerHTML=`
+ <div class="om2-home"><div class="om2-home-top"><div><span class="om2-kicker">MY HOME</span><h1>Assalamu alaikum, ${esc(name.split(' ')[0]||'Member')}.</h1><p>Your community, learning and progress — all in one place.</p></div><div class="om2-home-actions"><button class="om2-home-action" id="om2Customize">Customize</button><button class="om2-home-action primary" data-home="feed">Open Community →</button></div></div>
+ <section class="om2-profile-banner"><div class="om2-profile-main"><div class="om2-avatar">${avatar?'<img src="'+esc(avatar)+'" alt="">':'✦'}</div><div class="om2-identity"><span class="eyebrow">YOUR ONE MUSLIM PROFILE</span><h2>${esc(name)}</h2><p>${esc(bio)}</p><div class="om2-stat-row"><div class="om2-stat"><b>${esc(xp)}</b><span>TOTAL XP</span></div><div class="om2-stat"><b>${esc(following)}</b><span>FOLLOWING</span></div><div class="om2-stat"><b>${esc(rank)}</b><span>${esc(rankTitle)}</span></div></div></div><button class="om2-edit" id="om2EditProfile">Edit profile</button></div></section>
+ <section class="om2-quick"><button class="om2-quick-card" data-home="feed"><span class="om2-quick-icon">◉</span><span><strong>Community Feed</strong><span>See what your people are sharing.</span></span></button><button class="om2-quick-card" data-home="lessons"><span class="om2-quick-icon">▣</span><span><strong>Keep Learning</strong><span>Jump back into your lessons.</span></span></button><button class="om2-quick-card" data-home="profiles"><span class="om2-quick-icon">◎</span><span><strong>Discover People</strong><span>Find members and build connections.</span></span></button><a class="om2-quick-card" href="hudhud-ai.html"><span class="om2-quick-icon">🐦</span><span><strong>Ask HudHud</strong><span>Open your AI companion.</span></span></a></section>
+ <div class="om2-home-grid"><main><section class="om2-panel"><div class="om2-panel-head"><strong>Community pulse</strong><span>YOUR FEED</span><button class="om2-panel-link" data-home="feed">View all →</button></div><div class="om2-panel-body"><div class="om2-feed-list">${posts.length?posts.map(p=>'<article class="om2-feed-item"><div class="om2-feed-avatar">'+(p.a?'<img src="'+esc(p.a)+'" alt="">':'✦')+'</div><div><b>'+esc(p.t)+'</b><p>'+esc(p.p)+'</p></div><time>'+esc(p.time)+'</time></article>').join(''):'<div class="om2-feed-item"><div class="om2-feed-avatar">✦</div><div><b>Your community is waiting.</b><p>Open the Community Feed to see the latest conversations.</p></div></div>'}</div></div></section>
+ <section class="om2-panel" style="margin-top:16px"><div class="om2-panel-head"><strong>Continue learning</strong><span>KNOWLEDGE</span><button class="om2-panel-link" data-home="lessons">All lessons →</button></div><div class="om2-panel-body"><div class="om2-learning">${lessons.length?lessons.map(l=>'<div class="om2-lesson"><div class="om2-lesson-num">'+esc(l.n)+'</div><div><b>'+esc(l.t)+'</b><span>'+esc(l.m)+'</span></div><button data-home="lessons">Open →</button></div>').join(''):'<div class="om2-lesson"><div class="om2-lesson-num">01</div><div><b>Start your first lesson</b><span>Your learning path will appear here.</span></div><button data-home="lessons">Explore →</button></div>'}</div></div></section></main>
+ <aside class="om2-rail"><section class="om2-panel om2-focus"><div class="om2-panel-head"><strong>Today's focus</strong><span>ONE SMALL STEP</span></div><div class="om2-panel-body"><p>Spend a few minutes learning, make one meaningful connection, or share something useful with the community.</p><button class="om2-focus-button" data-home="lessons">Continue your journey →</button></div></section><section class="om2-panel"><div class="om2-panel-head"><strong>Your progress</strong><span>RANK</span></div><div class="om2-panel-body"><div class="om2-rank"><div class="om2-rank-avatar">${avatar?'<img src="'+esc(avatar)+'" alt="">':'✦'}</div><div><b>${esc(rank)}</b><span>${esc(rankTitle)}</span></div><div><strong>${esc(xp)}</strong><small>XP</small></div></div></div></section><section class="om2-panel"><div class="om2-panel-head"><strong>One Muslim LIVE</strong><span>SOON</span></div><div class="om2-panel-body"><p style="margin:0;color:#738078;font-size:11px;line-height:1.6">Live conversations are becoming part of the community. Keep an eye on this space for the next experience.</p><button class="om2-panel-link" style="margin-top:12px" data-home="feed">Explore community →</button></div></section></aside></div>
+ <section class="om2-bottom-banner"><div><strong>Your Home. Your journey.</strong><span>Customize what you want to see as One Muslim grows.</span></div><button class="om2-btn primary" id="om2CustomizeBottom">Customize Home</button></section></div>`;
+ const go=p=>document.querySelector('[data-page="'+p+'"]')?.click();
+ $$('[data-home]',host).forEach(e=>e.addEventListener('click',()=>go(e.dataset.home)));
+ const customize=()=>document.getElementById('omCustomizeHome')?.click();
+ $('#om2Customize',host)?.addEventListener('click',customize);$('#om2CustomizeBottom',host)?.addEventListener('click',customize);$('#om2EditProfile',host)?.addEventListener('click',()=>go('profile'));
 }
-function boot(){publicHome();appEnhance();setTimeout(appEnhance,500);setTimeout(publicHome,1200)}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-window.addEventListener('load',()=>{setTimeout(appEnhance,100);});
+function boot(){
+ document.body.classList.add('om2-active');publicHome();
+ const pv=$('#publicView'),app=$('#appView'),hp=$('#publicHomePage');
+ if(pv)new MutationObserver(()=>{if(app?.classList.contains('hidden')&&!pv.querySelector('.om2-landing')){pv.dataset.om2='';publicHome()}}).observe(pv,{childList:true});
+ if(app)new MutationObserver(()=>{if(!app.classList.contains('hidden'))setTimeout(renderHome,120)}).observe(app,{attributes:true,attributeFilter:['class']});
+ if(hp)new MutationObserver(()=>{if(!app?.classList.contains('hidden')&&!hp.querySelector('.om2-home'))setTimeout(renderHome,80)}).observe(hp,{childList:true});
+ setTimeout(publicHome,400);setTimeout(renderHome,900);setTimeout(renderHome,2000);
+}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
 })();
