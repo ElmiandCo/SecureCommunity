@@ -254,6 +254,7 @@
     observer.observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
   }
 
+  window.addEventListener('profile:updated',()=>{if(me)load();});
   sb.auth.onAuthStateChange((event,session)=>{
     if(session){me=session.user;setTimeout(()=>{if(!profile)load();},120);}
     else{me=null;profile=null;mounted=false;}
