@@ -35,7 +35,7 @@
   };
 
   let me=null, profile=null, layout=[], posts=[], aiPost=null, lessons=[], communities=[];
-  let mounted=false, dragged=null;
+  let mounted=false, dragged=null, dailyClaimed=false;
 
   function profileBackground(p){
     const v=p?.profile_background || p?.avatar_config?.background || 'default';
@@ -55,13 +55,14 @@
     const {data:{user}}=await sb.auth.getUser();
     if(!user) return;
     me=user;
-    const [pr,lay,ps,ls,cm,fl] = await Promise.all([
+    const [pr,lay,ps,ls,cm,fl,daily] = await Promise.all([
       sb.from('profiles').select('*').eq('id',user.id).maybeSingle(),
       sb.from('home_layouts').select('components').eq('user_id',user.id).maybeSingle(),
       sb.from('posts').select('id,user_id,body,created_at').order('created_at',{ascending:false}).limit(24),
       sb.from('lessons').select('id,title,description,difficulty,points_per_question,sort_order').eq('active',true).order('sort_order').limit(6),
       sb.from('communities').select('id,name,description').order('name').limit(40),
-      sb.from('profile_follows').select('following_id').eq('follower_id',user.id)
+      sb.from('profile_follows').select('following_id').eq('follower_id',user.id),
+      sb.rpc('get_daily_home_xp_status')
     ]);
     profile=pr.data||null;
     layout=Array.isArray(lay.data?.components) && lay.data.components.length ? lay.data.components.filter(x=>COMPONENTS[x?.type]) : DEFAULT_LAYOUT.map(type=>({type}));
@@ -69,6 +70,7 @@
     lessons=ls.data||[];
     communities=cm.data||[];
     window.__omHomeFollowingCount=(fl.data||[]).length;
+    dailyClaimed=daily.error ? false : Boolean(daily.data);
     if(posts.length){
       const ids=[...new Set(posts.map(p=>p.user_id).filter(Boolean))];
       const {data:profiles}=await sb.from('profiles').select('id,display_name,username,is_ai,ai_label').in('id',ids);
