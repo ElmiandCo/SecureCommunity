@@ -45,7 +45,7 @@ function init(){
  function close(){overlay.classList.remove('open');panel.classList.remove('open')}
  $('#omNav2Open').onclick=open;$('.om-nav2-close',panel).onclick=close;$('.om-nav2-close2',panel).onclick=close;overlay.onclick=close;
  $('#omNav2Search').oninput=e=>render(e.target.value);
- $('#omNav2Signout').onclick=()=>$('#signOut')?.click();
+ $('#omNav2Signout').onclick=()=>window.OneMuslimLogout?.();
  $('#omNav2Back').onclick=()=>$('#appBack')?.click();
  render();
 }
