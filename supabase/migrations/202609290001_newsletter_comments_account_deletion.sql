@@ -88,3 +88,33 @@ grant execute on function public.delete_my_account() to authenticated;
 alter table public.lesson_videos drop constraint if exists lesson_videos_uploaded_by_fkey;
 alter table public.lesson_videos add constraint lesson_videos_uploaded_by_fkey
   foreign key (uploaded_by) references auth.users(id) on delete set null;
+
+
+-- Optional starter content for a new OneMuslim database.
+insert into public.newsletter_articles (author_id,title,slug,category,excerpt,content,cover_emoji,published)
+select id,'A Wedding Built Around Family, Faith & Joy','wedding-family-faith-joy','Family',
+'A Muslim wedding can be deeply rooted in tradition and beautifully personal — from the nikah to the gathering that follows.',
+'Across generations, families often find their own rhythm for celebrating a marriage. The heart of the occasion remains simple: two people making a commitment, families coming together, and a community sharing in their happiness.',
+'💍',true from auth.users where lower(email)='elmi@elmi.com'
+and not exists(select 1 from public.newsletter_articles where slug='wedding-family-faith-joy');
+
+insert into public.newsletter_articles (author_id,title,slug,category,excerpt,content,cover_emoji,published)
+select id,'Should Our Mosques Make More Room for Youth Voices?','mosques-youth-voices','Discussion',
+'A lively community debate can be a chance to listen carefully, ask better questions and discover what younger members need.',
+'Youth councils, open forums and intergenerational conversations can give more people a meaningful seat at the table while keeping respect at the center.',
+'💬',true from auth.users where lower(email)='elmi@elmi.com'
+and not exists(select 1 from public.newsletter_articles where slug='mosques-youth-voices');
+
+insert into public.newsletter_articles (author_id,title,slug,category,excerpt,content,cover_emoji,published)
+select id,'A New Mosque Begins With a Foundation of People','mosque-foundation-people','Community',
+'Before the first wall rises, a mosque project begins with conversations about what the community needs.',
+'Before the first wall rises, volunteers, planners, donors, architects and families imagine a place that can grow with the community.',
+'🕌',true from auth.users where lower(email)='elmi@elmi.com'
+and not exists(select 1 from public.newsletter_articles where slug='mosque-foundation-people');
+
+insert into public.newsletter_articles (author_id,title,slug,category,excerpt,content,cover_emoji,published)
+select id,'The Nikah Table: Small Details That Become Big Memories','nikah-table-small-details','Faith',
+'From the seating plan to the meal, wedding days are full of small decisions that become big memories.',
+'A simple program, clear communication and a little flexibility can turn a busy day into a gathering people remember with gratitude.',
+'☾',true from auth.users where lower(email)='elmi@elmi.com'
+and not exists(select 1 from public.newsletter_articles where slug='nikah-table-small-details');
