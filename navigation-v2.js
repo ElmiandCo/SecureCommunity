@@ -4,12 +4,13 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const groups=[
  {title:'Explore',items:[['public-home','⌂','Home','Your One Muslim home'],['feed','◉','Community Feed','Posts and conversations'],['communities','◇','Communities','Groups and spaces'],['profiles','◉','People','Discover members']]},
  {title:'Learn & Grow',items:[['lessons','★','Lessons','Learn and earn XP'],['newsletter','📰','Newsletter','Read the latest edition']]},
- {title:'Your Space',items:[['profile','◎','My Profile','Your identity and activity'],['settings','⚙','Settings','Day / night, privacy and preferences']]},
+ {title:'Your Space',items:[['profile','◎','My Profile','Your identity and activity'],['settings','⚙','Settings','Privacy and preferences'],['appearance','☀','Day / Night','Switch between Day and Night mode']]},
  {title:'Tools & More',items:[['hudhud','🐦','HudHud AI','Your AI companion'],['shop','🛍','Shop','One Muslim collection'],['coming-soon','✦','Coming Soon','What is next']]},
  {title:'Administration',items:[['admin','⚙','Admin Console','Platform controls']]}
 ];
 function proxy(page){
  if(page==='settings'){window.OneMuslimSettings?.open?.();return}
+ if(page==='appearance'){window.OneMuslimSettings?.open?.('appearance');return}
  if(page==='communities'){
    const run=()=>{if(window.OneMuslimCommunities?.show){window.OneMuslimCommunities.show();return true}
      const el=$('[data-page="communities"]',document.getElementById('appView'));if(el){el.click();return true}return false};
