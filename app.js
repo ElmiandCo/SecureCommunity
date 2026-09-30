@@ -321,6 +321,7 @@ function routeInitialProfile(){
 window.OneMuslimEnterApp = enterApp;
 
 async function enterApp(){
+  try{ localStorage.setItem("oneMuslimHadSession","1"); }catch{}
   setScreen("appView");
   $("sessionBadge").textContent = "SECURE SESSION";
   try{
@@ -340,6 +341,7 @@ async function logout(){
   const {error} = await sb.auth.signOut();
   if(error){ toast(errText(error)); return; }
   me=null; profile=null; posts=[]; lessons=[]; lessonCompletions=new Map();
+  try{ localStorage.removeItem("oneMuslimHadSession"); }catch{}
   setScreen("publicView");
   $("sessionBadge").textContent="LOCKED";
   toast("Signed out. Private information is hidden.");
@@ -705,6 +707,7 @@ sb.auth.onAuthStateChange(async (event,session)=>{
   }
   if(session){
     me=session.user;
+    try{ localStorage.setItem("oneMuslimHadSession","1"); }catch{}
     try{
       await loadProfile();
       await loadLessons();
@@ -712,28 +715,47 @@ sb.auth.onAuthStateChange(async (event,session)=>{
       renderApp();
       routeInitialProfile();
     }catch(e){
+      // Never turn a recoverable data-loading error into a logout.
+      // The Supabase session remains alive; the user stays inside the app shell.
       console.error("Auth/profile load failed:",e);
-      setScreen("publicView");
-      toast("We signed you in, but couldn't load your profile yet.");
+      setScreen("appView");
+      $("sessionBadge").textContent="SECURE SESSION";
+      const home=$("publicHomePage");
+      if(home) home.innerHTML='<div style="max-width:760px;margin:90px auto;padding:32px;border:1px solid #d9e3dc;border-radius:22px;background:#fffdf8;text-align:center"><div style="font-size:38px">🔐</div><h2 style="margin:12px 0 8px">Your session is still secure.</h2><p style="color:#687970">We could not load your OneMuslim data right now. You are still signed in. Try again without signing out.</p><button id="omSessionRetry" class="primary" type="button">Retry</button></div>';
+      $("omSessionRetry")?.addEventListener("click",()=>enterApp());
+      toast("Your session is still active. We couldn't load the app data yet.");
     }
-  }else if(event==="SIGNED_OUT" || event==="INITIAL_SESSION"){
+  }else if(event==="SIGNED_OUT"){
     me=null; profile=null; posts=[]; lessons=[]; lessonCompletions=new Map();
+    try{ localStorage.removeItem("oneMuslimHadSession"); }catch{}
     setScreen("publicView");
     $("sessionBadge").textContent="LOCKED";
   }
 });
 
 (async()=>{
-  const {data}=await sb.auth.getSession();
+  const {data,error}=await sb.auth.getSession();
   if(data.session){
     me=data.session.user;
+    try{ localStorage.setItem("oneMuslimHadSession","1"); }catch{}
     if(new URLSearchParams(window.location.search).get("reset")==="1"){
       showAuth("reset");
       return;
     }
     try{ await loadProfile(); await loadPosts(); renderApp(); routeInitialProfile(); }
-    catch(e){ console.error(e); setScreen("publicView"); }
+    catch(e){
+      console.error("Initial app load failed:",e);
+      setScreen("appView");
+      $("sessionBadge").textContent="SECURE SESSION";
+      const home=$("publicHomePage");
+      if(home) home.innerHTML='<div style="max-width:760px;margin:90px auto;padding:32px;border:1px solid #d9e3dc;border-radius:22px;background:#fffdf8;text-align:center"><div style="font-size:38px">🔐</div><h2 style="margin:12px 0 8px">Welcome back.</h2><p style="color:#687970">Your session is still active. We are restoring your OneMuslim home.</p><button id="omSessionRetry" class="primary" type="button">Retry</button></div>';
+      $("omSessionRetry")?.addEventListener("click",()=>enterApp());
+    }
   }else{
+    let had=false;try{had=localStorage.getItem("oneMuslimHadSession")==="1"}catch{}
     setScreen("publicView");
+    $("sessionBadge").textContent="LOCKED";
+    if(error) console.warn("Session restore:",error);
+    if(had) toast("You were inactive for too long, so your session ended. Please sign in again.");
   }
 })();
