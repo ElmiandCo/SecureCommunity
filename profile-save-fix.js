@@ -58,7 +58,8 @@
     const idx=window.OneMuslimProfileSystem?.rankIndex?.(label); const rank=Number.isFinite(idx)?idx+1:1;
     const badges=Number(x.badges_count??x.badges??0)||0, following=Number(x.following_count??x.following??0)||0, src=avatar();
     const card=document.createElement('article');card.className='om-runtime-card';card.innerHTML=`<div class="om-runtime-bg" style="background:${background()}"></div><div class="om-runtime-fg"><div class="om-runtime-head"><div class="om-runtime-avatar">${src?`<img src="${esc(src)}" alt="Selected avatar">`:esc((name.match(/\\b\\w/g)||[]).slice(0,2).join('').toUpperCase())}</div><div><div class="om-runtime-name">${esc(name)}</div><div class="om-runtime-user">@${esc(x.username||'username')}</div></div><div class="om-runtime-rank"><strong>Rank ${rank}</strong><span>${esc(label)}</span></div></div><div class="om-runtime-progress"><i style="width:${Math.min(100,(xp%5000)/50)}%"></i></div><div class="om-runtime-xp">${xp.toLocaleString()} XP</div><div class="om-runtime-stats"><div class="om-runtime-stat"><b>${xp.toLocaleString()}</b><span>Total XP</span></div><div class="om-runtime-stat"><b>${badges}</b><span>Badges</span></div><div class="om-runtime-stat"><b>${following}</b><span>Following</span></div></div><div class="om-runtime-actions"><button type="button">Edit profile</button></div></div>`;
-    button.insertAdjacentElement('afterend',card);
+    panel.innerHTML='';
+    panel.appendChild(card);
     card.querySelector('button').onclick=e=>{e.preventDefault();e.stopPropagation();openBuilder()};
   }
   function refreshCard(){
