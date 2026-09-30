@@ -28,3 +28,11 @@
 
 /* BLACK NAVIGATION V2 */
 .om-nav2{background:#050505!important;color:#fff!important;border-bottom:1px solid #252525!important;box-shadow:0 8px 30px rgba(0,0,0,.28)!important}.om-nav2-brand{color:#fff!important}.om-nav2-trigger{background:#111!important;color:#fff!important;border-color:#333!important}.om-nav2-trigger small{color:#9a9a9a!important}.om-nav2-back{color:#c9c9c9!important}.om-nav2-panel{background:#090909!important;border:1px solid #292929!important;color:#fff!important;box-shadow:0 30px 90px rgba(0,0,0,.6)!important}.om-nav2-panel-head{border-bottom-color:#292929!important}.om-nav2-panel-head strong{color:#fff!important}.om-nav2-close{background:#1b1b1b!important;color:#fff!important}.om-nav2-search{display:block!important;min-height:44px!important;background:#111!important;color:#fff!important;border-color:#333!important;font-size:14px!important}.om-nav2-search::placeholder{color:#858585!important}.om-nav2-group-title{color:#d2ae58!important}.om-nav2-item{background:#111!important;color:#fff!important;border-color:#2b2b2b!important}.om-nav2-item:hover,.om-nav2-item.active{background:#1c1c1c!important;border-color:#8e743d!important}.om-nav2-icon{background:#202020!important;color:#fff!important}.om-nav2-copy span{color:#999!important}.om-nav2-footer{border-top-color:#292929!important}.om-nav2-footer button{background:#111!important;color:#ddd!important;border-color:#333!important}.om-nav2-footer .danger{background:#1b1010!important;color:#ffb0b0!important;border-color:#5b2b2b!important}
+
+
+/* ONE MUSLIM V2 IS THE ONLY APP NAVIGATION */
+#appView > .app-nav,
+#appView > .app-layout > .sidebar{display:none!important}
+#appView > .app-layout{display:block!important}
+#appView > .app-layout > .content{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+#appView > .app-layout > .content > .page{width:100%}
