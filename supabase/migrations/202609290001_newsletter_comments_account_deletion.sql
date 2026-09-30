@@ -82,6 +82,7 @@ end;
 $$;
 
 revoke all on function public.delete_my_account() from public;
+revoke execute on function public.delete_my_account() from anon;
 grant execute on function public.delete_my_account() to authenticated;
 
 -- Account deletion must not be blocked by an old lesson-video ownership record.
