@@ -1,0 +1,88 @@
+/* One Muslim 2026 — unified visual system. Loaded last intentionally. */
+:root{
+ --om-ink:#10261f;--om-ink2:#19382e;--om-green:#1d5b47;--om-green2:#2b8062;
+ --om-gold:#c9a24b;--om-cream:#fbf8f0;--om-paper:#fffdf8;--om-line:#e7e1d5;
+ --om-muted:#6f7e77;--om-shadow:0 24px 70px rgba(22,48,39,.10);
+}
+body.onemuslim-theme{background:var(--om-cream)!important;color:var(--om-ink)!important}
+body.onemuslim-theme:before{display:none!important}
+#omUnifiedBackdrop{position:fixed;inset:0;z-index:-2;pointer-events:none;background:
+ radial-gradient(circle at 88% 8%,rgba(201,162,75,.13),transparent 25%),
+ radial-gradient(circle at 8% 35%,rgba(29,91,71,.07),transparent 30%),
+ linear-gradient(180deg,#fffdf8,#fbf8f0 55%,#f6f1e6)}
+/* Public home */
+#publicView{min-height:100vh!important}
+.om-unified-landing{min-height:100vh;overflow:hidden;background:transparent;color:var(--om-ink)}
+.om-unified-nav{position:sticky;top:0;z-index:1000;height:76px;display:flex;align-items:center;gap:24px;padding:0 clamp(18px,5vw,72px);border-bottom:1px solid rgba(231,225,213,.78);background:rgba(255,253,248,.82);backdrop-filter:blur(18px)}
+.om-unified-brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--om-ink);font-weight:900;letter-spacing:.12em;font-size:13px}
+.om-unified-brand img{width:40px;height:40px;object-fit:contain}
+.om-unified-navlinks{display:flex;align-items:center;gap:4px;margin-left:auto}
+.om-unified-navlinks a{color:#51665d;text-decoration:none;font-size:13px;font-weight:750;padding:10px 12px;border-radius:10px}
+.om-unified-navlinks a:hover{background:#f0eadc;color:var(--om-green)}
+.om-unified-actions{display:flex;gap:8px}
+.om-btn{border:1px solid var(--om-line);border-radius:999px;padding:11px 17px;background:#fff;color:var(--om-green);font-weight:850;cursor:pointer}
+.om-btn.primary{background:var(--om-green);color:#fff;border-color:var(--om-green);box-shadow:0 10px 24px rgba(29,91,71,.18)}
+.om-btn.gold{background:linear-gradient(135deg,#c49a3e,#e1c56f);color:#14281f;border-color:#dfc474}
+.om-unified-hero{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;max-width:1420px;margin:auto;padding:clamp(70px,10vw,130px) clamp(20px,6vw,90px) 80px}
+.om-unified-hero-copy{position:relative;z-index:2}
+.om-kicker{display:inline-flex;align-items:center;gap:9px;color:var(--om-green);font-size:11px;font-weight:900;letter-spacing:.18em}
+.om-kicker:before{content:'';width:24px;height:1px;background:var(--om-gold)}
+.om-unified-hero h1{font:700 clamp(48px,6.8vw,96px)/.94 Georgia,'Times New Roman',serif;letter-spacing:-.055em;margin:18px 0 24px;color:var(--om-ink)}
+.om-unified-hero h1 em{font-style:normal;color:var(--om-green)}
+.om-unified-hero p{max-width:650px;color:#60716a;font-size:18px;line-height:1.7;margin:0}
+.om-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.om-hero-proof{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:#7b8780;font-size:11px;font-weight:800;letter-spacing:.08em}
+.om-hero-proof span{display:flex;align-items:center;gap:7px}.om-hero-proof i{width:6px;height:6px;border-radius:50%;background:var(--om-gold)}
+.om-hero-art{position:relative;min-height:540px;display:grid;place-items:center}
+.om-hero-art:before{content:'';position:absolute;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,#ead8a2 0,rgba(201,162,75,.16) 34%,transparent 69%);filter:blur(3px)}
+.om-arch{position:relative;width:min(430px,82vw);height:500px;border:1px solid rgba(201,162,75,.55);border-radius:220px 220px 28px 28px;background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(241,235,219,.68));box-shadow:var(--om-shadow);overflow:hidden}
+.om-arch:before{content:'';position:absolute;inset:18px;border:1px solid rgba(201,162,75,.3);border-radius:205px 205px 18px 18px;background:url('assets/onemuslim/pattern-light.svg') center/290px;opacity:.38}
+.om-arch-moon{position:absolute;top:58px;left:50%;transform:translateX(-50%);width:80px;height:80px;border-radius:50%;box-shadow:-18px 5px 0 0 var(--om-gold);filter:drop-shadow(0 8px 18px rgba(201,162,75,.2))}
+.om-arch-mosque{position:absolute;left:0;right:0;bottom:0;height:48%;background:url('assets/onemuslim/mosque-light.svg') center bottom/120% auto no-repeat;opacity:.78}
+.om-arch-word{position:absolute;left:0;right:0;bottom:86px;text-align:center;color:var(--om-green);font:700 24px Georgia,serif;letter-spacing:.08em}
+.om-arch-sub{position:absolute;left:0;right:0;bottom:58px;text-align:center;color:#78867f;font-size:10px;letter-spacing:.22em;font-weight:900}
+.om-float{position:absolute;padding:13px 15px;border:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-radius:16px;box-shadow:0 15px 35px rgba(22,48,39,.10);font-size:12px;color:var(--om-green)}
+.om-float b{display:block;font-size:13px}.om-float small{color:#7b8780}.om-float.a{left:-8px;top:25%}.om-float.b{right:-15px;top:48%}.om-float.c{left:5%;bottom:7%}
+.om-unified-section{max-width:1280px;margin:auto;padding:95px clamp(20px,5vw,50px)}
+.om-section-center{text-align:center;max-width:720px;margin:0 auto 48px}.om-section-center h2,.om-unified-split h2{font:700 clamp(36px,5vw,62px)/1.02 Georgia,serif;letter-spacing:-.045em;margin:14px 0;color:var(--om-ink)}.om-section-center h2 em,.om-unified-split h2 em{font-style:normal;color:var(--om-green)}.om-section-center p,.om-unified-split p{color:#6d7c75;line-height:1.7;font-size:16px}
+.om-feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.om-feature{padding:28px;border:1px solid var(--om-line);border-radius:25px;background:rgba(255,255,255,.72);box-shadow:0 12px 36px rgba(22,48,39,.045);min-height:210px}
+.om-feature.featured{grid-column:span 2;background:linear-gradient(135deg,#173f33,#286d55);color:#fff;border-color:#173f33}.om-feature.featured p{color:rgba(255,255,255,.72)}.om-feature.featured .om-feature-icon{background:rgba(255,255,255,.14);color:#f1d887}
+.om-feature-icon{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#edf4ef;color:var(--om-green);font-size:22px;margin-bottom:28px}.om-feature h3{margin:0 0 9px;font-size:21px}.om-feature p{margin:0;color:#728078;line-height:1.6;font-size:14px}
+.om-feature-meta{margin-top:25px;font-size:11px;letter-spacing:.12em;font-weight:900;color:var(--om-gold)}
+.om-unified-split{max-width:1280px;margin:auto;padding:90px clamp(20px,5vw,50px);display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.om-split-card{min-height:440px;border-radius:34px;background:linear-gradient(145deg,#173f33,#0e2b23);position:relative;overflow:hidden;box-shadow:var(--om-shadow);padding:28px;color:#fff}
+.om-split-card:before{content:'';position:absolute;inset:-20%;background:url('assets/onemuslim/pattern-light.svg') center/370px;opacity:.08;transform:rotate(8deg)}
+.om-mini-window{position:absolute;inset:70px 42px 42px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:24px;backdrop-filter:blur(10px);padding:24px}
+.om-mini-window .line{height:9px;border-radius:99px;background:rgba(255,255,255,.15);margin:13px 0}.om-mini-window .line.short{width:58%}.om-mini-window .pill{display:inline-block;padding:8px 11px;border-radius:99px;background:rgba(201,162,75,.2);color:#f0d98b;font-size:10px;font-weight:900;letter-spacing:.12em}
+.om-unified-split ul{list-style:none;padding:0;margin:28px 0;display:grid;gap:13px}.om-unified-split li{display:flex;gap:10px;align-items:center;color:#4f635a;font-weight:700}.om-unified-split li span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#e8f2ec;color:var(--om-green);font-size:12px}
+.om-live-banner{max-width:1280px;margin:30px auto 90px;padding:0 clamp(20px,5vw,50px)}.om-live-banner-inner{border-radius:30px;background:#122c24;color:#fff;padding:40px;display:flex;align-items:center;justify-content:space-between;gap:30px;overflow:hidden;position:relative}.om-live-banner-inner:after{content:'LIVE';position:absolute;right:-30px;top:-50px;font:900 190px Arial;color:rgba(255,255,255,.025);letter-spacing:-.08em}.om-live-banner h3{font:700 36px Georgia,serif;margin:0 0 9px}.om-live-banner p{margin:0;color:#afc1b9;line-height:1.6}
+.om-unified-footer{border-top:1px solid var(--om-line);padding:40px clamp(20px,6vw,80px);display:flex;justify-content:space-between;gap:20px;color:#7a867f;font-size:12px}
+.om-unified-footer strong{color:var(--om-green);letter-spacing:.12em}
+/* Auth/app shell */
+body.dashboard-theme #appView{background:var(--om-cream)!important;color:var(--om-ink)!important}
+body.dashboard-theme #appView .content{background:transparent!important}
+body.dashboard-theme #appView .sidebar{background:linear-gradient(180deg,#fffdf8,#f2f6f2)!important;border-right:1px solid var(--om-line)!important;border-radius:0!important;box-shadow:8px 0 30px rgba(20,50,40,.04)!important}
+body.dashboard-theme #appView .side{color:#51665d!important}
+body.dashboard-theme #appView .side.active,body.dashboard-theme #appView .side:hover{background:#e8f1eb!important;color:var(--om-green)!important}
+body.dashboard-theme #appView .primary{background:var(--om-green)!important;border-color:var(--om-green)!important}
+body.dashboard-theme #appView .page-head h2{font-family:Georgia,serif!important;color:var(--om-green)!important}
+body.dashboard-theme #appView .composer,body.dashboard-theme #appView .post,body.dashboard-theme #appView .profile-card,body.dashboard-theme #appView .profile-panel,body.dashboard-theme #appView .lesson-card,body.dashboard-theme #appView .lesson-player{border:1px solid var(--om-line)!important;background:#fff!important;box-shadow:0 12px 36px rgba(22,48,39,.055)!important;color:var(--om-ink)!important}
+/* authenticated My Home */
+#publicHomePage .om-myhome{max-width:1240px;margin:auto;padding-bottom:70px}
+#publicHomePage .om-home-header{padding:12px 0 25px}
+#publicHomePage .om-home-kicker{color:var(--om-gold)!important;letter-spacing:.16em!important}
+#publicHomePage .om-profile-hero{border-radius:32px!important;background:linear-gradient(135deg,#173f33,#2b765c)!important;box-shadow:0 22px 60px rgba(24,67,52,.16)!important}
+#publicHomePage .om-profile-hero:after{opacity:.18!important}
+#publicHomePage .om-home-widget{border-radius:23px!important;border:1px solid var(--om-line)!important;background:#fff!important;box-shadow:0 12px 36px rgba(22,48,39,.05)!important}
+#publicHomePage .om-widget-head{border-bottom:1px solid #eee9df!important}
+#publicHomePage .om-widget-icon{background:#edf4ef!important;color:var(--om-green)!important}
+#publicHomePage .om-widget-link{color:var(--om-green)!important}
+#publicHomePage .om-add-component,#publicHomePage .om-customize-btn{border-radius:999px!important;background:var(--om-green)!important;color:#fff!important;border-color:var(--om-green)!important}
+/* responsive */
+@media(max-width:900px){
+ .om-unified-nav{height:68px}.om-unified-navlinks{display:none}.om-unified-hero{grid-template-columns:1fr;padding-top:65px}.om-hero-art{min-height:460px}.om-feature-grid{grid-template-columns:1fr 1fr}.om-feature.featured{grid-column:span 2}.om-unified-split{grid-template-columns:1fr;gap:35px}.om-live-banner-inner{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:560px){
+ .om-unified-actions .om-btn:first-child{display:none}.om-unified-brand{font-size:11px}.om-unified-hero h1{font-size:50px}.om-unified-hero p{font-size:15px}.om-hero-art{min-height:390px}.om-arch{height:390px;width:300px}.om-float{transform:scale(.86)}.om-float.a{left:-8px}.om-float.b{right:-10px}.om-feature-grid{grid-template-columns:1fr}.om-feature.featured{grid-column:auto}.om-unified-section,.om-unified-split{padding-top:65px;padding-bottom:65px}.om-live-banner-inner{padding:28px}.om-live-banner h3{font-size:29px}.om-unified-footer{flex-direction:column}
+}
