@@ -11,7 +11,9 @@ const groups=[
 function proxy(page){
  if(page==='settings'){window.OneMuslimSettings?.open?.();return}
  if(page==='communities'){
-   window.OneMuslimCommunities?.show?.();
+   const run=()=>{if(window.OneMuslimCommunities?.show){window.OneMuslimCommunities.show();return true}
+     const el=$('[data-page="communities"]',document.getElementById('appView'));if(el){el.click();return true}return false};
+   if(!run())setTimeout(run,250);
    return;
  }
  if(page==='newsletter'){location.href='newsletter.html';return}
