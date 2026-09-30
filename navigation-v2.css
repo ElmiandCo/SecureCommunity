@@ -1,0 +1,27 @@
+/* One Muslim Navigation V2 — categorized, responsive, no hidden destinations */
+.om-nav2{position:sticky;top:0;z-index:5000;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 18px;background:rgba(255,253,248,.94);border-bottom:1px solid #e5dfd2;backdrop-filter:blur(18px);box-shadow:0 8px 30px rgba(15,48,38,.06)}
+.om-nav2-brand{display:flex;align-items:center;gap:10px;color:#0b2b23;font-weight:950;letter-spacing:.08em}
+.om-nav2-brand img{width:34px;height:34px;border-radius:11px}
+.om-nav2-trigger{display:flex;align-items:center;gap:8px;border:1px solid #ddd5c6;background:#fff;border-radius:12px;padding:10px 13px;color:#16382d;font-weight:850;cursor:pointer}
+.om-nav2-trigger span{font-size:12px}.om-nav2-trigger small{font-size:9px;color:#89938d;margin-left:4px}
+.om-nav2-back{border:0;background:transparent;color:#65726c;font-weight:800;cursor:pointer}
+.om-nav2-overlay{position:fixed;inset:0;z-index:9998;background:rgba(5,24,19,.48);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:.2s}
+.om-nav2-overlay.open{opacity:1;pointer-events:auto}
+.om-nav2-panel{position:fixed;z-index:9999;top:10px;right:10px;width:min(430px,calc(100vw - 20px));max-height:calc(100vh - 20px);overflow:auto;background:#fffdf8;border:1px solid #e2dbce;border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.28);padding:18px;transform:translateY(-12px) scale(.98);opacity:0;pointer-events:none;transition:.2s}
+.om-nav2-panel.open{transform:none;opacity:1;pointer-events:auto}
+.om-nav2-panel-head{display:flex;align-items:center;justify-content:space-between;padding:5px 4px 15px;border-bottom:1px solid #ece6dc}
+.om-nav2-panel-head strong{font:700 24px Georgia,serif;color:#0b2b23}
+.om-nav2-close{width:36px;height:36px;border:0;border-radius:50%;background:#eee9df;font-size:20px;cursor:pointer}
+.om-nav2-search{width:100%;box-sizing:border-box;margin:14px 0;border:1px solid #ddd5c6;border-radius:13px;padding:12px 14px;background:#fff;color:#18382f;outline:none}
+.om-nav2-group{margin:16px 0}.om-nav2-group-title{padding:0 8px 7px;font-size:9px;font-weight:950;letter-spacing:.18em;color:#9a8660;text-transform:uppercase}
+.om-nav2-items{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.om-nav2-item{display:flex;align-items:center;gap:10px;width:100%;min-height:54px;text-align:left;border:1px solid #e8e1d6;background:#fff;border-radius:14px;padding:9px 11px;cursor:pointer;color:#17372e}
+.om-nav2-item:hover,.om-nav2-item.active{border-color:#c9b77e;background:#f6f1e5}
+.om-nav2-icon{width:31px;height:31px;display:grid;place-items:center;border-radius:10px;background:#edf3ee;font-size:15px;flex:0 0 auto}
+.om-nav2-copy{min-width:0}.om-nav2-copy b{display:block;font-size:11px}.om-nav2-copy span{display:block;margin-top:3px;font-size:8px;color:#89938d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.om-nav2-footer{display:flex;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid #ece6dc}
+.om-nav2-footer button{flex:1;border:1px solid #ddd5c6;background:#fff;border-radius:12px;padding:11px;font-weight:850;color:#65726c;cursor:pointer}
+.om-nav2-footer .danger{color:#a34747;background:#fff8f8;border-color:#e6c8c8}
+@media(max-width:700px){.om-nav2{padding:10px 12px}.om-nav2-back{display:none}.om-nav2-panel{top:8px;right:8px;left:8px;width:auto;max-height:calc(100vh - 16px);border-radius:24px}.om-nav2-items{grid-template-columns:1fr}.om-nav2-item{min-height:58px}.om-nav2-brand span{font-size:11px}}
+/* Replace the old crowded bars once V2 is active. */
+#appView>.app-nav,#appView>.app-layout>.sidebar{display:none!important}
