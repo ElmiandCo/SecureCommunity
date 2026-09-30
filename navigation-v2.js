@@ -4,11 +4,12 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const groups=[
  {title:'Explore',items:[['public-home','⌂','Home','Your One Muslim home'],['feed','◉','Community Feed','Posts and conversations'],['communities','◇','Communities','Groups and spaces'],['profiles','◉','People','Discover members']]},
  {title:'Learn & Grow',items:[['lessons','★','Lessons','Learn and earn XP'],['newsletter','📰','Newsletter','Read the latest edition']]},
- {title:'Your Space',items:[['profile','◎','My Profile','Your identity and activity']]},
+ {title:'Your Space',items:[['profile','◎','My Profile','Your identity and activity'],['settings','⚙','Settings','Day / night, privacy and preferences']]},
  {title:'Tools & More',items:[['hudhud','🐦','HudHud AI','Your AI companion'],['shop','🛍','Shop','One Muslim collection'],['coming-soon','✦','Coming Soon','What is next']]},
  {title:'Administration',items:[['admin','⚙','Admin Console','Platform controls']]}
 ];
 function proxy(page){
+ if(page==='settings'){window.OneMuslimSettings?.open?.();return}
  if(page==='communities'){
    window.OneMuslimCommunities?.show?.();
    return;
