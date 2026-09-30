@@ -9,6 +9,10 @@ const groups=[
  {title:'Administration',items:[['admin','⚙','Admin Console','Platform controls']]}
 ];
 function proxy(page){
+ if(page==='communities'){
+   window.OneMuslimCommunities?.show?.();
+   return;
+ }
  if(page==='newsletter'){location.href='newsletter.html';return}
  if(page==='hudhud'){location.href='hudhud-ai.html';return}
  const el=$('[data-page="'+page+'"]',document.getElementById('appView'));
