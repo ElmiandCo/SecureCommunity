@@ -27,7 +27,7 @@ function proxy(page){
 function init(){
  const app=$('#appView'); if(!app||$('#omNav2'))return;
  const nav=document.createElement('div');nav.id='omNav2';nav.className='om-nav2';
- nav.innerHTML='<div class="om-nav2-brand"><img src="assets/won-muslim-logo.svg" alt=""><span>ONE MUSLIM</span></div><button class="om-nav2-trigger" id="omNav2Open" type="button">☰ <span>Navigate</span><small>All areas</small></button><button class="om-nav2-back" id="omNav2Back" type="button">← Back</button>';
+ nav.innerHTML='<div class="om-nav2-brand"><img src="assets/won-muslim-logo.svg" alt=""><span>ONE MUSLIM</span></div><div class="om-nav2-desktop-links"><button type="button" data-desktop-nav="public-home">Home</button><button type="button" data-desktop-nav="feed">Feed</button><button type="button" data-desktop-nav="communities">Communities</button><button type="button" data-desktop-nav="profiles">People</button><button type="button" data-desktop-nav="lessons">Learn</button></div><button class="om-nav2-trigger" id="omNav2Open" type="button">☰ <span>Menu</span><small>All areas</small></button><button class="om-nav2-back" id="omNav2Back" type="button">← Back</button>';
  app.prepend(nav);
  const overlay=document.createElement('div');overlay.id='omNav2Overlay';overlay.className='om-nav2-overlay';
  const panel=document.createElement('aside');panel.id='omNav2Panel';panel.className='om-nav2-panel';panel.setAttribute('aria-label','One Muslim navigation');
@@ -44,7 +44,7 @@ function init(){
  }
  function open(){overlay.classList.add('open');panel.classList.add('open');setTimeout(()=>$('#omNav2Search')?.focus(),50)}
  function close(){overlay.classList.remove('open');panel.classList.remove('open')}
- $('#omNav2Open').onclick=open;$('.om-nav2-close',panel).onclick=close;$('.om-nav2-close2',panel).onclick=close;overlay.onclick=close;
+ $('#omNav2Open').onclick=open;$('[data-desktop-nav]').forEach(b=>b.onclick=()=>{proxy(b.dataset.desktopNav);});$('.om-nav2-close',panel).onclick=close;$('.om-nav2-close2',panel).onclick=close;overlay.onclick=close;
  $('#omNav2Search').oninput=e=>render(e.target.value);
  $('#omNav2Signout').onclick=()=>window.OneMuslimLogout?.();
  $('#omNav2Back').onclick=()=>$('#appBack')?.click();
