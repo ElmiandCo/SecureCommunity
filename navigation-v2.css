@@ -36,3 +36,10 @@
 #appView > .app-layout{display:block!important}
 #appView > .app-layout > .content{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
 #appView > .app-layout > .content > .page{width:100%}
+
+/* Desktop navigation: expose the primary destinations directly; Menu remains the full categorized navigator. */
+.om-nav2-desktop-links{display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:8px}
+.om-nav2-desktop-links button{appearance:none;border:1px solid transparent;background:transparent;color:#cfcfcf;border-radius:10px;padding:9px 11px;font:800 11px/1 system-ui,sans-serif;cursor:pointer}
+.om-nav2-desktop-links button:hover{background:#151515;border-color:#303030;color:#fff}
+.om-nav2-trigger{position:relative;display:flex!important;z-index:2;min-width:112px;justify-content:center}
+@media(max-width:900px){.om-nav2-desktop-links{display:none}}
